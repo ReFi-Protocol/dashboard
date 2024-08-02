@@ -1,12 +1,13 @@
-import { ConnectKitButton } from "connectkit";
-import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+import MarketplaceLayout from "./layouts/marketplace";
 
 function App() {
   return (
-    <div>
-      <ConnectKitButton />
-      <UnifiedWalletButton />
-    </div>
+    <Routes>
+      <Route path="marketplace/*" element={<MarketplaceLayout />} />
+      <Route path="/" element={<Navigate to="/admin" replace />} />
+    </Routes>
   );
 }
 
