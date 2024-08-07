@@ -1,12 +1,10 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-
-import MarketplaceLayout from "./layouts/marketplace";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./layouts";
 
 function App() {
   return (
     <Routes>
-      <Route path="marketplace/*" element={<MarketplaceLayout />} />
-      <Route path="/" element={<Navigate to="/admin" replace />} />
+      <Route path="/*" element={<Layout />} />
     </Routes>
   );
 }
