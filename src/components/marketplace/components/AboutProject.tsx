@@ -1,11 +1,11 @@
 import { FC } from "react";
 
 const companyInfo = [
-  { value: "May 20, 2019", name: "Project start date" },
-  { value: "PEFC", name: "Certification" },
-  { value: "8.947 ha", name: "Land area " },
+  { value: "May 23, 2023", name: "Project start date" },
+  { value: "(In progress)", name: "Certification" },
+  { value: "61 ha", name: "Land area " },
   { value: "none", name: "Social action" },
-  { value: "Wetland, ZNIEFF type II", name: "Biodiversity features" },
+  { value: "Wetland - meadow - hedge - stream", name: "Biodiversity features" },
   { value: "01/04 to 01/09", name: "Open to the public" },
 ];
 
@@ -16,10 +16,10 @@ const AboutProject: FC = () => {
         <div
           className="h-96 w-full rounded-lg md:h-full"
           style={{
-            backgroundImage: "url('/images/map-image.png')",
-            backgroundSize: "cover",
+            backgroundImage: "url('/images/map-image.svg')",
             backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
+            backgroundColor: "#E0EBE1",
+            backgroundSize: "cover",
             aspectRatio: "16 / 9",
           }}
         />
@@ -27,53 +27,31 @@ const AboutProject: FC = () => {
 
       <div className="w-full md:w-1/2">
         <h3 className="font-sans text-2xl font-bold text-white md:text-3xl">
-          Sample Project Name
+          Peyrat-de-Bellac Forest
         </h3>
         <div className="mt-4 flex flex-col gap-4">
           <p className="text-lg text-white">
-            Located in Brittany, our Ploërdut forest is made up of four
-            individual plots that we acquired gradually over a period of time.
-          </p>
-          <p className="text-lg font-medium text-white">
-            On Ploërdut 1 a small area of{" "}
+            Located in the Nouvelle-Aquitaine in central France, the
+            Peyrat-de-Bellac forest stands out for its rich biodiversity. This
+            land, which we acquired in May 2023, is home to a unique ecosystem
+            of preserved meadows and ancient hedgerows. These wet meadows are
+            managed sustainably, encouraging their specific flora. As crucial
+            structural elements, the hedgerows are carefully maintained to
+            support the local fauna. The aim is to afforest only a part of the
+            property, thus preserving an open environment. Today, the forest is
+            dominated by{" "}
             <a
-              href="https://ecotree.green/en/offers/species/douglas-fir"
+              href="https://ecotree.green/en/species/4"
               className="text-white underline"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Douglas firs
-            </a>{" "}
-            were preserved. However, the previous owner cleared the rest of the
-            area. Thus, we are developing a new uneven-aged forest comprising
-            multiple tree species such as{" "}
-            <a
-              href="https://ecotree.green/en/offers/species/red-oak"
-              className="text-white underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Red Oak
+              sessile oaks
             </a>
-            ,{" "}
-            <a
-              href="https://ecotree.green/en/offers/species/chestnut"
-              className="text-white underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Chestnut
-            </a>
-            , and{" "}
-            <a
-              href="https://ecotree.green/en/offers/species/scots-pine"
-              className="text-white underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Scots pine
-            </a>
-            .
+            .The Peyrat-de-Bellac forest has another unique feature: it is home
+            to the plant 'Galium debile', slender marsh-bedstraw, an endangered
+            species in the Limousin region. This rare plant thrives on the banks
+            of streams on unwooded plots of land.
           </p>
         </div>
         <div className="mt-8 grid grid-cols-2 gap-6">
