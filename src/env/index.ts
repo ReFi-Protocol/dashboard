@@ -12,6 +12,7 @@ const envSchema = z.object({
   VITE_EVM_CHAIN_ID: z.number({ coerce: true }),
   VITE_SOLANA_RPC_URL: z.string(),
   VITE_SOLANA_CLUSTER: z.enum(SUPPORTED_CLUSTERS),
+  VITE_SOLANA_CANDY_MACHINE: z.string(),
 });
 
 let env: z.infer<typeof envSchema>;
