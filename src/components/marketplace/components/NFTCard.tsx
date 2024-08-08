@@ -1,4 +1,9 @@
 import { FC } from "react";
+import { publicKey } from "@metaplex-foundation/umi";
+import { useUmi } from "../../../web3/solana/hook";
+import { mintNftFromCandyMachine } from "../../../web3/solana/service/create-nft";
+import { CANDY_MACHINE_ADDRESS } from "../../../web3/solana/const";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 interface NFTCardProps {
   name: string;
@@ -7,6 +12,18 @@ interface NFTCardProps {
 }
 
 const NFTCard: FC<NFTCardProps> = ({ name, author, price }) => {
+  const umi = useUmi();
+  const wallet = useWallet();
+
+  const buyNft = async () => {
+    const mint = await mintNftFromCandyMachine(
+      umi,
+      publicKey(CANDY_MACHINE_ADDRESS),
+    );
+
+    alert(mint.toString());
+  };
+
   return (
     <div className="flex flex-col items-start rounded-[20px] bg-[#061A11] p-5">
       <div className="mb-5 h-[205px] w-full rounded-[18px] bg-[#000000]"></div>
@@ -20,9 +37,21 @@ const NFTCard: FC<NFTCardProps> = ({ name, author, price }) => {
             <span className="text-sm font-normal text-white">Price</span>
             <span className="text-sm font-bold text-white"> - {price}</span>
           </p>
-          <button className="text-black rounded-full bg-[#07BA9A] px-10 py-[2px] font-bold hover:bg-white">
-            Rent
-          </button>
+          {wallet.publicKey ? (
+            <button
+              onClick={buyNft}
+              className="text-black rounded-full bg-[#07BA9A] px-10 py-[2px] font-bold hover:bg-white"
+            >
+              Rent
+            </button>
+          ) : (
+            <button
+              onClick={buyNft}
+              className="text-black rounded-full bg-[#07BA9A] px-10 py-[2px] font-bold hover:bg-white"
+            >
+              Connect
+            </button>
+          )}
         </div>
       </div>
     </div>
