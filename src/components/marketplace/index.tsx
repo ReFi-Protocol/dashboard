@@ -86,13 +86,12 @@ const MarketplaceContent: FC = () => {
           </ul>
         </div>
         <p className="px-1 text-center font-sans text-[15px] font-normal text-white md:px-11">
-          The project commenced on May 20, 2019, and is certified by the
-          Programme for the Endorsement of Forest Certification (PEFC). It
-          encompasses a land area of 8.947 hectares and features significant
-          biodiversity elements, including a wetland, ZNIEFF type II
-          designation, forest ponds, and a stream. There are currently no social
-          action initiatives associated with the project. Additionally, the area
-          is open to the public from January 4 to January 9.
+          The project commenced on May 23, 2023, and is currently in progress
+          for certification. It encompasses a land area of 61 hectares and
+          features significant biodiversity element, including a wetlands,
+          meadows, hedges, and a stream. There are currently no social action
+          initiatives associated with the project. Additionally, the area is
+          open to the public from April 1 to September 1.
         </p>
       </div>
       <div>

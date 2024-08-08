@@ -1,24 +1,30 @@
 import { FC } from "react";
 import MarketplaceContent from "../marketplace";
 import DashboardContent from "../dashboard";
+import StakingContent from "../staking";
+import BridgingContent from "../bridging";
+import LeaderboardContent from "../leaderboard";
 
 interface PageContentProps {
   activeTab: string;
 }
 
 const PageContent: FC<PageContentProps> = ({ activeTab }) => {
-  const renderContent = () => {
-    switch (activeTab) {
-      case "marketplace":
-        return <MarketplaceContent />;
-      case "dashboard":
-        return <DashboardContent />;
-      default:
-        return <p className="text-white">Content for {activeTab}</p>;
-    }
+  const contentMap: { [key: string]: JSX.Element } = {
+    marketplace: <MarketplaceContent />,
+    dashboard: <DashboardContent />,
+    staking: <StakingContent />,
+    bridging: <BridgingContent />,
+    leaderboard: <LeaderboardContent />,
   };
 
-  return <div>{renderContent()}</div>;
+  return (
+    <div>
+      {contentMap[activeTab] || (
+        <p className="text-white">Content for {activeTab}</p>
+      )}
+    </div>
+  );
 };
 
 export default PageContent;

@@ -23,7 +23,7 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
       >
         <HiX className="text-white " />
       </span>
-      <div className="flex flex-col gap-10 px-4 pt-8">
+      <div className="flex flex-col gap-11 px-4 pt-8">
         <div className="flex items-center justify-start gap-2">
           <img
             src="./images/Refi_logo.png"
