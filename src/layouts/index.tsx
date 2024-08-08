@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Sidebar from "../components/sidebar";
 import routes from "../routes";
 import PageTitle from "../components/page-contents/PageTitle";
+import { AppRoute } from "../types";
 
 const Layout: FC = () => {
   const [currentRoute, setCurrentRoute] = useState("Dashboard");
@@ -20,7 +21,7 @@ const Layout: FC = () => {
     getActiveRoute(routes);
   }, [location.pathname]);
 
-  const getActiveRoute = (routes: Route[]) => {
+  const getActiveRoute = (routes: AppRoute[]) => {
     const activeRoute = "Dashboard";
     for (let i = 0; i < routes.length; i++) {
       if (
@@ -32,7 +33,7 @@ const Layout: FC = () => {
     return activeRoute;
   };
 
-  const getRoutes = (routes: Route[]) => {
+  const getRoutes = (routes: AppRoute[]) => {
     return routes.map((prop, key) => {
       return <Route path={prop.path} element={prop.component} key={key} />;
     });

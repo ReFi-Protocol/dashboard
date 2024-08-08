@@ -10,17 +10,9 @@ import {
   MdTrendingUp,
   MdSwapHoriz,
 } from "react-icons/md";
+import { AppRoute } from "./types";
 
-interface Route {
-  name: string;
-  layout: string;
-  path: string;
-  icon: React.ReactNode;
-  component: React.ReactNode;
-  secondary?: boolean;
-}
-
-const routes: Route[] = [
+const routes: AppRoute[] = [
   {
     name: "Dashboard",
     layout: "/",
