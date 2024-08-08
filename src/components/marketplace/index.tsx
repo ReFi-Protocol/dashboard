@@ -18,19 +18,26 @@ const MarketplaceContent: FC = () => {
       <div
         className="relative flex items-center justify-start rounded-[30px] pl-6"
         style={{
-          backgroundImage: "url(/images/marketplace-promo-image.png)",
+          backgroundImage: "url(/images/forest-promo-image.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           height: "292px",
         }}
       >
-        <div className="flex flex-col gap-1 lg:max-w-[40%]">
+        <div
+          className="absolute inset-0 rounded-[30px] bg-[#000000] opacity-40"
+          style={{ zIndex: 1 }}
+        ></div>
+        <div
+          className="relative flex flex-col gap-1 lg:max-w-[40%]"
+          style={{ zIndex: 2 }}
+        >
           <h3 className="font-sans text-[28px] text-lg font-extrabold text-white">
-            Ploërdut forest 1
+            Peyrat-de-Bellac Forest
           </h3>
           <p className="font-sans text-sm font-normal text-white">
-            Discover our Ploërdut 1 forest in Brittany, the work we do there and
-            the NFT collection you can buy of this Forest.
+            Discover the Peyrat-de-Bellac forest in central France, the work we
+            do and the NFT collection you can buy of this Forest.
           </p>
         </div>
         <div
@@ -38,12 +45,16 @@ const MarketplaceContent: FC = () => {
           style={{
             width: "150px",
             height: "150px",
-            backgroundColor: "#D9D9D9",
+            backgroundImage: "url('./images/Logo-ET-vignette.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
             border: "11px solid black",
             borderRadius: "50%",
+            zIndex: 2,
           }}
         ></div>
       </div>
+
       <div className="mb-20 mt-[106px] flex flex-col gap-4 px-16">
         <div className="flex justify-center rounded-[20px] bg-[#061A11]">
           <ul className="flex flex-col px-12 py-5 text-center text-white md:flex-row">
