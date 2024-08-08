@@ -9,3 +9,13 @@
 * {
   user-select: none;
 }
+
+.wallet-button {
+  width: 12rem !important;
+  border-radius: 1.5rem !important;
+  background-color: #25ac88 !important;
+  padding: 0.5rem 0 !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  color: #fff !important;
+}

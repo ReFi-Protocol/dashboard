@@ -2,7 +2,7 @@ import { FC } from "react";
 import { HiX } from "react-icons/hi";
 import Links from "./Links";
 import routes from "../../routes";
-import { ConnectKitButton } from "connectkit";
+// import { ConnectKitButton } from "connectkit";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 
 interface SidebarProps {
@@ -38,7 +38,7 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
           <ul className="mb-auto pt-1">
             <Links routes={routes} />
           </ul>
-          <ConnectKitButton.Custom>
+          {/* <ConnectKitButton.Custom>
             {({
               isConnected,
               isConnecting,
@@ -57,8 +57,8 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
                 </button>
               );
             }}
-          </ConnectKitButton.Custom>
-          {/* <UnifiedWalletButton /> */}
+          </ConnectKitButton.Custom> */}
+          <UnifiedWalletButton buttonClassName="wallet-button" />
         </div>
       </div>
     </div>
