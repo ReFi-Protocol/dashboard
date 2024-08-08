@@ -62,12 +62,6 @@ importers:
       connectkit:
         specifier: ^1.7.2
         version: 1.8.2(@babel/core@7.24.9)(@tanstack/react-query@5.51.15(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(viem@2.18.2(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.1(@react-native-async-storage/async-storage@1.24.0(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.24.8(@babel/core@7.24.9))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10)))(@tanstack/query-core@5.51.15)(@tanstack/react-query@5.51.15(react@18.3.1))(@types/react@18.3.3)(bufferutil@4.0.8)(immer@9.0.21)(react-dom@18.3.1(react@18.3.1))(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.24.8(@babel/core@7.24.9))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@3.29.4)(typescript@5.5.4)(utf-8-validate@5.0.10)(viem@2.18.2(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
-      identicon.js:
-        specifier: ^2.3.3
-        version: 2.3.3
-      is-empty-typed:
-        specifier: ^1.0.0
-        version: 1.0.0
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0
@@ -80,6 +74,9 @@ importers:
       react-hook-form:
         specifier: ^7.47.0
         version: 7.52.1(react@18.3.1)
+      react-icons:
+        specifier: ^5.2.1
+        version: 5.2.1(react@18.3.1)
       react-redux:
         specifier: ^8.1.3
         version: 8.1.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.24.8(@babel/core@7.24.9))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(redux@4.2.1)
@@ -4578,9 +4575,6 @@ packages:
   idb-keyval@6.2.1:
     resolution: {integrity: sha512-8Sb3veuYCyrZL+VBt9LJfZjLUPWVvqn8tG28VqYNFCo43KHcKuq+b4EiXGeuaLAQWL2YmyDgMp2aSpH9JHsEQg==}
 
-  identicon.js@2.3.3:
-    resolution: {integrity: sha512-/qgOkXKZ7YbeCYbawJ9uQQ3XJ3uBg9VDpvHjabCAPp6aRMhjLaFAxG90+1TxzrhKaj6AYpVGrx6UXQfQA41UEA==}
-
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
@@ -4691,9 +4685,6 @@ packages:
     resolution: {integrity: sha512-eljcgEDlEns/7AXFosB5K/2nCM4P7FQPkGc/DWLy5rmFEWvZayGrik1d9/QIY5nJ4f9YsVvBkA6kJpHn9rISdQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
-
-  is-empty-typed@1.0.0:
-    resolution: {integrity: sha512-hobFidvpSH/UCQFmfoJkUdtKgFMEwsd1fyj25Uip2QV5KYWnRyzi5In4OUYsJS1Cu2knpirQG/J5jh5Vp895yA==}
 
   is-extglob@2.1.1:
     resolution: {integrity: sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==}
@@ -5996,6 +5987,11 @@ packages:
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
+
+  react-icons@5.2.1:
+    resolution: {integrity: sha512-zdbW5GstTzXaVKvGSyTaBalt7HSfuK5ovrzlpyiWHAFXndXTdd/1hdDHI4xBM1Mn7YriT6aqESucFl9kEXzrdw==}
+    peerDependencies:
+      react: '*'
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -13893,8 +13889,6 @@ snapshots:
 
   idb-keyval@6.2.1: {}
 
-  identicon.js@2.3.3: {}
-
   ieee754@1.2.1: {}
 
   ignore@5.3.1: {}
@@ -13993,8 +13987,6 @@ snapshots:
   is-docker@2.2.1: {}
 
   is-docker@3.0.0: {}
-
-  is-empty-typed@1.0.0: {}
 
   is-extglob@2.1.1: {}
 
@@ -15384,6 +15376,10 @@ snapshots:
       scheduler: 0.23.2
 
   react-hook-form@7.52.1(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+
+  react-icons@5.2.1(react@18.3.1):
     dependencies:
       react: 18.3.1
 
