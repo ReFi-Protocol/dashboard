@@ -1,35 +1,29 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import NFTCard from "./NFTCard";
-
-const mockNFTs = [
-  { name: "Swipe Circles", author: "Peter Will", price: "125000 $REFI" },
-  { name: "Swipe Circles", author: "Peter Will", price: "125000 $REFI" },
-  { name: "Swipe Circles", author: "Peter Will", price: "125000 $REFI" },
-  { name: "Swipe Circles", author: "Peter Will", price: "125000 $REFI" },
-  { name: "Swipe Circles", author: "Peter Will", price: "125000 $REFI" },
-  { name: "Swipe Circles", author: "Peter Will", price: "125000 $REFI" },
-];
+import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
+import { fetchCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
+import { CANDY_MACHINE_ADDRESS } from "../../../web3/solana/const";
+import { publicKey } from "@metaplex-foundation/umi";
 
 const NFTCollectionGallery: FC = () => {
-  return (
+  const candyMachine = useCandyMachine();
+
+  return candyMachine ? (
     <div className="">
       <h3 className="font-sans text-[22px] font-semibold text-white">
         NFT Collection
       </h3>
       <p className="font-sans text-base font-medium text-white">
-        250 unique NFTs part of this project
+        {candyMachine.items.length} unique NFTs part of this project
       </p>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {mockNFTs.map((nft, index) => (
-          <NFTCard
-            key={index}
-            name={nft.name}
-            author={nft.author}
-            price={nft.price}
-          />
+        {candyMachine.items.splice(0, 12).map((item) => (
+          <NFTCard name={item.name} key={item.index} uri={item.uri} />
         ))}
       </div>
     </div>
+  ) : (
+    <div>loading...</div>
   );
 };
 

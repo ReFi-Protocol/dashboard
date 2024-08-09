@@ -5,6 +5,7 @@ import {
   some,
   isSome,
   transactionBuilder,
+  publicKey,
 } from "@metaplex-foundation/umi";
 import {
   mintV2,
@@ -13,12 +14,13 @@ import {
 } from "@metaplex-foundation/mpl-candy-machine";
 import {} from "@metaplex-foundation/umi";
 import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
+import { CANDY_MACHINE_ADDRESS } from "../const";
 
 export async function mintNftFromCandyMachine(
   umi: Umi,
-  candyMachineAddress: PublicKey,
   nftMint = generateSigner(umi),
 ) {
+  const candyMachineAddress = publicKey(CANDY_MACHINE_ADDRESS);
   const candyMachine = await fetchCandyMachine(umi, candyMachineAddress);
   const candyGuard = await fetchCandyGuard(umi, candyMachine.mintAuthority);
 
