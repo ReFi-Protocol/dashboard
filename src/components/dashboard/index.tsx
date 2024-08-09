@@ -3,6 +3,7 @@ import { MdBarChart, MdLock } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
 import Widget from "../../components/widget";
 import { FaMoneyBills } from "react-icons/fa6";
+import ExchangeRateChart from "./components/ExchangeRateChart";
 
 const DashboardContent: FC = () => {
   return (
@@ -29,7 +30,9 @@ const DashboardContent: FC = () => {
           subtitle={"20 pCRBN"}
         />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2"></div>
+      <div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2">
+        <ExchangeRateChart />
+      </div>
     </div>
   );
 };
