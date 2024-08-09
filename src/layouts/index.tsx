@@ -4,6 +4,7 @@ import Sidebar from "../components/sidebar";
 import routes from "../routes";
 import PageTitle from "../components/page-contents/PageTitle";
 import { AppRoute } from "../types";
+import NotFound from "../components/not-found";
 
 const Layout: FC = () => {
   const [currentRoute, setCurrentRoute] = useState("Dashboard");
@@ -49,6 +50,7 @@ const Layout: FC = () => {
             <Routes>
               {getRoutes(routes)}
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="*" element={<NotFound />} />{" "}
             </Routes>
           </div>
         </main>
