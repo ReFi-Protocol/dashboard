@@ -53,12 +53,15 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
                   onClick={show}
                   className="w-48 rounded-3xl bg-[#25AC88] py-2 text-xs font-medium text-white"
                 >
-                  {isConnected ? address : "Connect Wallet"}
+                  {isConnected ? address : "Connect SOL Wallet"}
                 </button>
               );
             }}
           </ConnectKitButton.Custom> */}
-          <UnifiedWalletButton buttonClassName="wallet-button" />
+          <UnifiedWalletButton
+            buttonClassName="wallet-button"
+            overrideContent="Connect SOL WALLET"
+          />
         </div>
       </div>
     </div>
