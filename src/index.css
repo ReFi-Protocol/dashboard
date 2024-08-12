@@ -22,4 +22,5 @@ body {
   font-weight: 500 !important;
   color: #000000 !important;
   min-width: fit-content;
+  text-align: center;
 }
