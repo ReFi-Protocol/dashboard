@@ -4,8 +4,101 @@ import Widget from "../../components/widget";
 import { FaMoneyBills } from "react-icons/fa6";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import { TbShieldLockFilled } from "react-icons/tb";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import { getProgram } from "../../web3/solana/staking";
+import {
+  getStakeInfo,
+  getStakeInfoAddress,
+} from "../../web3/solana/staking/util";
+import { Wallet } from "../../web3/solana/staking/types";
+import {
+  COLLECTION_MINT_PK,
+  NFT_APY,
+  SPL_MINT_PK,
+} from "../../web3/solana/const";
+import { getInitializeStakeInfoIx } from "../../web3/solana/staking/instruction/initializeStakeInfo";
+import { getLockNftIx } from "../../web3/solana/staking/instruction/lockNft";
+import { getStakeIx } from "../../web3/solana/staking/instruction/stake";
+import { getConnection } from "../../web3/solana/connection";
+import { d } from "../../web3/solana/service/d";
+import {
+  PublicKey,
+  TransactionInstruction,
+  TransactionMessage,
+  VersionedTransaction,
+} from "@solana/web3.js";
 
 const StakingContent: FC = () => {
+  const wallet = useAnchorWallet();
+
+  async function stake(
+    wallet: Wallet,
+    amount: number,
+    nftInfo?: {
+      lockPeriod: keyof typeof NFT_APY;
+      mint: PublicKey;
+    },
+  ) {
+    const connection = getConnection();
+    const program = getProgram(wallet);
+    const stakeInfo = await getStakeInfo(wallet, program);
+
+    const dAmount = d(amount);
+    const stakeIndex = stakeInfo ? stakeInfo.stakes.length : 0;
+
+    const initializeStakeIx = await getInitializeStakeInfoIx({
+      accounts: {
+        signer: wallet.publicKey,
+        stakeInfo: getStakeInfoAddress(wallet.publicKey, program.programId),
+      },
+      program,
+    });
+
+    const stakeIx = await getStakeIx({
+      args: { dAmount },
+      accounts: {
+        signer: wallet.publicKey,
+        mint: SPL_MINT_PK,
+      },
+      program,
+    });
+
+    const instructions: TransactionInstruction[] = stakeInfo
+      ? []
+      : [initializeStakeIx];
+
+    instructions.push(stakeIx);
+
+    if (nftInfo) {
+      instructions.push(
+        await getLockNftIx({
+          args: { stakeIndex, lockPeriod: nftInfo.lockPeriod },
+          accounts: {
+            signer: wallet.publicKey,
+            mint: nftInfo.mint,
+          },
+          program,
+        }),
+      );
+    }
+
+    const { blockhash } = await connection.getLatestBlockhash();
+
+    const messageV0 = new TransactionMessage({
+      payerKey: wallet.publicKey,
+      recentBlockhash: blockhash,
+      instructions,
+    }).compileToV0Message();
+
+    const transactionV0 = new VersionedTransaction(messageV0);
+
+    // Simulate the versioned transaction
+    const simulateResult = await connection.simulateTransaction(transactionV0);
+
+    // Print the simulation result
+    console.log("Simulation Result:", simulateResult);
+  }
+
   return (
     <div className="flex flex-col gap-12 text-white">
       <div
@@ -84,6 +177,7 @@ const StakingContent: FC = () => {
         <h3 className="mb-4 font-sans text-xl font-semibold text-white">
           My Stakes & Rewards
         </h3>
+        {wallet && <button onClick={() => stake(wallet, 500_00)}>stake</button>}
       </div>
     </div>
   );

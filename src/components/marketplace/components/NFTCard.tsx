@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import { useUmi } from "../../../web3/solana/hook";
-import { mintNftFromCandyMachine } from "../../../web3/solana/service/create-nft";
+import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
 import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { publicKey, Umi } from "@metaplex-foundation/umi";
 import { NFTMetadata } from "../../../types";
 import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
-import { fetchMetadata } from "../../../web3/solana/service/fetch-metadata";
+import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 
 interface NFTCardProps {
   uri: string;
