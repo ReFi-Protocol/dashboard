@@ -9,7 +9,12 @@ const mockData = [
   { value: "0.56", name: "Floor price" },
 ];
 
-const tabOptions = ["NFT Collection", "About the project", "Highlights"];
+const tabOptions = [
+  "NFT Collection",
+  "About the project",
+  "Highlights",
+  "My NFTs",
+];
 
 const MarketplaceContent: FC = () => {
   const [activeTab, setActiveTab] = useState<string>("NFT Collection");
