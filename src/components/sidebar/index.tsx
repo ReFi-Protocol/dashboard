@@ -58,7 +58,10 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
               );
             }}
           </ConnectKitButton.Custom> */}
-          <UnifiedWalletButton buttonClassName="wallet-button" />
+          <UnifiedWalletButton
+            buttonClassName="wallet-button"
+            overrideContent="Connect SOL WALLET"
+          />
         </div>
       </div>
     </div>

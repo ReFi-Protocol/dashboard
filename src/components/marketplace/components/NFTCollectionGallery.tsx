@@ -6,13 +6,37 @@ import { CANDY_MACHINE_ADDRESS } from "../../../web3/solana/const";
 import { publicKey } from "@metaplex-foundation/umi";
 import { Button, Image } from "@chakra-ui/react";
 import NFTModal from "./NFTModal";
+import { mintNftFromCandyMachine } from "../../../web3/solana/service/create-nft";
+import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Umi } from "@metaplex-foundation/umi";
+import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
+import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
+import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 
 const NFTCollectionGallery: FC = () => {
   const candyMachine = useCandyMachine();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [nftInfo, setNftInfo] = useState(null);
+
+  const wallet = useWallet();
+  const umi = useUmi(wallet);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+
+  const buyNft = async (umi: Umi) => {
+    try {
+      const mint = await mintNftFromCandyMachine(umi);
+      const digitalAsset = await fetchDigitalAsset(umi, mint);
+      const metadata = await fetchMetadata(digitalAsset.metadata.uri);
+
+      setNftInfo(metadata);
+      openModal();
+    } catch (error) {
+      console.error("Error purchasing NFT:", error);
+    }
+  };
 
   return candyMachine ? (
     <div>
@@ -24,30 +48,37 @@ const NFTCollectionGallery: FC = () => {
             forest until the end of the Ownership Duration (OD). After the OD,
             the pCRBN remains in your wallet as a collectible
           </p>
-          <Button
-            variant="brand"
-            onClick={openModal}
-            className="inset-y-0 min-w-fit flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
-          >
-            Buy NFT for 125000 $REFI
-          </Button>
+          {wallet.publicKey ? (
+            <Button
+              variant="brand"
+              onClick={() => buyNft(umi)}
+              className="inset-y-0 min-w-fit flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
+            >
+              Buy NFT for 125000 $REFI
+            </Button>
+          ) : (
+            <UnifiedWalletButton
+              buttonClassName="wallet-button"
+              overrideContent="Connect SOL WALLET"
+            />
+          )}
         </div>
         <div className="max-w-1/2 relative w-[538px]">
           <div className="flex min-h-[300px]  items-center">
             <Image
               src="./images/1.webp"
-              className=" h-[230px] w-[230px] rounded-[27px]"
+              className="h-[230px] w-[230px] rounded-[27px]"
               alt="First NFT Example"
             />
             <Image
               src="./images/5.webp"
-              className=" h-[230px] w-[230px]  rounded-[27px]"
+              className="h-[230px] w-[230px] rounded-[27px]"
               alt="Third NFT Example"
             />
           </div>
           <Image
             src="./images/3.webp"
-            className="absolute left-[45%] top-1/2 z-20 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 transform rounded-[27px]"
+            className="z-1 absolute left-[45%] top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 transform rounded-[27px]"
             alt="Second NFT Example"
           />
         </div>
@@ -68,7 +99,7 @@ const NFTCollectionGallery: FC = () => {
           />
         ))}
       </div>
-      <NFTModal isOpen={isModalOpen} onClose={closeModal} />
+      <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} />
     </div>
   ) : (
     <div>loading...</div>

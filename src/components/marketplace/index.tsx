@@ -2,7 +2,7 @@ import { useState, FC } from "react";
 import TabContent from "./components/TabContent";
 
 const mockData = [
-  { value: "250", name: "NFTs" },
+  { value: "50", name: "NFTs" },
   { value: "110%", name: "Maximum APY" },
   { value: "125000 $REFI", name: "Starting from" },
   { value: "0.56", name: "Floor price" },
@@ -29,14 +29,7 @@ const MarketplaceContent: FC = () => {
           height: "292px",
         }}
       >
-        <div
-          className="absolute inset-0 rounded-[30px] bg-[#000000] opacity-40"
-          style={{ zIndex: 1 }}
-        ></div>
-        <div
-          className="relative flex flex-col gap-1 lg:max-w-[40%]"
-          style={{ zIndex: 2 }}
-        >
+        <div className="relative flex flex-col gap-1 lg:max-w-[40%]">
           <h3 className="font-sans text-[28px] text-lg font-extrabold text-white">
             Peyrat-de-Bellac Forest
           </h3>
@@ -55,7 +48,6 @@ const MarketplaceContent: FC = () => {
             backgroundPosition: "center",
             border: "11px solid black",
             borderRadius: "50%",
-            zIndex: 2,
           }}
         ></div>
       </div>

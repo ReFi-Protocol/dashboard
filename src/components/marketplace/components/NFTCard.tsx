@@ -13,9 +13,8 @@ interface NFTCardProps {
 }
 
 const NFTCard: FC<NFTCardProps> = ({ uri, name }) => {
-  const wallet = useWallet();
-  const umi = useUmi(wallet);
   const [metadata, setMetadata] = useState<NFTMetadata>();
+  const wallet = useWallet();
 
   useEffect(() => {
     fetch(uri).then((response) => {
@@ -24,12 +23,6 @@ const NFTCard: FC<NFTCardProps> = ({ uri, name }) => {
       });
     });
   }, []);
-
-  // const buyNft = async (umi: Umi) => {
-  //   const mint = await mintNftFromCandyMachine(umi);
-
-  //   alert(mint.toString());
-  // };
 
   return (
     <div className="flex flex-col items-start rounded-[20px] bg-[#061A11] p-5">
@@ -40,10 +33,9 @@ const NFTCard: FC<NFTCardProps> = ({ uri, name }) => {
       <div className="flex w-full flex-col gap-5 pl-2.5">
         <div className="flex items-center justify-between">
           <span className="text-sm font-bold text-white">{name}</span>
-          {wallet.publicKey && umi ? (
+          {wallet.publicKey ? (
             <button
-              // onClick={() => buyNft(umi)}
-              onClick={onClick}
+              onClick={() => console.log("Learn more")}
               className="rounded-full bg-none px-10 py-[2px] font-bold text-white hover:bg-none hover:underline"
             >
               Learn more

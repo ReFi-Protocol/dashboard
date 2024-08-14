@@ -134,10 +134,7 @@ const StakingContent: FC = () => {
         metricsWidgets={globalMetricsWidgets}
         title="Global Metrics"
       />
-      <MetricsSection
-        metricsWidgets={userMetricsWidgets}
-        title="User Metrics"
-      />
+      <MetricsSection metricsWidgets={userMetricsWidgets} title="My Metrics" />
       <StakingPools
         stakingPoolData={stakingPoolData}
         selectedPoolIndex={selectedPoolIndex}
