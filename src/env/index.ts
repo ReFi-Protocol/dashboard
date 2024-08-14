@@ -16,7 +16,6 @@ const envSchema = z.object({
   VITE_SOLANA_SPL: z.string(),
   VITE_SOLANA_COLLECTION: z.string(),
   VITE_SOLANA_SPL_DECIMALS: z.number({ coerce: true }),
-  VITE_COIN_GECKO_API_KEY: z.string(),
 });
 
 let env: z.infer<typeof envSchema>;
