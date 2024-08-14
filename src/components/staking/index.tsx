@@ -34,7 +34,6 @@ const StakingContent: FC = () => {
 
   async function test(wallet: Wallet, umi: Umi) {
     const refiNfts = await getReFiNfts(umi, wallet.publicKey);
-
     await stake(wallet, 500_00, {
       mint: new PublicKey(refiNfts[0].publicKey),
       lockPeriod: 90,

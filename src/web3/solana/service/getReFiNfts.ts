@@ -10,7 +10,6 @@ import { COLLECTION_MINT_ADDRESS } from "../const";
 export async function getReFiNfts(umi: Umi, address: PublicKey) {
   const nftMints = await getNftMints(address);
   const nfts = await fetchAllDigitalAsset(umi, nftMints);
-
   return nfts.reduce<DigitalAsset[]>((acc, curr) => {
     if (
       curr.metadata.collection.__option === "Some" &&
@@ -18,7 +17,6 @@ export async function getReFiNfts(umi: Umi, address: PublicKey) {
     ) {
       acc.push(curr);
     }
-
     return acc;
   }, []);
 }
