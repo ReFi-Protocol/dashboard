@@ -1,4 +1,5 @@
 import { PublicKey, Transaction, VersionedTransaction } from "@solana/web3.js";
+import { getStakes } from "../service/getStakes";
 
 export interface Wallet {
   signTransaction<T extends Transaction | VersionedTransaction>(
@@ -9,3 +10,5 @@ export interface Wallet {
   ): Promise<T[]>;
   publicKey: PublicKey;
 }
+
+export type Stake = Awaited<ReturnType<typeof getStakes>>[number];

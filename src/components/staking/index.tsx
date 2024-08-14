@@ -18,6 +18,7 @@ import { getStakeIx } from "../../web3/solana/staking/instruction/stake";
 import { getConnection } from "../../web3/solana/connection";
 import { d } from "../../web3/solana/service/d";
 import {
+  Connection,
   PublicKey,
   TransactionInstruction,
   TransactionMessage,
@@ -34,6 +35,7 @@ const StakingContent: FC = () => {
 
   async function test(wallet: Wallet, umi: Umi) {
     const refiNfts = await getReFiNfts(umi, wallet.publicKey);
+
     await stake(wallet, 500_00, {
       mint: new PublicKey(refiNfts[0].publicKey),
       lockPeriod: 90,
@@ -106,6 +108,17 @@ const StakingContent: FC = () => {
 
     // Print the simulation result
     console.log("Simulation Result:", simulateResult);
+
+    const hash = await sendTransaction(transactionV0, connection);
+
+    console.log(hash);
+  }
+
+  async function sendTransaction(
+    tx: VersionedTransaction,
+    connection: Connection,
+  ): Promise<string> {
+    return wallet.sendTransaction(tx, connection);
   }
 
   return (
