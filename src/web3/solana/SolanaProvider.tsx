@@ -98,7 +98,7 @@ export const SolanaProvider = ({ children }: { children: React.ReactNode }) => {
       wallets={wallets}
       config={{
         theme: "dark",
-        autoConnect: false,
+        autoConnect: true,
         env: CLUSTER,
         metadata: {
           name: "Dashboard",
