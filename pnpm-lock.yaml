@@ -89,6 +89,9 @@ importers:
       async-mutex:
         specifier: ^0.4.0
         version: 0.4.1
+      big.js:
+        specifier: ^6.2.1
+        version: 6.2.1
       classnames:
         specifier: ^2.3.2
         version: 2.5.1
@@ -141,6 +144,9 @@ importers:
       '@tailwindcss/forms':
         specifier: ^0.5.6
         version: 0.5.7(tailwindcss@3.4.7)
+      '@types/big.js':
+        specifier: ^6.2.2
+        version: 6.2.2
       '@types/identicon.js':
         specifier: ^2.3.4
         version: 2.3.4
@@ -3356,6 +3362,9 @@ packages:
   '@types/babel__traverse@7.20.6':
     resolution: {integrity: sha512-r1bzfrm0tomOI8g1SzvCaQHo6Lcv6zu0EA+W2kHrt8dyrHQxGzBBL4kdkzIS+jBMV+EYcMAEAqXqYaLJq5rOZg==}
 
+  '@types/big.js@6.2.2':
+    resolution: {integrity: sha512-e2cOW9YlVzFY2iScnGBBkplKsrn2CsObHQ2Hiw4V1sSyiGbgWL8IyqE3zFi1Pt5o1pdAtYkDAIsF3KKUPjdzaA==}
+
   '@types/bn.js@4.11.6':
     resolution: {integrity: sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==}
 
@@ -4134,6 +4143,9 @@ packages:
   big-integer@1.6.52:
     resolution: {integrity: sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg==}
     engines: {node: '>=0.6'}
+
+  big.js@6.2.1:
+    resolution: {integrity: sha512-bCtHMwL9LeDIozFn+oNhhFoq+yQ3BNdnsLSASUxLciOb1vgvpHsIO1dsENiGMgbb4SkP5TrzWzRiLddn8ahVOQ==}
 
   bigint-buffer@1.1.5:
     resolution: {integrity: sha512-trfYco6AoZ+rKhKnxA0hgX0HAbVP/s808/EuDSe2JDzUnCp/xAsli35Orvk67UrTEcwuxZqYZDmfA2RXJgxVvA==}
@@ -12965,6 +12977,8 @@ snapshots:
     dependencies:
       '@babel/types': 7.24.9
 
+  '@types/big.js@6.2.2': {}
+
   '@types/bn.js@4.11.6':
     dependencies:
       '@types/node': 22.2.0
@@ -14426,6 +14440,8 @@ snapshots:
   big-integer@1.6.36: {}
 
   big-integer@1.6.52: {}
+
+  big.js@6.2.1: {}
 
   bigint-buffer@1.1.5:
     dependencies:
