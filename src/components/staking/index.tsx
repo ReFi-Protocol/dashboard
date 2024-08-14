@@ -4,18 +4,14 @@ import Widget from "../../components/widget";
 import { FaMoneyBills } from "react-icons/fa6";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import { TbShieldLockFilled } from "react-icons/tb";
-import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { getProgram } from "../../web3/solana/staking";
 import {
   getStakeInfo,
   getStakeInfoAddress,
 } from "../../web3/solana/staking/util";
 import { Wallet } from "../../web3/solana/staking/types";
-import {
-  COLLECTION_MINT_PK,
-  NFT_APY,
-  SPL_MINT_PK,
-} from "../../web3/solana/const";
+import { NFT_APY, SPL_MINT_PK } from "../../web3/solana/const";
 import { getInitializeStakeInfoIx } from "../../web3/solana/staking/instruction/initializeStakeInfo";
 import { getLockNftIx } from "../../web3/solana/staking/instruction/lockNft";
 import { getStakeIx } from "../../web3/solana/staking/instruction/stake";
@@ -27,9 +23,23 @@ import {
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
+import { useUmi } from "../../web3/solana/hook";
+import { Umi } from "@metaplex-foundation/umi";
+import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 
 const StakingContent: FC = () => {
-  const wallet = useAnchorWallet();
+  const anchorWallet = useAnchorWallet();
+  const wallet = useWallet();
+  const umi = useUmi(wallet);
+
+  async function test(wallet: Wallet, umi: Umi) {
+    const refiNfts = await getReFiNfts(umi, wallet.publicKey);
+
+    await stake(wallet, 500_00, {
+      mint: new PublicKey(refiNfts[0].publicKey),
+      lockPeriod: 90,
+    });
+  }
 
   async function stake(
     wallet: Wallet,
@@ -44,7 +54,7 @@ const StakingContent: FC = () => {
     const stakeInfo = await getStakeInfo(wallet, program);
 
     const dAmount = d(amount);
-    const stakeIndex = stakeInfo ? stakeInfo.stakes.length : 0;
+    const stakeIndex = stakeInfo?.stakes.length || 0;
 
     const initializeStakeIx = await getInitializeStakeInfoIx({
       accounts: {
@@ -177,7 +187,9 @@ const StakingContent: FC = () => {
         <h3 className="mb-4 font-sans text-xl font-semibold text-white">
           My Stakes & Rewards
         </h3>
-        {wallet && <button onClick={() => stake(wallet, 500_00)}>stake</button>}
+        {anchorWallet && umi && (
+          <button onClick={() => test(anchorWallet, umi)}>stake</button>
+        )}
       </div>
     </div>
   );
