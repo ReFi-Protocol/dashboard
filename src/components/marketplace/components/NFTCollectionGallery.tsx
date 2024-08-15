@@ -13,28 +13,40 @@ import { Umi } from "@metaplex-foundation/umi";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
+import RevealNFTModal from "./RevealNFTModal";
 
 const NFTCollectionGallery: FC = () => {
   const candyMachine = useCandyMachine();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isRevealModalOpen, setRevealModalOpen] = useState(false);
   const [nftInfo, setNftInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const wallet = useWallet();
   const umi = useUmi(wallet);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+  const openRevealModal = () => setRevealModalOpen(true);
+  const closeRevealModal = () => setRevealModalOpen(false);
 
   const buyNft = async (umi: Umi) => {
+    setIsLoading(true);
+    openRevealModal();
+
     try {
       const mint = await mintNftFromCandyMachine(umi);
       const digitalAsset = await fetchDigitalAsset(umi, mint);
       const metadata = await fetchMetadata(digitalAsset.metadata.uri);
 
       setNftInfo(metadata);
+      closeRevealModal();
       openModal();
     } catch (error) {
       console.error("Error purchasing NFT:", error);
+      closeRevealModal();
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,10 +60,12 @@ const NFTCollectionGallery: FC = () => {
             forest until the end of the Ownership Duration (OD). After the OD,
             the pCRBN remains in your wallet as a collectible
           </p>
-          {wallet.publicKey ? (
+          {wallet.publicKey && umi ? (
             <Button
               variant="brand"
               onClick={() => buyNft(umi)}
+              isLoading={isLoading}
+              loadingText="Revealing NFT..."
               className="inset-y-0 min-w-fit flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
             >
               Buy NFT for 125000 $REFI
@@ -99,7 +113,10 @@ const NFTCollectionGallery: FC = () => {
           />
         ))}
       </div>
-      <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} />
+      <RevealNFTModal isOpen={isRevealModalOpen} onClose={closeRevealModal} />
+      {nftInfo && (
+        <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} />
+      )}
     </div>
   ) : (
     <div>loading...</div>
