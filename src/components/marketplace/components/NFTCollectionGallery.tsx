@@ -15,12 +15,15 @@ import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import RevealNFTModal from "./RevealNFTModal";
 
+const ITEMS_PER_PAGE = 12;
+
 const NFTCollectionGallery: FC = () => {
   const candyMachine = useCandyMachine();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isRevealModalOpen, setRevealModalOpen] = useState(false);
   const [nftInfo, setNftInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const wallet = useWallet();
   const umi = useUmi(wallet);
@@ -49,6 +52,14 @@ const NFTCollectionGallery: FC = () => {
       setIsLoading(false);
     }
   };
+
+  const handleLoadMore = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const paginatedItems = candyMachine
+    ? candyMachine.items.slice(0, currentPage * ITEMS_PER_PAGE)
+    : [];
 
   return candyMachine ? (
     <div>
@@ -104,7 +115,7 @@ const NFTCollectionGallery: FC = () => {
         {candyMachine.items.length} unique NFTs part of this project
       </p>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {candyMachine.items.splice(0, 12).map((item) => (
+        {paginatedItems.map((item) => (
           <NFTCard
             name={item.name}
             key={item.index}
@@ -113,6 +124,17 @@ const NFTCollectionGallery: FC = () => {
           />
         ))}
       </div>
+      {paginatedItems.length < candyMachine.items.length && (
+        <div className="flex justify-center">
+          <Button
+            onClick={handleLoadMore}
+            variant="brand"
+            className="inset-y-0 mt-8 w-full max-w-40 flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
+          >
+            View More
+          </Button>
+        </div>
+      )}
       <RevealNFTModal isOpen={isRevealModalOpen} onClose={closeRevealModal} />
       {nftInfo && (
         <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} />
