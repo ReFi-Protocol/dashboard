@@ -1,8 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { MdBarChart, MdLock } from "react-icons/md";
-import { IoLocationSharp } from "react-icons/io5";
 import MetricsSection from "../MetricSection";
-import { FaMoneyBills } from "react-icons/fa6";
+import { LockIcon, ConfettiIcon, SumIcon } from "../icons";
 import ExchangeRateChart from "./components/ExchangeRateChart";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { useUmi } from "../../web3/solana/hook";
@@ -48,33 +46,30 @@ const DashboardContent: FC = () => {
 
   const metricsWidgets: WidgetData[] = [
     {
-      icon: <MdBarChart className="h-7 w-7" />,
+      icon: <SumIcon width={28} height={28} fill="white" />,
       title: "Total Owned",
       subtitle: `${formatReFi(totalReFi)} $REFI`,
     },
     {
-      icon: <MdLock className="h-6 w-6" />,
+      icon: <LockIcon width={28} height={28} fill="white" />,
       title: "Locked in Staking",
       subtitle: `${formatReFi(lockedReFi)} $REFI`,
     },
     {
-      icon: <FaMoneyBills className="h-7 w-7" />,
+      icon: <ConfettiIcon width={28} height={28} fill="white" />,
       title: "Expected Rewards",
       subtitle: `${formatReFi(expectedReward)} $REFI`,
     },
     {
-      icon: <IoLocationSharp className="h-6 w-6" />,
-      title: "Owned/Staked pCRBN",
+      icon: <LockIcon width={28} height={28} fill="white" />,
+      title: "Owned/Locked pCRBN",
       subtitle: `${myNfts.length + lockedNftCount} pCRBN`,
     },
   ];
 
   return (
     <div>
-      <MetricsSection
-        title="Metrics Overview"
-        metricsWidgets={metricsWidgets}
-      />
+      <MetricsSection title="My Metrics" metricsWidgets={metricsWidgets} />
       <div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2">
         <ExchangeRateChart />
       </div>

@@ -77,6 +77,11 @@ const userMetricsWidgets: WidgetData[] = [
     title: "Expected Rewards",
     subtitle: "540 $REFI",
   },
+  {
+    icon: <LockIcon width={28} height={28} fill="white" />,
+    title: "Owned/Locked pCRBN",
+    subtitle: `22 pCRBN`,
+  },
 ];
 
 const stakingPoolData: StakingPoolData[] = [
