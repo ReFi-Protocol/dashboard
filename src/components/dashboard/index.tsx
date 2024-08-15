@@ -16,6 +16,7 @@ import { formatReFi } from "../../web3/solana/staking/util";
 import { getExpectedReward } from "../../web3/solana/staking/service/getExpectedReward";
 import { getLockedNftCount } from "../../web3/solana/staking/service/getLockedNftCount";
 import GrowthChart from "./components/GrowthChart";
+import { fetchHistoricalPrice } from "../../service";
 
 const DashboardContent: FC = () => {
   const anchorWallet = useAnchorWallet();
@@ -23,6 +24,8 @@ const DashboardContent: FC = () => {
   const umi = useUmi(wallet);
   const [stakes, setStakes] = useState<Stake[]>([]);
   const [myNfts, setMyNfts] = useState<DigitalAsset[]>([]);
+  const [prices, setPrices] = useState<[number, number][]>([]);
+  const currentPrice = prices[prices.length - 1]?.[1] || 0;
 
   const lockedReFi = getLockedReFi(stakes);
   const expectedReward = getExpectedReward(stakes);
@@ -49,6 +52,10 @@ const DashboardContent: FC = () => {
     }
   }, [anchorWallet]);
 
+  useEffect(() => {
+    fetchHistoricalPrice().then(setPrices);
+  }, []);
+
   return (
     <div>
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 3xl:grid-cols-4">
@@ -74,7 +81,7 @@ const DashboardContent: FC = () => {
         />
       </div>
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2">
-        <ExchangeRateChart />
+        <ExchangeRateChart prices={prices} currentPrice={currentPrice} />
         <GrowthChart stakes={stakes} />
       </div>
     </div>

@@ -3,23 +3,24 @@ import Card from "../../card";
 import LineChart from "../../charts/LineChart";
 import { FaChartLine } from "react-icons/fa6";
 import { createLineChartConfig } from "../../../service";
+import { format } from "date-fns";
 
-const data = [50, 64, 48, 66, 49, 68, 71, 70];
-const categories = [
-  "Jul 10",
-  "Jul 11",
-  "Jul 12",
-  "Jul 13",
-  "Jul 14",
-  "Jul 15",
-  "Jul 16",
-  "Jul 17",
-];
+type ExchangeRateChartProps = {
+  prices: [number, number][];
+  currentPrice: number;
+};
 
-const ExchangeRateChart: React.FC = () => {
-  const { series, options } = createLineChartConfig(data, categories, {
-    name: "Exchange rate",
-  });
+const ExchangeRateChart: React.FC<ExchangeRateChartProps> = ({
+  prices,
+  currentPrice,
+}) => {
+  const { series, options } = createLineChartConfig(
+    prices.map((price) => price[1]),
+    prices.map((price) => format(price[0], "MMM dd")),
+    {
+      name: "Exchange rate",
+    },
+  );
 
   return (
     <Card extra="!p-5 text-center">
@@ -31,7 +32,7 @@ const ExchangeRateChart: React.FC = () => {
           <div className="flex items-center gap-2.5 text-white">
             <FaChartLine className="h-4 w-4" />
             <span className="font-sans text-sm font-semibold text-white">
-              1 REFI = 1 USD
+              {`1 ReFi = ${currentPrice} USD`}
             </span>
           </div>
         </div>

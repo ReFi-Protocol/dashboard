@@ -3,7 +3,7 @@ import Card from "../../card";
 import LineChart from "../../charts/LineChart";
 import { Stake } from "../../../web3/solana/staking/types";
 import { createLineChartConfig } from "../../../service";
-import { addDays, eachDayOfInterval, format, fromUnixTime } from "date-fns";
+import { eachDayOfInterval, format, fromUnixTime } from "date-fns";
 import { BN } from "@coral-xyz/anchor";
 import { calculateClaimableReward } from "../../../web3/solana/staking/util";
 import { SPL_DECIMALS } from "../../../web3/solana/const";

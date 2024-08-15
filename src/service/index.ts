@@ -84,3 +84,28 @@ export function createLineChartConfig(
 
   return { series, options };
 }
+
+export function fetchHistoricalPrice(): Promise<[number, number][]> {
+  return fetchFromCoinGecko(
+    "coins/refi-protocol/market_chart?vs_currency=usd&days=360&precision=7",
+  ).then((data) => data.prices);
+}
+export function fetchPrice() {
+  return fetchFromCoinGecko("coins/refi-protocol/tickers");
+}
+
+function fetchFromCoinGecko(path: string) {
+  const baseApiUrl = "https://api.coingecko.com/api/v3";
+
+  const url = `${baseApiUrl}/${path}`;
+
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      "x-cg-demo-api-key": "CG-DuiZWUEaAQfvPjcqDiHycdXq",
+    },
+  };
+
+  return fetch(url, options).then((res) => res.json());
+}
