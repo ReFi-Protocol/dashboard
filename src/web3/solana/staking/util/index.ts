@@ -41,8 +41,11 @@ export function formatReFi(lamports: number) {
   });
 }
 
-export function calculateClaimableReward(stake: Stake) {
-  const currentTimestamp = Math.floor(Date.now() / 1000);
+export function calculateClaimableReward(
+  stake: Stake,
+  onDate: number = Date.now(),
+) {
+  const currentTimestamp = Math.floor(onDate / 1000);
   const startTimestamp = stake.startTime.toNumber();
   const daysPassed = Math.floor(
     (currentTimestamp - startTimestamp) / ONE_DAY_SECONDS,
@@ -70,7 +73,7 @@ export function calculateClaimableReward(stake: Stake) {
     stake.maxNftRewardLamports.toNumber(),
   );
 
-  return annualBaseReward + limitedAnnualNftReward;
+  return Math.max(annualBaseReward + limitedAnnualNftReward, 0);
 }
 
 export const calculateReward = (

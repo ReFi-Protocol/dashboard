@@ -1,13 +1,26 @@
 import React from "react";
-import {
-  lineChartDataTotalSpent,
-  lineChartOptionsTotalSpent,
-} from "../../../variables/charts";
 import Card from "../../card";
 import LineChart from "../../charts/LineChart";
 import { FaChartLine } from "react-icons/fa6";
+import { createLineChartConfig } from "../../../service";
+
+const data = [50, 64, 48, 66, 49, 68, 71, 70];
+const categories = [
+  "Jul 10",
+  "Jul 11",
+  "Jul 12",
+  "Jul 13",
+  "Jul 14",
+  "Jul 15",
+  "Jul 16",
+  "Jul 17",
+];
 
 const ExchangeRateChart: React.FC = () => {
+  const { series, options } = createLineChartConfig(data, categories, {
+    name: "Exchange rate",
+  });
+
   return (
     <Card extra="!p-5 text-center">
       <div className="flex justify-between">
@@ -38,12 +51,7 @@ const ExchangeRateChart: React.FC = () => {
       </div>
       <div className="mt-10 flex h-full w-full sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden">
         <div className="h-full w-full">
-          {" "}
-          {/* Контейнер для графика с шириной 100% */}
-          <LineChart
-            options={lineChartOptionsTotalSpent}
-            series={lineChartDataTotalSpent}
-          />
+          <LineChart options={options} series={series} />
         </div>
       </div>
     </Card>
