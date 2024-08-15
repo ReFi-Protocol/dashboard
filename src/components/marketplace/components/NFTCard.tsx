@@ -1,10 +1,7 @@
 import { FC, useEffect, useState } from "react";
-import { useUmi } from "../../../web3/solana/hook";
-import { mintNftFromCandyMachine } from "../../../web3/solana/service/create-nft";
-import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { Umi } from "@metaplex-foundation/umi";
 import { NFTMetadata } from "../../../types";
+import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 
 interface NFTCardProps {
   uri: string;
@@ -17,11 +14,7 @@ const NFTCard: FC<NFTCardProps> = ({ uri, name }) => {
   const wallet = useWallet();
 
   useEffect(() => {
-    fetch(uri).then((response) => {
-      response.json().then((json) => {
-        setMetadata(json);
-      });
-    });
+    fetchMetadata(uri).then(setMetadata);
   }, []);
 
   return (

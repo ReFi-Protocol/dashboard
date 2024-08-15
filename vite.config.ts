@@ -23,11 +23,17 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      crypto: "crypto-browserify",
       stream: "stream-browserify",
     },
   },
   optimizeDeps: {
-    include: ["@project-serum/anchor", "@solana/web3.js", "buffer"],
+    include: [
+      "@project-serum/anchor",
+      "@solana/web3.js",
+      "buffer",
+      "crypto-browserify",
+    ],
     esbuildOptions: {
       target: "esnext",
       define: {

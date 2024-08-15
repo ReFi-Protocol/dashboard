@@ -13,6 +13,9 @@ const envSchema = z.object({
   VITE_SOLANA_RPC_URL: z.string(),
   VITE_SOLANA_CLUSTER: z.enum(SUPPORTED_CLUSTERS),
   VITE_SOLANA_CANDY_MACHINE: z.string(),
+  VITE_SOLANA_SPL: z.string(),
+  VITE_SOLANA_COLLECTION: z.string(),
+  VITE_SOLANA_SPL_DECIMALS: z.number({ coerce: true }),
 });
 
 let env: z.infer<typeof envSchema>;

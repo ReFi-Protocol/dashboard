@@ -6,7 +6,7 @@ import { CANDY_MACHINE_ADDRESS } from "../../../web3/solana/const";
 import { publicKey } from "@metaplex-foundation/umi";
 import { Button, Image } from "@chakra-ui/react";
 import NFTModal from "./NFTModal";
-import { mintNftFromCandyMachine } from "../../../web3/solana/service/create-nft";
+import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
 import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Umi } from "@metaplex-foundation/umi";

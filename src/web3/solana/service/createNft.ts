@@ -6,6 +6,7 @@ import {
   isSome,
   transactionBuilder,
   publicKey,
+  TransactionBuilderSendAndConfirmOptions,
 } from "@metaplex-foundation/umi";
 import {
   mintV2,
@@ -23,6 +24,10 @@ export async function mintNftFromCandyMachine(
   const candyMachineAddress = publicKey(CANDY_MACHINE_ADDRESS);
   const candyMachine = await fetchCandyMachine(umi, candyMachineAddress);
   const candyGuard = await fetchCandyGuard(umi, candyMachine.mintAuthority);
+
+  const sendAndConfirmOptions: TransactionBuilderSendAndConfirmOptions = {
+    confirm: { commitment: "finalized" },
+  };
 
   await transactionBuilder()
     .add(setComputeUnitLimit(umi, { units: 800_000 }))
@@ -48,7 +53,7 @@ export async function mintNftFromCandyMachine(
         },
       }),
     )
-    .sendAndConfirm(umi);
+    .sendAndConfirm(umi, sendAndConfirmOptions);
 
   return nftMint.publicKey;
 }
