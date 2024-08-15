@@ -1,13 +1,27 @@
 import React from "react";
-import {
-  lineChartDataTotalSpent,
-  lineChartOptionsTotalSpent,
-} from "../../../variables/charts";
 import Card from "../../card";
 import LineChart from "../../charts/LineChart";
 import { FaChartLine } from "react-icons/fa6";
+import { createLineChartConfig } from "../../../service";
+import { format } from "date-fns";
 
-const ExchangeRateChart: React.FC = () => {
+type ExchangeRateChartProps = {
+  prices: [number, number][];
+  currentPrice: number;
+};
+
+const ExchangeRateChart: React.FC<ExchangeRateChartProps> = ({
+  prices,
+  currentPrice,
+}) => {
+  const { series, options } = createLineChartConfig(
+    prices.map((price) => price[1]),
+    prices.map((price) => format(price[0], "MMM dd")),
+    {
+      name: "Exchange rate",
+    },
+  );
+
   return (
     <Card extra="!p-5 text-center">
       <div className="flex justify-between">
@@ -18,7 +32,7 @@ const ExchangeRateChart: React.FC = () => {
           <div className="flex items-center gap-2.5 text-white">
             <FaChartLine className="h-4 w-4" />
             <span className="font-sans text-sm font-semibold text-white">
-              1 REFI = 1 USD
+              {`1 ReFi = ${currentPrice} USD`}
             </span>
           </div>
         </div>
@@ -38,12 +52,7 @@ const ExchangeRateChart: React.FC = () => {
       </div>
       <div className="mt-10 flex h-full w-full sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden">
         <div className="h-full w-full">
-          {" "}
-          {/* Контейнер для графика с шириной 100% */}
-          <LineChart
-            options={lineChartOptionsTotalSpent}
-            series={lineChartDataTotalSpent}
-          />
+          <LineChart options={options} series={series} />
         </div>
       </div>
     </Card>

@@ -14,6 +14,8 @@ import { formatReFi } from "../../web3/solana/staking/util";
 import { getExpectedReward } from "../../web3/solana/staking/service/getExpectedReward";
 import { getLockedNftCount } from "../../web3/solana/staking/service/getLockedNftCount";
 import { WidgetData } from "../../types";
+import GrowthChart from "./components/GrowthChart";
+import { fetchHistoricalPrice } from "../../service";
 
 const DashboardContent: FC = () => {
   const anchorWallet = useAnchorWallet();
@@ -21,14 +23,19 @@ const DashboardContent: FC = () => {
   const umi = useUmi(wallet);
   const [stakes, setStakes] = useState<Stake[]>([]);
   const [myNfts, setMyNfts] = useState<DigitalAsset[]>([]);
+  const [prices, setPrices] = useState<[number, number][]>([]);
+  const currentPrice = prices[prices.length - 1]?.[1] || 0;
+
   const lockedReFi = getLockedReFi(stakes);
   const expectedReward = getExpectedReward(stakes);
   const lockedNftCount = getLockedNftCount(stakes);
   const [totalReFi, setTotalReFi] = useState(0);
 
   useEffect(() => {
-    if (anchorWallet && umi) {
-      getStakes(anchorWallet).then(setStakes);
+    if (anchorWallet && umi && wallet.connected) {
+      getStakes(anchorWallet).then((stakes) => {
+        setStakes(stakes);
+      });
       getReFiNfts(umi, anchorWallet.publicKey).then(setMyNfts);
     } else {
       setStakes([]);
@@ -67,11 +74,16 @@ const DashboardContent: FC = () => {
     },
   ];
 
+  useEffect(() => {
+    fetchHistoricalPrice().then(setPrices);
+  }, []);
+
   return (
     <div>
       <MetricsSection title="My Metrics" metricsWidgets={metricsWidgets} />
-      <div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2">
-        <ExchangeRateChart />
+      <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2">
+        <ExchangeRateChart prices={prices} currentPrice={currentPrice} />
+        <GrowthChart stakes={stakes} />
       </div>
     </div>
   );
