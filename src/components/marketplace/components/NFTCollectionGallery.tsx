@@ -53,6 +53,16 @@ const NFTCollectionGallery: FC = () => {
     }
   };
 
+  const handleLearnMore = async (uri: string) => {
+    try {
+      const metadata = await fetchMetadata(uri);
+      setNftInfo(metadata);
+      openModal();
+    } catch (error) {
+      console.error("Failed to fetch metadata for NFT:", error);
+    }
+  };
+
   const handleLoadMore = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
@@ -120,7 +130,7 @@ const NFTCollectionGallery: FC = () => {
             name={item.name}
             key={item.index}
             uri={item.uri}
-            onClick={openModal}
+            onClick={() => handleLearnMore(item.uri)}
           />
         ))}
       </div>

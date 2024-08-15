@@ -9,7 +9,7 @@ interface NFTCardProps {
   onClick: () => void;
 }
 
-const NFTCard: FC<NFTCardProps> = ({ uri, name }) => {
+const NFTCard: FC<NFTCardProps> = ({ uri, name, onClick }) => {
   const [metadata, setMetadata] = useState<NFTMetadata>();
   const wallet = useWallet();
 
@@ -28,7 +28,7 @@ const NFTCard: FC<NFTCardProps> = ({ uri, name }) => {
           <span className="text-sm font-bold text-white">{name}</span>
           {wallet.publicKey ? (
             <button
-              onClick={() => console.log("Learn more")}
+              onClick={onClick}
               className="rounded-full bg-none px-10 py-[2px] font-bold text-white hover:bg-none hover:underline"
             >
               Learn more
