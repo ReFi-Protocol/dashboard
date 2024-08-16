@@ -14,6 +14,7 @@ import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import RevealNFTModal from "./RevealNFTModal";
+import { Spinner } from "@chakra-ui/react";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -151,7 +152,9 @@ const NFTCollectionGallery: FC = () => {
       )}
     </div>
   ) : (
-    <div>loading...</div>
+    <div className="flex h-full items-center justify-center">
+      <Spinner color="white" className="h-10 w-10" />
+    </div>
   );
 };
 

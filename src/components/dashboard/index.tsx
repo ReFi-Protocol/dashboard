@@ -16,6 +16,7 @@ import { getLockedNftCount } from "../../web3/solana/staking/service/getLockedNf
 import { WidgetData } from "../../types";
 import GrowthChart from "./components/GrowthChart";
 import { fetchHistoricalPrice } from "../../service";
+import MyNFTsGallery from "../marketplace/components/MyNFTsGallery";
 
 const DashboardContent: FC = () => {
   const anchorWallet = useAnchorWallet();
@@ -84,6 +85,12 @@ const DashboardContent: FC = () => {
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2">
         <ExchangeRateChart prices={prices} currentPrice={currentPrice} />
         <GrowthChart stakes={stakes} />
+      </div>
+      <div>
+        <h3 className="mb-4 mt-6 font-sans text-xl font-semibold text-white">
+          My NFTs
+        </h3>
+        <MyNFTsGallery />
       </div>
     </div>
   );
