@@ -1,5 +1,6 @@
 import { WalletAdapterNetwork } from "@jup-ag/wallet-adapter";
 import { z } from "zod";
+import { Env } from "../types";
 
 export const SUPPORTED_CLUSTERS = [
   WalletAdapterNetwork.Devnet,
@@ -16,7 +17,7 @@ const envSchema = z.object({
   VITE_SOLANA_SPL: z.string(),
   VITE_SOLANA_COLLECTION: z.string(),
   VITE_SOLANA_SPL_DECIMALS: z.number({ coerce: true }),
-  VITE_ENVIRONMENT: z.string(),
+  VITE_ENVIRONMENT: z.nativeEnum(Env),
 });
 
 let env: z.infer<typeof envSchema>;

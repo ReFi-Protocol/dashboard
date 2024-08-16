@@ -1,5 +1,12 @@
 import { ReactNode } from "react";
 
+export const Env = {
+  DEVELOPMENT: "development",
+  PRODUCTION: "production",
+} as const;
+
+export type Env = (typeof Env)[keyof typeof Env];
+
 export interface AppRoute {
   name: string;
   layout: string;
