@@ -4,7 +4,7 @@ import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
 import { fetchCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
 import { CANDY_MACHINE_ADDRESS } from "../../../web3/solana/const";
 import { publicKey } from "@metaplex-foundation/umi";
-import { Button, Image } from "@chakra-ui/react";
+import { Button, Image, useToast } from "@chakra-ui/react";
 import NFTModal from "./NFTModal";
 import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
 import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
@@ -15,10 +15,12 @@ import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import RevealNFTModal from "./RevealNFTModal";
 import { Spinner } from "@chakra-ui/react";
+import { useCustomToast } from "../../../utils";
 
 const ITEMS_PER_PAGE = 12;
 
 const NFTCollectionGallery: FC = () => {
+  const showToast = useCustomToast();
   const candyMachine = useCandyMachine();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isRevealModalOpen, setRevealModalOpen] = useState(false);
@@ -49,6 +51,11 @@ const NFTCollectionGallery: FC = () => {
     } catch (error) {
       console.error("Error purchasing NFT:", error);
       closeRevealModal();
+      showToast({
+        title: "Error purchasing NFT",
+        description: "An unexpected error occurred.",
+        status: "error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +95,8 @@ const NFTCollectionGallery: FC = () => {
               onClick={() => buyNft(umi)}
               isLoading={isLoading}
               loadingText="Revealing NFT..."
-              className="inset-y-0 min-w-fit flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
+              borderRadius={"26px"}
+              className="inset-y-0 min-w-fit flex-grow bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
             >
               Buy NFT for 125000 $REFI
             </Button>
