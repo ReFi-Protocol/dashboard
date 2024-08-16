@@ -17,9 +17,11 @@ import { WidgetData } from "../../types";
 import GrowthChart from "./components/GrowthChart";
 import { fetchHistoricalPrice } from "../../service";
 import MyNFTsGallery from "../marketplace/components/MyNFTsGallery";
+import ConnectWalletModal from "../connect-wallet-modal";
 
 const DashboardContent: FC = () => {
   const anchorWallet = useAnchorWallet();
+  const [isModalOpen, setModalOpen] = useState(true);
   const wallet = useWallet();
   const umi = useUmi(wallet);
   const [stakes, setStakes] = useState<Stake[]>([]);
@@ -78,6 +80,15 @@ const DashboardContent: FC = () => {
   useEffect(() => {
     fetchHistoricalPrice().then(setPrices);
   }, []);
+
+  if (!wallet.publicKey) {
+    return (
+      <ConnectWalletModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+      />
+    );
+  }
 
   return (
     <div>

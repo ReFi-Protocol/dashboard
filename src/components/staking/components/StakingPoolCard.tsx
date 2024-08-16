@@ -24,7 +24,9 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
   return (
     <div
       className={`rounded-[20px] p-4 ${
-        isSelected ? "border-2 border-[#25AC88] bg-[#0A2C1D]" : "bg-[#061A11]"
+        isSelected
+          ? "border-2 border-[#25AC88] bg-[#0A2C1D]"
+          : "border-2 border-[#061A11] bg-[#061A11]"
       }`}
     >
       <h4 className="pb-[6px] text-lg font-semibold text-white">{duration}</h4>
@@ -37,6 +39,7 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
       <Button
         variant="brand"
         onClick={openModal}
+        borderRadius={"26px"}
         className="inset-y-0 w-full min-w-fit flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2 text-[14px] font-semibold text-[#000000]"
       >
         Stake Now

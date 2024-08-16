@@ -55,16 +55,16 @@ const TransactionHistoryTable: FC<TransactionHistoryTableProps> = ({
             transactions.map((transaction, index) => (
               <Tr key={index}>
                 <Td>
-                  <div className="px-1 py-10">{transaction.date}</div>
+                  <div className="px-1 py-2.5">{transaction.date}</div>
                 </Td>
                 <Td>
-                  <div className="px-1 py-10">{transaction.refiEth}</div>
+                  <div className="px-1 py-2.5">{transaction.refiEth}</div>
                 </Td>
                 <Td>
-                  <div className="px-1 py-10">{transaction.refiSol}</div>
+                  <div className="py2.5 px-1">{transaction.refiSol}</div>
                 </Td>
                 <Td>
-                  <div className="px-1 py-10">{transaction.gasFee}</div>
+                  <div className="px-1 py-2.5">{transaction.gasFee}</div>
                 </Td>
               </Tr>
             ))

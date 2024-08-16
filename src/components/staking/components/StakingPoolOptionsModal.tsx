@@ -49,8 +49,8 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   return (
     <Modal onClose={onClose} size={"sm"} isOpen={isOpen} isCentered>
       <ModalOverlay />
-      <ModalContent className="w-fit  max-w-[700px] justify-center rounded-[40px] border-[1px] border-[#333333] bg-[#000000] p-5">
-        <ModalHeader className="flex  w-full justify-between pb-4 text-white">
+      <ModalContent className="w-fit max-w-[700px] justify-center rounded-[40px] border-[1px] border-[#333333] !bg-[#000000] p-5">
+        <ModalHeader className="flex w-full justify-between pb-4 text-white">
           <p>Select Staking Option</p>
           <Button
             onClick={onClose}

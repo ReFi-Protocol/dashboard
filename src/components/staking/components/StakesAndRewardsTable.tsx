@@ -34,7 +34,7 @@ const tableHeaders = [
   "Start Date",
   "Locked End Date",
   "APY",
-  "TX Status",
+  "Staking Status",
   "Rewards",
   "Action",
 ];
@@ -87,8 +87,9 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
           />
           <p className="mt-4 text-lg font-medium">You have no staked $REFI</p>
           <Button
+            variant="brand"
             onClick={onStakeNow}
-            colorScheme="green"
+            borderRadius={"26px"}
             className="text-black mt-6 rounded-[26px] bg-[#25AC88] px-6 py-2 text-[14px] font-semibold"
           >
             Stake Now

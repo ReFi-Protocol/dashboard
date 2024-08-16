@@ -18,6 +18,7 @@ import { Spinner } from "@chakra-ui/react";
 import { useCustomToast } from "../../../utils";
 
 const ITEMS_PER_PAGE = 12;
+const MAX_NFTS_SHOWED = 50;
 
 const NFTCollectionGallery: FC = () => {
   const showToast = useCustomToast();
@@ -36,6 +37,7 @@ const NFTCollectionGallery: FC = () => {
   const openRevealModal = () => setRevealModalOpen(true);
   const closeRevealModal = () => setRevealModalOpen(false);
 
+  console.log(candyMachine?.itemsRedeemed, "candyMachine");
   const buyNft = async (umi: Umi) => {
     setIsLoading(true);
     openRevealModal();
@@ -86,12 +88,14 @@ const NFTCollectionGallery: FC = () => {
     }
   };
 
-  const handleLoadMore = () => {
+  const handleViewMore = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
   const paginatedItems = candyMachine
-    ? candyMachine.items.slice(0, currentPage * ITEMS_PER_PAGE)
+    ? candyMachine.items
+        .slice(0, MAX_NFTS_SHOWED)
+        .slice(0, currentPage * ITEMS_PER_PAGE)
     : [];
 
   return candyMachine ? (
@@ -113,7 +117,7 @@ const NFTCollectionGallery: FC = () => {
               borderRadius={"26px"}
               className="inset-y-0 min-w-fit flex-grow bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
             >
-              Buy NFT for 125000 $REFI
+              Buy NFT for 125,000 $REFI
             </Button>
           ) : (
             <UnifiedWalletButton
@@ -146,7 +150,8 @@ const NFTCollectionGallery: FC = () => {
         Explore NFT Collection
       </h3>
       <p className="font-sans text-base font-medium text-white">
-        {candyMachine.items.length} unique NFTs part of this project
+        {/* {candyMachine.items.length}  */}
+        50 unique NFTs part of this project
       </p>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {paginatedItems.map((item) => (
@@ -158,11 +163,13 @@ const NFTCollectionGallery: FC = () => {
           />
         ))}
       </div>
-      {paginatedItems.length < candyMachine.items.length && (
+      {paginatedItems.length <
+        candyMachine.items.slice(0, MAX_NFTS_SHOWED).length && (
         <div className="flex justify-center">
           <Button
-            onClick={handleLoadMore}
+            onClick={handleViewMore}
             variant="brand"
+            borderRadius={"26px"}
             className="inset-y-0 mt-8 w-full max-w-40 flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
           >
             View More
