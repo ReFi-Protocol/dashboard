@@ -44,15 +44,6 @@ const mockHighlights = [
     imageUrl:
       "https://bocdn.ecotree.green/essence/0001/04/c655e758f256168e2dce85019615878c69c8b85d.jpg?d=960x540",
   },
-  {
-    description: "Details of the pack: Douglas fir, Norway Maple, Sessile Oak",
-    imageUrl:
-      "https://bocdn.ecotree.green/pack/0001/04/e7b80dddf86dcd04126e124a2b9e52f7ec72285c.jpeg?d=960x540",
-  },
-  {
-    description: "Details of the pack: Sessile Oak",
-    imageUrl: "https://cdn.ecotree.green/img/articles/WEDDING.jpg?d=960x540",
-  },
 ];
 
 const HighlightsGallery: FC = () => {

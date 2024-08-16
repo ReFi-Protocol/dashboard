@@ -1,9 +1,19 @@
-import { FC } from "react";
-import { MdBarChart, MdLock } from "react-icons/md";
-import Widget from "../../components/widget";
-import { FaMoneyBills } from "react-icons/fa6";
-import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
-import { TbShieldLockFilled } from "react-icons/tb";
+import { FC, useState } from "react";
+import {
+  LockIcon,
+  GraphIcon,
+  MoneyIcon,
+  ShieldILockIcon,
+  ConfettiIcon,
+  SumIcon,
+} from "../icons";
+
+import StakesAndRewardsTable from "./components/StakesAndRewardsTable";
+
+import { WidgetData, StakingPoolData } from "../../types";
+import StakingPromoBanner from "./components/StakingPromoBanner";
+import MetricsSection from "../MetricSection";
+import StakingPools from "./components/StakingPools";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { getProgram } from "../../web3/solana/staking";
 import {
@@ -28,7 +38,113 @@ import { useUmi } from "../../web3/solana/hook";
 import { Umi } from "@metaplex-foundation/umi";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 
+const globalMetricsWidgets: WidgetData[] = [
+  {
+    icon: <LockIcon width={28} height={28} fill="white" />,
+    title: "Total Supply Locked",
+    subtitle: "50%",
+  },
+  {
+    icon: <GraphIcon width={28} height={28} fill="white" />,
+    title: "Fully Diluted Valuation",
+    subtitle: "$3,232,234",
+  },
+  {
+    icon: <MoneyIcon width={28} height={28} fill="white" />,
+    title: "USD Price",
+    subtitle: "$0.002",
+  },
+  {
+    icon: <ShieldILockIcon width={28} height={28} fill="white" />,
+    title: "Total Value Locked",
+    subtitle: "$REFI 200",
+  },
+];
+
+const userMetricsWidgets: WidgetData[] = [
+  {
+    icon: <SumIcon width={28} height={28} fill="white" />,
+    title: "Total Owned",
+    subtitle: "350.4 $REFI",
+  },
+  {
+    icon: <LockIcon width={28} height={28} fill="white" />,
+    title: "Locked in Staking",
+    subtitle: "1130 $REFI",
+  },
+  {
+    icon: <ConfettiIcon width={28} height={28} fill="white" />,
+    title: "Expected Rewards",
+    subtitle: "540 $REFI",
+  },
+  {
+    icon: <LockIcon width={28} height={28} fill="white" />,
+    title: "Owned/Locked pCRBN",
+    subtitle: `22 pCRBN`,
+  },
+];
+
+const stakingPoolData: StakingPoolData[] = [
+  {
+    duration: "30 Days",
+    maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
+    apy: "35%",
+  },
+  {
+    duration: "60 Days",
+    maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
+    apy: "65%",
+  },
+  {
+    duration: "90 Days",
+    maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
+    apy: "110%",
+  },
+  {
+    duration: "No lock-in period",
+    maxStake:
+      "Stake or de-stake anytime. There is no limit to the $REFI staked.",
+    apy: "5.5%",
+  },
+];
+
+const mockStakes = [
+  {
+    state: 0,
+    amount: "$REFI 1500",
+    usdValue: "$500",
+    startDate: "14-07-2024",
+    lockedEndDate: "16-07-2024",
+    apy: "35%",
+    txStatus: "CONFIRMED",
+    rewards: "25 Tokens",
+  },
+  {
+    state: 1,
+    amount: "$REFI 1500",
+    usdValue: "$500",
+    startDate: "14-07-2024",
+    lockedEndDate: "16-07-2024",
+    apy: "35%",
+    txStatus: "CONFIRMED",
+    rewards: "25 Tokens",
+  },
+  {
+    state: 2,
+    amount: "$REFI 1500",
+    usdValue: "$500",
+    startDate: "No Lock-in",
+    lockedEndDate: "No Lock-in",
+    apy: "5.5%",
+    txStatus: "CONFIRMED",
+    rewards: "25 Tokens",
+  },
+];
+
 const StakingContent: FC = () => {
+  const [selectedPoolIndex, setSelectedPoolIndex] = useState<number>(
+    stakingPoolData.length - 1,
+  );
   const anchorWallet = useAnchorWallet();
   const wallet = useWallet();
   const umi = useUmi(wallet);
@@ -121,88 +237,32 @@ const StakingContent: FC = () => {
     return wallet.sendTransaction(tx, connection);
   }
 
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  const handleSelectPool = (index: number) => {
+    setSelectedPoolIndex(index);
+  };
+
   return (
     <div className="flex flex-col gap-12 text-white">
-      <div
-        className="flex h-[137px] max-h-fit w-full items-center rounded-[15px] border border-[#333333] bg-contain bg-left bg-no-repeat"
-        style={{ backgroundImage: `url('./images/staking-promo-image.png')` }}
-      >
-        <div className=" ml-4 mr-4 md:ml-52">
-          <p className="font-sans text-base text-white">
-            Harness the benefits of compounding by staking your tokens and
-            reinvesting the rewards as they accumulate.
-          </p>
-        </div>
-      </div>
-      <div>
-        <h3 className="mb-4 font-sans text-xl font-semibold text-white">
-          Global Metrics
-        </h3>
-        <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 3xl:grid-cols-4">
-          <Widget
-            icon={<MdBarChart className="h-7 w-7" />}
-            title={"Total Supply Locked"}
-            subtitle={"50%"}
-          />
-          <Widget
-            icon={<MdLock className="h-6 w-6" />}
-            title={"Fully Diluted Valuation"}
-            subtitle={"$3,232,234"}
-          />
-          <Widget
-            icon={<FaMoneyBills className="h-7 w-7" />}
-            title={"USD Price"}
-            subtitle={"$0.002"}
-          />
-          <Widget
-            icon={<TbShieldLockFilled className="h-7 w-7" />}
-            title={"Total Value Locked"}
-            subtitle={"$REFI 200"}
-          />
-        </div>
-      </div>
-
-      <div>
-        <h3 className="mb-4 font-sans text-xl font-semibold text-white">
-          User Metrics
-        </h3>
-        <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 3xl:grid-cols-4">
-          <Widget
-            icon={<MdBarChart className="h-7 w-7" />}
-            title={"Total Owned"}
-            subtitle={"350.4 $REFI"}
-          />
-          <Widget
-            icon={<MdLock className="h-6 w-6" />}
-            title={"Locked in Staking"}
-            subtitle={"1130 $REFI"}
-          />
-          <Widget
-            icon={<FaMoneyBills className="h-7 w-7" />}
-            title={"Expected Rewards"}
-            subtitle={"540 $REFI"}
-          />
-        </div>
-      </div>
-
-      <div>
-        <div className="mb-4 flex items-center gap-2.5">
-          <h3 className="font-sans text-xl font-semibold text-white">
-            Staking Pools
-          </h3>
-          <UnifiedWalletButton buttonClassName="wallet-button" />
-        </div>
-        <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 3xl:grid-cols-4"></div>
-      </div>
-
-      <div>
-        <h3 className="mb-4 font-sans text-xl font-semibold text-white">
-          My Stakes & Rewards
-        </h3>
-        {anchorWallet && umi && (
+      <StakingPromoBanner />
+      <MetricsSection
+        metricsWidgets={globalMetricsWidgets}
+        title="Global Metrics"
+      />
+      <MetricsSection metricsWidgets={userMetricsWidgets} title="My Metrics" />
+      <StakingPools
+        stakingPoolData={stakingPoolData}
+        selectedPoolIndex={selectedPoolIndex}
+        onSelectPool={handleSelectPool}
+      />
+      {/* {anchorWallet && umi && (
           <button onClick={() => test(anchorWallet, umi)}>stake</button>
-        )}
-      </div>
+        )} */}
+      <StakesAndRewardsTable stakes={mockStakes} onStakeNow={openModal} />
     </div>
   );
 };

@@ -55,7 +55,7 @@ const GrowthChart: React.FC<GrowthChartProps> = ({ stakes }) => {
       <div className="flex justify-between">
         <div className="flex flex-col gap-2.5">
           <h3 className="self-start font-sans text-xl font-bold text-white">
-            Growth
+            Portfolio Growth
           </h3>
           <div className="flex items-center gap-2.5 text-white"></div>
         </div>

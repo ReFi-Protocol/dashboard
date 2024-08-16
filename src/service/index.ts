@@ -21,7 +21,7 @@ export function createLineChartConfig(
       show: false,
     },
     theme: {
-      mode: "light",
+      mode: "dark",
     },
     chart: {
       type: "line",

@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface AppRoute {
   name: string;
   layout: string;
@@ -22,4 +24,16 @@ export interface NFTMetadata {
       type: string;
     }[];
   };
+}
+
+export interface WidgetData {
+  icon: ReactNode;
+  title: string;
+  subtitle: string;
+}
+
+export interface StakingPoolData {
+  duration: string;
+  maxStake: string;
+  apy: string;
 }

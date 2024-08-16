@@ -24,3 +24,12 @@ body {
   min-width: fit-content;
   text-align: center;
 }
+
+.css-qvr9d9-CurrentUserBadge {
+  border-radius: 1.5rem !important;
+  background-color: #25ac88 !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  min-width: fit-content;
+  text-align: center;
+}
