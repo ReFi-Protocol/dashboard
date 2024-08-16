@@ -9,3 +9,28 @@
 * {
   user-select: none;
 }
+body,
+html {
+  background-color: #000000;
+}
+
+.wallet-button {
+  width: 12rem !important;
+  border-radius: 1.5rem !important;
+  background-color: #25ac88 !important;
+  padding: 0.5rem 0 !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  color: #000000 !important;
+  min-width: fit-content;
+  text-align: center;
+}
+
+.css-qvr9d9-CurrentUserBadge {
+  border-radius: 1.5rem !important;
+  background-color: #25ac88 !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  min-width: fit-content;
+  text-align: center;
+}

@@ -1,12 +1,11 @@
-import { ConnectKitButton } from "connectkit";
-import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./layouts";
 
 function App() {
   return (
-    <div>
-      <ConnectKitButton />
-      <UnifiedWalletButton />
-    </div>
+    <Routes>
+      <Route path="/*" element={<Layout />} />
+    </Routes>
   );
 }
 
