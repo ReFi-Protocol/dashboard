@@ -7,10 +7,11 @@ import { useUmi } from "../../../web3/solana/hook";
 import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import { Spinner } from "@chakra-ui/react";
+import { NFTInfo } from "../../../types";
 
 const MyNFTsGallery: FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [nftInfo, setNftInfo] = useState<DigitalAsset | null>(null);
+  const [nftInfo, setNftInfo] = useState<NFTInfo | null>(null);
   const [nfts, setNfts] = useState<DigitalAsset[]>([]);
   const [loading, setLoading] = useState(false);
   const wallet = useWallet();

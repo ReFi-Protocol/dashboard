@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -11,6 +12,11 @@ import {
   NumberIncrementStepper,
   Button,
 } from "@chakra-ui/react";
+
+interface StakingPoolOptionsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
 const stakingPools = [
   {
@@ -36,7 +42,10 @@ const stakingPools = [
   },
 ];
 
-const StakingPoolOptionsModal = ({ isOpen, onClose }) => {
+const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   return (
     <Modal onClose={onClose} size={"sm"} isOpen={isOpen} isCentered>
       <ModalOverlay />

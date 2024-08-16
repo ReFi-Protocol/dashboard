@@ -26,6 +26,13 @@ export interface NFTMetadata {
   };
 }
 
+export interface NFTInfo {
+  name: string;
+  description: string;
+  image: string;
+  attributes: { trait_type: string; value: string | number }[] | null;
+}
+
 export interface WidgetData {
   icon: ReactNode;
   title: string;
