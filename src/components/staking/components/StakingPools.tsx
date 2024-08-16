@@ -15,14 +15,10 @@ const StakingPools: FC<StakingPoolsProps> = ({
   onSelectPool,
 }) => (
   <div>
-    <div className="mb-4 flex items-center gap-2.5">
+    <div className="mb-4 flex items-center">
       <h3 className="font-sans text-xl font-semibold text-white">
         Staking Pools
       </h3>
-      <UnifiedWalletButton
-        buttonClassName="wallet-button"
-        overrideContent="Connect SOL WALLET"
-      />
     </div>
     <div className="mt-3 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 3xl:grid-cols-4">
       {stakingPoolData.map((pool, index) => (

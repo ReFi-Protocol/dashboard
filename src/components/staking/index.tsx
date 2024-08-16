@@ -86,14 +86,14 @@ const userMetricsWidgets: WidgetData[] = [
 
 const stakingPoolData: StakingPoolData[] = [
   {
-    duration: "30 Days",
+    duration: "45 Days",
     maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
-    apy: "35%",
+    apy: "20%",
   },
   {
-    duration: "60 Days",
+    duration: "80 Days",
     maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
-    apy: "65%",
+    apy: "50%",
   },
   {
     duration: "90 Days",

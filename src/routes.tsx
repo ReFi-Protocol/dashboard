@@ -11,8 +11,9 @@ import {
   MdSwapHoriz,
 } from "react-icons/md";
 import { AppRoute } from "./types";
+import { env } from "./env";
 
-const routes: AppRoute[] = [
+const devRoutes: AppRoute[] = [
   {
     name: "Dashboard",
     layout: "/",
@@ -50,5 +51,26 @@ const routes: AppRoute[] = [
     component: <Leaderboard />,
   },
 ];
+
+const prodRoutes: AppRoute[] = [
+  {
+    name: "Dashboard",
+    layout: "/",
+    path: "dashboard",
+    icon: <MdHome className="h-6 w-6" />,
+    component: <Dashboard />,
+  },
+  {
+    name: "Marketplace",
+    layout: "/",
+    path: "marketplace",
+    icon: <MdOutlineShoppingCart className="h-6 w-6" />,
+    component: <Marketplace />,
+    secondary: true,
+  },
+];
+
+const routes: AppRoute[] =
+  env.VITE_ENVIRONMENT === "development" ? devRoutes : prodRoutes;
 
 export default routes;

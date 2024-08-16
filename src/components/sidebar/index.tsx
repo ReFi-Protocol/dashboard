@@ -23,8 +23,8 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
       >
         <HiX className="text-white " />
       </span>
-      <div className="flex flex-col gap-11 px-4 pt-8">
-        <div className="flex items-center justify-start gap-2">
+      <div className="flex flex-col px-4 pt-8">
+        <div className="flex items-center justify-center gap-2 pb-11">
           <img
             src="./images/Refi_logo.png"
             alt="Refi Protocol Logo"
@@ -58,6 +58,8 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
               );
             }}
           </ConnectKitButton.Custom> */}
+        </div>
+        <div className="flex justify-center pt-5">
           <UnifiedWalletButton
             buttonClassName="wallet-button"
             overrideContent="Connect SOL WALLET"

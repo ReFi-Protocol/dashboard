@@ -38,8 +38,8 @@ const BridgeInfo: FC<BridgeInfoProps> = ({ onSwap }) => (
               textColor="white"
             />
             <Button
-              variant="ghost"
-              className="inset-y-0 min-w-fit flex-grow pl-2.5 pr-2.5 text-[14px] font-semibold text-[#25AC88] lg:mr-12"
+              variant="brand"
+              className="inset-y-0 min-w-fit flex-grow pl-2.5 pr-2.5 text-[14px] font-semibold text-[#25AC88] "
             >
               Connect ETH wallet
             </Button>
@@ -59,8 +59,8 @@ const BridgeInfo: FC<BridgeInfoProps> = ({ onSwap }) => (
               className="w-full flex-grow focus:border-white focus:ring-0"
             />
             <Button
-              variant="ghost"
-              className="inset-y-0 min-w-fit flex-grow pl-2.5 pr-2.5 text-[14px] font-semibold text-[#25AC88] lg:mr-12"
+              variant="brand"
+              className="inset-y-0 min-w-fit flex-grow pl-2.5 pr-2.5 text-[14px] font-semibold text-[#25AC88]"
             >
               Connect SOL wallet
             </Button>
@@ -70,6 +70,7 @@ const BridgeInfo: FC<BridgeInfoProps> = ({ onSwap }) => (
       <Button
         variant="brand"
         onClick={onSwap}
+        borderRadius={"30px"}
         className="w-full rounded-[30px] bg-[#07BA9A] p-3 text-center text-base font-semibold text-[#000000]"
       >
         Swap

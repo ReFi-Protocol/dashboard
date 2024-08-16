@@ -25,11 +25,11 @@ const NFTCard: FC<NFTCardProps> = ({ uri, name, onClick }) => {
       />
       <div className="flex w-full flex-col gap-5 pl-2.5">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-bold text-white">{name}</span>
+          <h3 className="text-lg font-bold text-white">{name}</h3>
           {wallet.publicKey ? (
             <button
+              className="text-black rounded-full bg-[#07BA9A] px-10 py-[2px] font-bold hover:bg-white"
               onClick={onClick}
-              className="rounded-full bg-none px-10 py-[2px] font-bold text-white hover:bg-none hover:underline"
             >
               Learn more
             </button>
