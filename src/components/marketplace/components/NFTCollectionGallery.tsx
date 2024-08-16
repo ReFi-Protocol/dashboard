@@ -48,12 +48,27 @@ const NFTCollectionGallery: FC = () => {
       setNftInfo(metadata);
       closeRevealModal();
       openModal();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error purchasing NFT:", error);
+
+      console.log(JSON.stringify(error));
+      console.log(error.name);
+      function getDescription(error: { name: string }) {
+        switch (error.name) {
+          case "NotEnoughTokens":
+            return "Not enough ReFi";
+          case "ProgramErrorNotRecognizedError":
+            return "Not enough SOL";
+          default:
+            return "An unexpected error occurred. Please contact us";
+        }
+      }
+
+      console.log(JSON.stringify(error));
       closeRevealModal();
       showToast({
         title: "Error purchasing NFT",
-        description: "An unexpected error occurred.",
+        description: getDescription(error),
         status: "error",
       });
     } finally {
