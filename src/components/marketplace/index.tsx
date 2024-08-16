@@ -5,6 +5,7 @@ import ProjectStats from "./components/ProjectStats";
 import { useCandyMachine } from "../../web3/solana/hook";
 import { useWallet } from "@solana/wallet-adapter-react";
 import ConnectWalletModal from "../connect-wallet-modal";
+import { env } from "../../env";
 
 const tabOptions = [
   "NFT Collection",
@@ -18,15 +19,20 @@ const MarketplaceContent: FC = () => {
   const [isModalOpen, setModalOpen] = useState(true);
   const wallet = useWallet();
   const candyMachine = useCandyMachine();
-  const FREEZED_NFTs = 200;
+  const FREEZED_NFTS =
+    (candyMachine?.items?.length || 0) - env.VITE_MAX_NFT_AVAILABLE;
+
   const availableNFTs = candyMachine?.items?.length
     ? candyMachine?.items?.length -
-      FREEZED_NFTs -
+      FREEZED_NFTS -
       Number(candyMachine?.itemsRedeemed)
     : 0;
 
   const mockData = [
-    { value: `${availableNFTs}/50`, name: "NFTs Available" },
+    {
+      value: `${availableNFTs}/${env.VITE_MAX_NFT_AVAILABLE}`,
+      name: "NFTs Available",
+    },
     { value: "110%", name: "Maximum APY" },
     { value: "125,000 $REFI", name: "Starting from" },
     { value: "125,000 $REFI", name: "Volume traded" },

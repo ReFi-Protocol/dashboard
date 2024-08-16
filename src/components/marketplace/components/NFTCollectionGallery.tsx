@@ -16,9 +16,9 @@ import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import RevealNFTModal from "./RevealNFTModal";
 import { Spinner } from "@chakra-ui/react";
 import { useCustomToast } from "../../../utils";
+import { env } from "../../../env";
 
 const ITEMS_PER_PAGE = 12;
-const MAX_NFTS_SHOWED = 50;
 
 const NFTCollectionGallery: FC = () => {
   const showToast = useCustomToast();
@@ -29,6 +29,15 @@ const NFTCollectionGallery: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const FREEZED_NFTS =
+    (candyMachine?.items?.length || 0) - env.VITE_MAX_NFT_AVAILABLE;
+
+  const availableNFTs = candyMachine?.items?.length
+    ? candyMachine?.items?.length -
+      FREEZED_NFTS -
+      Number(candyMachine?.itemsRedeemed)
+    : 0;
+
   const wallet = useWallet();
   const umi = useUmi(wallet);
 
@@ -37,7 +46,6 @@ const NFTCollectionGallery: FC = () => {
   const openRevealModal = () => setRevealModalOpen(true);
   const closeRevealModal = () => setRevealModalOpen(false);
 
-  console.log(candyMachine?.itemsRedeemed, "candyMachine");
   const buyNft = async (umi: Umi) => {
     setIsLoading(true);
     openRevealModal();
@@ -94,7 +102,7 @@ const NFTCollectionGallery: FC = () => {
 
   const paginatedItems = candyMachine
     ? candyMachine.items
-        .slice(0, MAX_NFTS_SHOWED)
+        .slice(0, env.VITE_MAX_NFT_AVAILABLE)
         .slice(0, currentPage * ITEMS_PER_PAGE)
     : [];
 
@@ -108,7 +116,7 @@ const NFTCollectionGallery: FC = () => {
             forest until the end of the Ownership Duration (OD). After the OD,
             the pCRBN remains in your wallet as a collectible
           </p>
-          {wallet.publicKey && umi ? (
+          {wallet.publicKey && umi && availableNFTs > 0 ? (
             <Button
               variant="brand"
               onClick={() => buyNft(umi)}
@@ -164,7 +172,7 @@ const NFTCollectionGallery: FC = () => {
         ))}
       </div>
       {paginatedItems.length <
-        candyMachine.items.slice(0, MAX_NFTS_SHOWED).length && (
+        candyMachine.items.slice(0, env.VITE_MAX_NFT_AVAILABLE).length && (
         <div className="flex justify-center">
           <Button
             onClick={handleViewMore}

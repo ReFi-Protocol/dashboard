@@ -18,6 +18,7 @@ const envSchema = z.object({
   VITE_SOLANA_COLLECTION: z.string(),
   VITE_SOLANA_SPL_DECIMALS: z.number({ coerce: true }),
   VITE_ENVIRONMENT: z.nativeEnum(Env),
+  VITE_MAX_NFT_AVAILABLE: z.number({ coerce: true }),
 });
 
 let env: z.infer<typeof envSchema>;
