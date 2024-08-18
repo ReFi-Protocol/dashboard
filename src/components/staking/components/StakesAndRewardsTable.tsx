@@ -10,20 +10,18 @@ import {
   Box,
   Image,
 } from "@chakra-ui/react";
-
-interface StakeData {
-  state: number;
-  amount: string;
-  usdValue: string;
-  startDate: string;
-  lockedEndDate: string;
-  apy: string;
-  txStatus: string;
-  rewards: string;
-}
+import { Stake } from "../../../web3/solana/staking/types";
+import {
+  calculateClaimableReward,
+  formatReFi,
+} from "../../../web3/solana/staking/util";
+import { d } from "../../../web3/solana/service/d";
+import { addDays, format, fromUnixTime } from "date-fns";
+import { APY_DECIMALS } from "../../../web3/solana/const";
 
 interface StakesAndRewardsTableProps {
-  stakes: StakeData[];
+  stakes: Stake[];
+  currentPrice: number;
   onStakeNow: () => void;
 }
 
@@ -42,6 +40,7 @@ const tableHeaders = [
 const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
   stakes,
   onStakeNow,
+  currentPrice,
 }) => {
   const renderHeader = () => (
     <Thead>
@@ -53,28 +52,43 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
     </Thead>
   );
 
-  const renderStakeRow = (stake: StakeData, index: number) => (
-    <Tr key={index}>
-      <Td>{stake.state}</Td>
-      <Td>{stake.amount}</Td>
-      <Td>{stake.usdValue}</Td>
-      <Td>{stake.startDate}</Td>
-      <Td>{stake.lockedEndDate}</Td>
-      <Td>{stake.apy}</Td>
-      <Td>{stake.txStatus}</Td>
-      <Td>{stake.rewards}</Td>
-      <Td>
-        <div className="flex flex-col gap-2">
-          <Button variant="solid" size="sm" colorScheme="green">
-            Claim
-          </Button>
-          <Button variant="outline" size="sm" colorScheme="red">
-            Destake
-          </Button>
-        </div>
-      </Td>
-    </Tr>
-  );
+  const renderStakeRow = (stake: Stake, index: number) => {
+    const date = fromUnixTime(stake.startTime.toNumber());
+    const lockEndDate = addDays(date, stake.nftLockDays || 0);
+    const dApy = stake.baseApy + (stake.nftApy || 0);
+    const apy = dApy / 10 ** APY_DECIMALS;
+    const status = stake.restakeTime
+      ? "Restaked"
+      : stake.destakeTime
+        ? "Destaked"
+        : "Confirmed";
+
+    const claimableReward = calculateClaimableReward(stake);
+    const actualReward = claimableReward - stake.paidAmount.toNumber();
+
+    return (
+      <Tr key={index}>
+        <Td>{index}</Td>
+        <Td>{formatReFi(stake.amount.toNumber())}</Td>
+        <Td>{d(stake.amount.toNumber()) * currentPrice}</Td>
+        <Td>{format(date, "MMM dd")}</Td>
+        <Td>{format(lockEndDate, "MMM dd")}</Td>
+        <Td>{`${apy}%`}</Td>
+        <Td>{status}</Td>
+        <Td>{formatReFi(actualReward)}</Td>
+        <Td>
+          <div className="flex flex-col gap-2">
+            <Button variant="solid" size="sm" colorScheme="green">
+              Claim
+            </Button>
+            <Button variant="outline" size="sm" colorScheme="red">
+              Destake
+            </Button>
+          </div>
+        </Td>
+      </Tr>
+    );
+  };
 
   const renderNoStakesMessage = () => (
     <Tr>

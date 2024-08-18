@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   LockIcon,
   GraphIcon,
@@ -20,13 +20,13 @@ import {
   getStakeInfo,
   getStakeInfoAddress,
 } from "../../web3/solana/staking/util";
-import { Wallet } from "../../web3/solana/staking/types";
+import { Stake, Wallet } from "../../web3/solana/staking/types";
 import { NFT_APY, SPL_MINT_PK } from "../../web3/solana/const";
 import { getInitializeStakeInfoIx } from "../../web3/solana/staking/instruction/initializeStakeInfo";
 import { getLockNftIx } from "../../web3/solana/staking/instruction/lockNft";
 import { getStakeIx } from "../../web3/solana/staking/instruction/stake";
 import { getConnection } from "../../web3/solana/connection";
-import { d } from "../../web3/solana/service/d";
+import { D } from "../../web3/solana/service/d";
 import {
   Connection,
   PublicKey,
@@ -37,6 +37,8 @@ import {
 import { useUmi } from "../../web3/solana/hook";
 import { Umi } from "@metaplex-foundation/umi";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
+import { getStakes } from "../../web3/solana/staking/service/getStakes";
+import { useAppSelector } from "../../store";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -142,12 +144,24 @@ const mockStakes = [
 ];
 
 const StakingContent: FC = () => {
+  const { currentPrice } = useAppSelector((state) => state.price);
   const [selectedPoolIndex, setSelectedPoolIndex] = useState<number>(
     stakingPoolData.length - 1,
   );
+  const [stakes, setStakes] = useState<Stake[]>([]);
   const anchorWallet = useAnchorWallet();
   const wallet = useWallet();
   const umi = useUmi(wallet);
+
+  useEffect(() => {
+    if (anchorWallet && umi && wallet.connected) {
+      getStakes(anchorWallet).then((stakes) => {
+        setStakes(stakes);
+      });
+    } else {
+      setStakes([]);
+    }
+  }, [anchorWallet, umi]);
 
   async function test(wallet: Wallet, umi: Umi) {
     const refiNfts = await getReFiNfts(umi, wallet.publicKey);
@@ -170,7 +184,7 @@ const StakingContent: FC = () => {
     const program = getProgram(wallet);
     const stakeInfo = await getStakeInfo(wallet, program);
 
-    const dAmount = d(amount);
+    const dAmount = D(amount);
     const stakeIndex = stakeInfo?.stakes.length || 0;
 
     const initializeStakeIx = await getInitializeStakeInfoIx({
@@ -262,7 +276,11 @@ const StakingContent: FC = () => {
       {/* {anchorWallet && umi && (
           <button onClick={() => test(anchorWallet, umi)}>stake</button>
         )} */}
-      <StakesAndRewardsTable stakes={mockStakes} onStakeNow={openModal} />
+      <StakesAndRewardsTable
+        currentPrice={currentPrice}
+        stakes={stakes}
+        onStakeNow={openModal}
+      />
     </div>
   );
 };
