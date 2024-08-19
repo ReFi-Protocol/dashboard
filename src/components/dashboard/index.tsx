@@ -18,16 +18,17 @@ import GrowthChart from "./components/GrowthChart";
 import { fetchHistoricalPrice } from "../../service";
 import MyNFTsGallery from "../marketplace/components/MyNFTsGallery";
 import ConnectWalletModal from "../connect-wallet-modal";
+import { useAppSelector } from "../../store";
 
 const DashboardContent: FC = () => {
+  const { historicalPrices } = useAppSelector((state) => state.price);
   const anchorWallet = useAnchorWallet();
   const [isModalOpen, setModalOpen] = useState(true);
   const wallet = useWallet();
   const umi = useUmi(wallet);
   const [stakes, setStakes] = useState<Stake[]>([]);
   const [myNfts, setMyNfts] = useState<DigitalAsset[]>([]);
-  const [prices, setPrices] = useState<[number, number][]>([]);
-  const currentPrice = prices[prices.length - 1]?.[1] || 0;
+  const currentPrice = historicalPrices[historicalPrices.length - 1]?.[1] || 0;
 
   const lockedReFi = getLockedReFi(stakes);
   const expectedReward = getExpectedReward(stakes);
@@ -77,10 +78,6 @@ const DashboardContent: FC = () => {
     },
   ];
 
-  useEffect(() => {
-    fetchHistoricalPrice().then(setPrices);
-  }, []);
-
   if (!wallet.publicKey) {
     return (
       <ConnectWalletModal
@@ -94,7 +91,10 @@ const DashboardContent: FC = () => {
     <div>
       <MetricsSection title="My Metrics" metricsWidgets={metricsWidgets} />
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2">
-        <ExchangeRateChart prices={prices} currentPrice={currentPrice} />
+        <ExchangeRateChart
+          prices={historicalPrices}
+          currentPrice={currentPrice}
+        />
         <GrowthChart stakes={stakes} />
       </div>
       <div>
