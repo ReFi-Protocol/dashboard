@@ -16,7 +16,7 @@ export async function stake(
   wallet: Wallet,
   amount: number,
   nftInfo?: {
-    lockPeriod: keyof typeof NFT_APY;
+    lockPeriod: number;
     mint: PublicKey;
   },
 ) {

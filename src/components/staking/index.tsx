@@ -29,6 +29,11 @@ import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import { getStakes } from "../../web3/solana/staking/service/getStakes";
 import { useAppSelector } from "../../store";
 import { stake } from "../../web3/solana/staking/service/stake";
+import { useToast } from "@chakra-ui/react";
+import { useCustomToast } from "../../utils";
+import { claim } from "../../web3/solana/staking/service/claim";
+import { destake } from "../../web3/solana/staking/service/destake";
+import { restake } from "../../web3/solana/staking/service/restake";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -101,6 +106,7 @@ const stakingPoolData: StakingPoolData[] = [
 ];
 
 const StakingContent: FC = () => {
+  const showToast = useCustomToast();
   const { currentPrice } = useAppSelector((state) => state.price);
   const [selectedPoolIndex, setSelectedPoolIndex] = useState<number>(
     stakingPoolData.length - 1,
@@ -126,11 +132,78 @@ const StakingContent: FC = () => {
     walletContext: WalletContextState,
   ) {
     const refiNfts = await getReFiNfts(umi, wallet.publicKey);
+    const amount = 10_000;
+    const nftToLock = new PublicKey(refiNfts[0].publicKey);
+    const lockPeriod = 90;
 
-    await stake(walletContext, wallet, 10_000, {
-      mint: new PublicKey(refiNfts[0].publicKey),
-      lockPeriod: 90,
-    });
+    try {
+      await stake(walletContext, wallet, amount, {
+        mint: nftToLock,
+        lockPeriod,
+      });
+    } catch (e: any) {
+      showToast({
+        title: "Error",
+        description: e.message,
+        status: "error",
+      });
+
+      console.error(e);
+    }
+  }
+
+  async function test1(
+    wallet: Wallet,
+    walletContext: WalletContextState,
+    stakeIndex: number,
+  ) {
+    try {
+      await claim(walletContext, wallet, stakeIndex);
+    } catch (e: any) {
+      showToast({
+        title: "Error",
+        description: e.message,
+        status: "error",
+      });
+
+      console.error(e);
+    }
+  }
+
+  async function test2(
+    wallet: Wallet,
+    walletContext: WalletContextState,
+    stakeIndex: number,
+  ) {
+    try {
+      await destake(walletContext, wallet, stakeIndex);
+    } catch (e: any) {
+      showToast({
+        title: "Error",
+        description: e.message,
+        status: "error",
+      });
+
+      console.error(e);
+    }
+  }
+
+  async function test3(
+    wallet: Wallet,
+    walletContext: WalletContextState,
+    stakeIndex: number,
+  ) {
+    try {
+      await restake(walletContext, wallet, stakeIndex);
+    } catch (e: any) {
+      showToast({
+        title: "Error",
+        description: e.message,
+        status: "error",
+      });
+
+      console.error(e);
+    }
   }
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -146,7 +219,22 @@ const StakingContent: FC = () => {
     <div className="flex flex-col gap-12 text-white">
       {anchorWallet && umi && (
         <button onClick={() => test(anchorWallet, umi, walletContext)}>
-          TEST
+          test stake
+        </button>
+      )}
+      {anchorWallet && (
+        <button onClick={() => test1(anchorWallet, walletContext, 0)}>
+          test claim
+        </button>
+      )}
+      {anchorWallet && (
+        <button onClick={() => test2(anchorWallet, walletContext, 0)}>
+          test destake
+        </button>
+      )}
+      {anchorWallet && (
+        <button onClick={() => test3(anchorWallet, walletContext, 0)}>
+          test restake
         </button>
       )}
       <StakingPromoBanner />

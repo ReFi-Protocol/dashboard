@@ -2,10 +2,13 @@ import { WalletContextState } from "@solana/wallet-adapter-react";
 import {
   Connection,
   PublicKey,
+  RpcResponseAndContext,
+  SimulatedTransactionResponse,
   TransactionInstruction,
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
+import { checkCustomError } from "./checkError";
 
 export async function sendTransaction(
   instructions: TransactionInstruction[],
@@ -26,7 +29,10 @@ export async function sendTransaction(
   // Simulate the versioned transaction
   const simulateResult = await connection.simulateTransaction(transactionV0);
 
-  // Print the simulation result
+  console.log(simulateResult);
+
+  checkCustomError(simulateResult);
+
   console.log("Simulation Result:", simulateResult);
 
   const hash = await wallet.sendTransaction(transactionV0, connection);
