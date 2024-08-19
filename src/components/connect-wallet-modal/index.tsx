@@ -19,7 +19,12 @@ const ConnectWalletModal: FC<ConnectWalletModalProps> = ({
   onClose,
 }) => {
   return (
-    <Modal onClose={onClose} isOpen={isOpen} isCentered>
+    <Modal
+      onClose={onClose}
+      isOpen={isOpen}
+      closeOnOverlayClick={false}
+      isCentered
+    >
       <ModalOverlay bg="rgba(0, 0, 0, 0.7)" backdropFilter="blur(10x)" />
       <ModalContent className="m-auto min-w-fit items-center justify-center !rounded-[40px] !bg-[#061A11] px-7 pb-12 pt-7 !text-white">
         <ModalBody className="z-50">

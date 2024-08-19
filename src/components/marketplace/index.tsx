@@ -36,7 +36,7 @@ const MarketplaceContent: FC = () => {
     { value: "110%", name: "Maximum APY" },
     { value: "125,000 $REFI", name: "Starting from" },
     { value: "125,000 $REFI", name: "Volume traded" },
-    { value: "92", name: "Ownership Duration" },
+    { value: "92 days", name: "Ownership Duration" },
   ];
 
   if (!wallet.publicKey) {

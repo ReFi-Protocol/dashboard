@@ -39,6 +39,7 @@ import { Umi } from "@metaplex-foundation/umi";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import { getStakes } from "../../web3/solana/staking/service/getStakes";
 import { useAppSelector } from "../../store";
+import ConnectWalletModal from "../connect-wallet-modal";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -103,43 +104,10 @@ const stakingPoolData: StakingPoolData[] = [
     apy: "110%",
   },
   {
-    duration: "No lock-in period",
+    duration: "No Lock-in period",
     maxStake:
       "Stake or de-stake anytime. There is no limit to the $REFI staked.",
     apy: "5.5%",
-  },
-];
-
-const mockStakes = [
-  {
-    state: 0,
-    amount: "$REFI 1500",
-    usdValue: "$500",
-    startDate: "14-07-2024",
-    lockedEndDate: "16-07-2024",
-    apy: "35%",
-    txStatus: "CONFIRMED",
-    rewards: "25 Tokens",
-  },
-  {
-    state: 1,
-    amount: "$REFI 1500",
-    usdValue: "$500",
-    startDate: "14-07-2024",
-    lockedEndDate: "16-07-2024",
-    apy: "35%",
-    txStatus: "CONFIRMED",
-    rewards: "25 Tokens",
-  },
-  {
-    state: 2,
-    amount: "$REFI 1500",
-    usdValue: "$500",
-    startDate: "No Lock-in",
-    lockedEndDate: "No Lock-in",
-    apy: "5.5%",
-    txStatus: "CONFIRMED",
-    rewards: "25 Tokens",
   },
 ];
 
@@ -149,10 +117,11 @@ const StakingContent: FC = () => {
     stakingPoolData.length - 1,
   );
   const [stakes, setStakes] = useState<Stake[]>([]);
+  const [isConnectWalletModalOpen, setConnectWalletModalOpen] = useState(true);
+  const [isModalOpen, setModalOpen] = useState(false);
   const anchorWallet = useAnchorWallet();
   const wallet = useWallet();
   const umi = useUmi(wallet);
-
   useEffect(() => {
     if (anchorWallet && umi && wallet.connected) {
       getStakes(anchorWallet).then((stakes) => {
@@ -251,14 +220,21 @@ const StakingContent: FC = () => {
     return wallet.sendTransaction(tx, connection);
   }
 
-  const [isModalOpen, setModalOpen] = useState(false);
-
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
   const handleSelectPool = (index: number) => {
     setSelectedPoolIndex(index);
   };
+
+  if (!wallet.publicKey) {
+    return (
+      <ConnectWalletModal
+        isOpen={isConnectWalletModalOpen}
+        onClose={() => setConnectWalletModalOpen(false)}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col gap-12 text-white">
