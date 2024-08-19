@@ -14,32 +14,26 @@ import { WidgetData, StakingPoolData } from "../../types";
 import StakingPromoBanner from "./components/StakingPromoBanner";
 import MetricsSection from "../MetricSection";
 import StakingPools from "./components/StakingPools";
-import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
-import { getProgram } from "../../web3/solana/staking";
 import {
-  getStakeInfo,
-  getStakeInfoAddress,
-} from "../../web3/solana/staking/util";
+  useAnchorWallet,
+  useWallet,
+  WalletContextState,
+} from "@solana/wallet-adapter-react";
+
 import { Stake, Wallet } from "../../web3/solana/staking/types";
-import { NFT_APY, SPL_MINT_PK } from "../../web3/solana/const";
-import { getInitializeStakeInfoIx } from "../../web3/solana/staking/instruction/initializeStakeInfo";
-import { getLockNftIx } from "../../web3/solana/staking/instruction/lockNft";
-import { getStakeIx } from "../../web3/solana/staking/instruction/stake";
-import { getConnection } from "../../web3/solana/connection";
-import { D } from "../../web3/solana/service/d";
-import {
-  Connection,
-  PublicKey,
-  TransactionInstruction,
-  TransactionMessage,
-  VersionedTransaction,
-} from "@solana/web3.js";
+
+import { PublicKey } from "@solana/web3.js";
 import { useUmi } from "../../web3/solana/hook";
 import { Umi } from "@metaplex-foundation/umi";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import { getStakes } from "../../web3/solana/staking/service/getStakes";
 import { useAppSelector } from "../../store";
 import ConnectWalletModal from "../connect-wallet-modal";
+import { stake } from "../../web3/solana/staking/service/stake";
+import { useCustomToast } from "../../utils";
+import { claim } from "../../web3/solana/staking/service/claim";
+import { destake } from "../../web3/solana/staking/service/destake";
+import { restake } from "../../web3/solana/staking/service/restake";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -112,6 +106,7 @@ const stakingPoolData: StakingPoolData[] = [
 ];
 
 const StakingContent: FC = () => {
+  const showToast = useCustomToast();
   const { currentPrice } = useAppSelector((state) => state.price);
   const [selectedPoolIndex, setSelectedPoolIndex] = useState<number>(
     stakingPoolData.length - 1,
@@ -120,10 +115,11 @@ const StakingContent: FC = () => {
   const [isConnectWalletModalOpen, setConnectWalletModalOpen] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const anchorWallet = useAnchorWallet();
-  const wallet = useWallet();
-  const umi = useUmi(wallet);
+  const walletContext = useWallet();
+  const umi = useUmi(walletContext);
+
   useEffect(() => {
-    if (anchorWallet && umi && wallet.connected) {
+    if (anchorWallet && umi && walletContext.connected) {
       getStakes(anchorWallet).then((stakes) => {
         setStakes(stakes);
       });
@@ -132,92 +128,85 @@ const StakingContent: FC = () => {
     }
   }, [anchorWallet, umi]);
 
-  async function test(wallet: Wallet, umi: Umi) {
-    const refiNfts = await getReFiNfts(umi, wallet.publicKey);
-
-    await stake(wallet, 500_00, {
-      mint: new PublicKey(refiNfts[0].publicKey),
-      lockPeriod: 90,
-    });
-  }
-
-  async function stake(
+  async function test(
     wallet: Wallet,
-    amount: number,
-    nftInfo?: {
-      lockPeriod: keyof typeof NFT_APY;
-      mint: PublicKey;
-    },
+    umi: Umi,
+    walletContext: WalletContextState,
   ) {
-    const connection = getConnection();
-    const program = getProgram(wallet);
-    const stakeInfo = await getStakeInfo(wallet, program);
+    const refiNfts = await getReFiNfts(umi, wallet.publicKey);
+    console.log(refiNfts, "refiNfts");
+    const amount = 10_000;
+    const nftToLock = new PublicKey(refiNfts[0].publicKey);
+    const lockPeriod = 90;
 
-    const dAmount = D(amount);
-    const stakeIndex = stakeInfo?.stakes.length || 0;
+    try {
+      await stake(walletContext, wallet, amount, {
+        mint: nftToLock,
+        lockPeriod,
+      });
+    } catch (e: any) {
+      showToast({
+        title: "Error",
+        description: e.message,
+        status: "error",
+      });
 
-    const initializeStakeIx = await getInitializeStakeInfoIx({
-      accounts: {
-        signer: wallet.publicKey,
-        stakeInfo: getStakeInfoAddress(wallet.publicKey, program.programId),
-      },
-      program,
-    });
-
-    const stakeIx = await getStakeIx({
-      args: { dAmount },
-      accounts: {
-        signer: wallet.publicKey,
-        mint: SPL_MINT_PK,
-      },
-      program,
-    });
-
-    const instructions: TransactionInstruction[] = stakeInfo
-      ? []
-      : [initializeStakeIx];
-
-    instructions.push(stakeIx);
-
-    if (nftInfo) {
-      instructions.push(
-        await getLockNftIx({
-          args: { stakeIndex, lockPeriod: nftInfo.lockPeriod },
-          accounts: {
-            signer: wallet.publicKey,
-            mint: nftInfo.mint,
-          },
-          program,
-        }),
-      );
+      console.error(e);
     }
-
-    const { blockhash } = await connection.getLatestBlockhash();
-
-    const messageV0 = new TransactionMessage({
-      payerKey: wallet.publicKey,
-      recentBlockhash: blockhash,
-      instructions,
-    }).compileToV0Message();
-
-    const transactionV0 = new VersionedTransaction(messageV0);
-
-    // Simulate the versioned transaction
-    const simulateResult = await connection.simulateTransaction(transactionV0);
-
-    // Print the simulation result
-    console.log("Simulation Result:", simulateResult);
-
-    const hash = await sendTransaction(transactionV0, connection);
-
-    console.log(hash);
   }
 
-  async function sendTransaction(
-    tx: VersionedTransaction,
-    connection: Connection,
-  ): Promise<string> {
-    return wallet.sendTransaction(tx, connection);
+  async function test1(
+    wallet: Wallet,
+    walletContext: WalletContextState,
+    stakeIndex: number,
+  ) {
+    try {
+      await claim(walletContext, wallet, stakeIndex);
+    } catch (e: any) {
+      showToast({
+        title: "Error",
+        description: e.message,
+        status: "error",
+      });
+
+      console.error(e);
+    }
+  }
+
+  async function test2(
+    wallet: Wallet,
+    walletContext: WalletContextState,
+    stakeIndex: number,
+  ) {
+    try {
+      await destake(walletContext, wallet, stakeIndex);
+    } catch (e: any) {
+      showToast({
+        title: "Error",
+        description: e.message,
+        status: "error",
+      });
+
+      console.error(e);
+    }
+  }
+
+  async function test3(
+    wallet: Wallet,
+    walletContext: WalletContextState,
+    stakeIndex: number,
+  ) {
+    try {
+      await restake(walletContext, wallet, stakeIndex);
+    } catch (e: any) {
+      showToast({
+        title: "Error",
+        description: e.message,
+        status: "error",
+      });
+
+      console.error(e);
+    }
   }
 
   const openModal = () => setModalOpen(true);
@@ -227,7 +216,7 @@ const StakingContent: FC = () => {
     setSelectedPoolIndex(index);
   };
 
-  if (!wallet.publicKey) {
+  if (!walletContext.publicKey) {
     return (
       <ConnectWalletModal
         isOpen={isConnectWalletModalOpen}
@@ -238,6 +227,26 @@ const StakingContent: FC = () => {
 
   return (
     <div className="flex flex-col gap-12 text-white">
+      {anchorWallet && umi && (
+        <button onClick={() => test(anchorWallet, umi, walletContext)}>
+          test stake
+        </button>
+      )}
+      {anchorWallet && (
+        <button onClick={() => test1(anchorWallet, walletContext, 0)}>
+          test claim
+        </button>
+      )}
+      {anchorWallet && (
+        <button onClick={() => test2(anchorWallet, walletContext, 0)}>
+          test destake
+        </button>
+      )}
+      {anchorWallet && (
+        <button onClick={() => test3(anchorWallet, walletContext, 0)}>
+          test restake
+        </button>
+      )}
       <StakingPromoBanner />
       <MetricsSection
         metricsWidgets={globalMetricsWidgets}
@@ -249,9 +258,6 @@ const StakingContent: FC = () => {
         selectedPoolIndex={selectedPoolIndex}
         onSelectPool={handleSelectPool}
       />
-      {/* {anchorWallet && umi && (
-          <button onClick={() => test(anchorWallet, umi)}>stake</button>
-        )} */}
       <StakesAndRewardsTable
         currentPrice={currentPrice}
         stakes={stakes}

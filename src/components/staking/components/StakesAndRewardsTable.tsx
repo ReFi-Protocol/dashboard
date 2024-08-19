@@ -64,7 +64,10 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
         : "Confirmed";
 
     const claimableReward = calculateClaimableReward(stake);
-    const actualReward = claimableReward - stake.paidAmount.toNumber();
+    const actualReward = Math.max(
+      claimableReward - stake.paidAmount.toNumber(),
+      0,
+    );
 
     return (
       <Tr key={index}>
