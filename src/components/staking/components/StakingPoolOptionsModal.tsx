@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -12,41 +12,69 @@ import {
   NumberIncrementStepper,
   Button,
 } from "@chakra-ui/react";
+import { StakingPoolData } from "../../../types";
 import { IoClose } from "react-icons/io5";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import { useCustomToast } from "../../../utils";
+import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
+import { stake } from "../../../web3/solana/staking/service/stake";
+import { useUmi } from "../../../web3/solana/hook";
 
 interface StakingPoolOptionsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  stakingPoolData: StakingPoolData[];
+  selectedPoolIndex: number | null;
+  onSelectPool: (index: number) => void;
 }
-
-const stakingPools = [
-  {
-    duration: "45 Days",
-    maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
-    apy: "20%",
-  },
-  {
-    duration: "80 Days",
-    maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
-    apy: "50%",
-  },
-  {
-    duration: "90 Days",
-    maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
-    apy: "110%",
-  },
-  {
-    duration: "No Lock-in period",
-    maxStake:
-      "Stake or de-stake anytime. There is no limit to the $REFI staked.",
-    apy: "5.5%",
-  },
-];
 
 const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   isOpen,
   onClose,
+  stakingPoolData,
+  selectedPoolIndex,
+  onSelectPool,
 }) => {
+  const [amount, setAmount] = useState<number>(0);
+  const REFI_BALANCE = 5000;
+
+  const anchorWallet = useAnchorWallet();
+  const walletContext = useWallet();
+  const umi = useUmi(walletContext);
+  const showToast = useCustomToast();
+
+  const handleStakeClick = async () => {
+    if (anchorWallet && umi && selectedPoolIndex) {
+      try {
+        const refiNfts = await getReFiNfts(umi, anchorWallet.publicKey);
+        const nftToLock = new PublicKey(refiNfts[0].publicKey);
+        const lockPeriod = stakingPoolData[selectedPoolIndex]?.duration || 0;
+
+        await stake(walletContext, anchorWallet, amount, {
+          mint: nftToLock,
+          lockPeriod,
+        });
+
+        showToast({
+          title: "Success",
+          description: `You have successfully staked ${amount} $REFI`,
+          status: "success",
+        });
+
+        onClose();
+      } catch (e: any) {
+        showToast({
+          title: "Error",
+          description: e.message,
+          status: "error",
+        });
+
+        console.error(e);
+      }
+    }
+  };
+
   return (
     <Modal onClose={onClose} size={"sm"} isOpen={isOpen} isCentered>
       <ModalOverlay />
@@ -59,15 +87,20 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
         </ModalHeader>
         <ModalBody>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
-            {stakingPools.map((pool, index) => (
+            {stakingPoolData.map((pool, index) => (
               <div
                 key={index}
-                className="rounded-[10px] bg-[#061A11]  py-4 text-center"
+                onClick={() => onSelectPool(index)}
+                className={`cursor-pointer rounded-[10px] py-4 text-center ${
+                  selectedPoolIndex === index
+                    ? "border-2 border-[#25AC88] bg-[#0A2C1D]"
+                    : "border-2 border-[#061A11] bg-[#061A11]"
+                }`}
               >
                 <p className="text-nowrap pb-2.5 text-base font-semibold text-white">
-                  {index !== stakingPools.length - 1
-                    ? `${pool.duration} Lockup`
-                    : `${pool.duration}`}
+                  {index !== stakingPoolData.length - 1
+                    ? `${pool.duration} Days Lockup`
+                    : `No Lock-in period`}
                 </p>
                 <p className="text-base font-semibold text-white">
                   {pool.apy} APY
@@ -85,10 +118,11 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
               </label>
               <NumberInput
                 min={0}
-                defaultValue={15}
+                value={amount}
                 size="md"
-                max={30}
+                // max={}
                 clampValueOnBlur={false}
+                onChange={(valueString) => setAmount(Number(valueString))}
                 className="mb-4 min-h-11 w-full !rounded-[16px] bg-[#061A11] !py-3 !pl-4 text-white"
               >
                 <NumberInputField className="!focus:ring-0 !active:ring-0 !focus:border-none !focus:outline-none !active:border-none !active:outline-none !max-h-6 !border-none bg-[#061A11] !p-0 text-white !outline-none !ring-0" />
@@ -111,6 +145,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
             <Button
               variant="brand"
               rounded={"16px"}
+              onClick={() => setAmount(REFI_BALANCE)}
               className="inset-y-0 h-11 w-fit max-w-20 rounded-[16px] bg-[#25AC88] !px-6 !py-3.5 text-base font-semibold text-[#000000]"
             >
               Max
@@ -124,18 +159,20 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
                 className="h-8 w-8"
               />
               <span className="font-sans text-base font-normal">
-                $REFI Balance: <b>0 $REFI</b>
+                $REFI Balance: <b>{REFI_BALANCE} $REFI</b>
               </span>
             </div>
             <Button
               variant="brand"
-              onClick={() => console.log("stake now clicked")}
+              onClick={() => handleStakeClick()}
               borderRadius={"26px"}
               className="inset-y-0 w-fit rounded-[26px] bg-[#25AC88] !px-32 py-2 text-[14px] font-semibold text-[#000000]"
             >
               Stake Now
             </Button>
-            <div className="text-white">You are staking 10 $REFI tokens.</div>
+            <div className="text-white">
+              You are staking {amount} $REFI tokens.
+            </div>
           </div>
         </ModalBody>
       </ModalContent>

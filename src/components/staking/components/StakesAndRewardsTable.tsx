@@ -18,6 +18,11 @@ import {
 import { d } from "../../../web3/solana/service/d";
 import { addDays, format, fromUnixTime } from "date-fns";
 import { APY_DECIMALS } from "../../../web3/solana/const";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import { useCustomToast } from "../../../utils";
+import { claim } from "../../../web3/solana/staking/service/claim";
+import { destake } from "../../../web3/solana/staking/service/destake";
+import { restake } from "../../../web3/solana/staking/service/restake";
 
 interface StakesAndRewardsTableProps {
   stakes: Stake[];
@@ -42,6 +47,58 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
   onStakeNow,
   currentPrice,
 }) => {
+  const anchorWallet = useAnchorWallet();
+  const walletContext = useWallet();
+  const showToast = useCustomToast();
+
+  const handleClaimClick = async (stakeIndex: number) => {
+    if (anchorWallet) {
+      try {
+        await claim(walletContext, anchorWallet, stakeIndex);
+      } catch (e: any) {
+        showToast({
+          title: "Error",
+          description: e.message,
+          status: "error",
+        });
+
+        console.error(e);
+      }
+    }
+  };
+
+  const handleRestakeClick = async (stakeIndex: number) => {
+    if (anchorWallet) {
+      try {
+        await restake(walletContext, anchorWallet, stakeIndex);
+      } catch (e: any) {
+        showToast({
+          title: "Error",
+          description: e.message,
+          status: "error",
+        });
+
+        console.error(e);
+      }
+    }
+  };
+
+  const handleDestakeClick = async (stakeIndex: number) => {
+    if (anchorWallet) {
+      try {
+        await destake(walletContext, anchorWallet, stakeIndex);
+      } catch (e: any) {
+        showToast({
+          title: "Error",
+          description: e.message,
+          status: "error",
+        });
+
+        console.error(e);
+      }
+    }
+  };
+
   const renderHeader = () => (
     <Thead>
       <Tr className="py-6">
@@ -81,10 +138,28 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
         <Td>{formatReFi(actualReward)}</Td>
         <Td>
           <div className="flex flex-col gap-2">
-            <Button variant="solid" size="sm" colorScheme="green">
+            <Button
+              variant="solid"
+              size="sm"
+              colorScheme="green"
+              onClick={() => handleClaimClick(index)}
+            >
               Claim
             </Button>
-            <Button variant="outline" size="sm" colorScheme="red">
+            <Button
+              variant="outline"
+              size="sm"
+              colorScheme="green"
+              onClick={() => handleRestakeClick(index)}
+            >
+              Restake
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              colorScheme="red"
+              onClick={() => handleDestakeClick(index)}
+            >
               Destake
             </Button>
           </div>

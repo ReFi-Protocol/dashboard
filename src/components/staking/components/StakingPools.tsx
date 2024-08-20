@@ -1,11 +1,10 @@
 import { FC } from "react";
-import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import StakingPoolCard from "./StakingPoolCard";
 import { StakingPoolData } from "../../../types";
 
 interface StakingPoolsProps {
   stakingPoolData: StakingPoolData[];
-  selectedPoolIndex: number;
+  selectedPoolIndex: number | null;
   onSelectPool: (index: number) => void;
 }
 
@@ -29,6 +28,8 @@ const StakingPools: FC<StakingPoolsProps> = ({
           apy={pool.apy}
           isSelected={selectedPoolIndex === index}
           onSelect={() => onSelectPool(index)}
+          selectedPoolIndex={selectedPoolIndex}
+          stakingPoolData={stakingPoolData}
         />
       ))}
     </div>

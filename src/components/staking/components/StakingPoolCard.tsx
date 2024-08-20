@@ -1,13 +1,16 @@
 import { FC, useState } from "react";
 import { Button } from "@chakra-ui/react";
+import { StakingPoolData } from "../../../types";
 import StakingPoolOptionsModal from "./StakingPoolOptionsModal";
 
 export interface StakingPoolCardProps {
-  duration: string;
+  duration: number | null;
   maxStake: string;
   apy: string;
   isSelected: boolean;
   onSelect: () => void;
+  selectedPoolIndex: number | null;
+  stakingPoolData: StakingPoolData[];
 }
 
 const StakingPoolCard: FC<StakingPoolCardProps> = ({
@@ -16,9 +19,14 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
   apy,
   isSelected,
   onSelect,
+  selectedPoolIndex,
+  stakingPoolData,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const openModal = () => setModalOpen(true);
+  const openModal = () => {
+    onSelect();
+    setModalOpen(true);
+  };
   const closeModal = () => setModalOpen(false);
 
   return (
@@ -29,7 +37,9 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
           : "border-2 border-[#061A11] bg-[#061A11]"
       }`}
     >
-      <h4 className="pb-[6px] text-lg font-semibold text-white">{duration}</h4>
+      <h4 className="pb-[6px] text-lg font-semibold text-white">
+        {duration ? `${duration} Days Lockup` : "No Lock-in period"}
+      </h4>
       <p className="pb-[30px] text-[11px] font-normal text-[#D0D0D0]">
         {maxStake}
       </p>
@@ -44,7 +54,13 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
       >
         Stake Now
       </Button>
-      <StakingPoolOptionsModal isOpen={isModalOpen} onClose={closeModal} />
+      <StakingPoolOptionsModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        stakingPoolData={stakingPoolData}
+        selectedPoolIndex={selectedPoolIndex}
+        onSelectPool={onSelect}
+      />
     </div>
   );
 };

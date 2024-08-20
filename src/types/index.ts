@@ -47,7 +47,7 @@ export interface WidgetData {
 }
 
 export interface StakingPoolData {
-  duration: string;
+  duration: number | null;
   maxStake: string;
   apy: string;
 }
