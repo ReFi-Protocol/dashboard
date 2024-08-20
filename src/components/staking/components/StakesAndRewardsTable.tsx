@@ -1,12 +1,14 @@
 import { FC } from "react";
 import {
   Table,
+  TableContainer,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
   Button,
+  Badge,
   Box,
   Image,
 } from "@chakra-ui/react";
@@ -134,30 +136,50 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
         <Td>{format(date, "MMM dd")}</Td>
         <Td>{format(lockEndDate, "MMM dd")}</Td>
         <Td>{`${apy}%`}</Td>
-        <Td>{status}</Td>
+        <Td>
+          <Badge
+            colorScheme="green"
+            variant="subtle"
+            className="!rounded-lg !bg-[#0A2C1D] !px-[6px] !py-[5px] uppercase !text-[#07BA9A]"
+          >
+            {status}
+          </Badge>
+        </Td>
         <Td>{formatReFi(actualReward)}</Td>
         <Td>
           <div className="flex flex-col gap-2">
             <Button
-              variant="solid"
-              size="sm"
-              colorScheme="green"
-              onClick={() => handleClaimClick(index)}
-            >
-              Claim
-            </Button>
-            <Button
               variant="outline"
               size="sm"
               colorScheme="green"
+              textColor={"#07BA9A"}
+              borderRadius={"8px"}
               onClick={() => handleRestakeClick(index)}
             >
               Restake
             </Button>
             <Button
-              variant="outline"
+              variant="solid"
+              size="sm"
+              colorScheme="green"
+              background={"#25AC88"}
+              textColor={"#1A1A1A"}
+              _hover={{ background: "#ffffff", color: "#25AC88" }}
+              _active={{ background: "#ffffff", color: "#25AC88" }}
+              borderRadius={"8px"}
+              onClick={() => handleClaimClick(index)}
+            >
+              Claim
+            </Button>
+            <Button
+              variant="solid"
               size="sm"
               colorScheme="red"
+              background={"#DB3545"}
+              textColor={"#ffffff"}
+              _hover={{ background: "#ffffff", color: "#DB3545" }}
+              _active={{ background: "#ffffff", color: "#DB3545" }}
+              borderRadius={"8px"}
               onClick={() => handleDestakeClick(index)}
             >
               Destake
@@ -196,27 +218,29 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
       <h3 className="mb-4 font-sans text-xl font-semibold text-white">
         My Stakes & Rewards
       </h3>
-      <Table
-        variant="unstyled"
-        className="w-full rounded-[20px] bg-[#061A11] text-center text-sm font-semibold text-white"
-      >
-        {renderHeader()}
-        <Tbody>
-          <Tr>
-            <Td colSpan={9} padding="0">
-              <Box
-                as="hr"
-                borderColor="#3C3B3B"
-                borderWidth="1px"
-                width="100%"
-              />
-            </Td>
-          </Tr>
-          {stakes.length > 0
-            ? stakes.map(renderStakeRow)
-            : renderNoStakesMessage()}
-        </Tbody>
-      </Table>
+      <TableContainer>
+        <Table
+          variant="unstyled"
+          className="w-full rounded-[20px] bg-[#061A11] text-center text-sm font-semibold text-white"
+        >
+          {renderHeader()}
+          <Tbody>
+            <Tr>
+              <Td colSpan={9} padding="0">
+                <Box
+                  as="hr"
+                  borderColor="#3C3B3B"
+                  borderWidth="1px"
+                  width="100%"
+                />
+              </Td>
+            </Tr>
+            {stakes.length > 0
+              ? stakes.map(renderStakeRow)
+              : renderNoStakesMessage()}
+          </Tbody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

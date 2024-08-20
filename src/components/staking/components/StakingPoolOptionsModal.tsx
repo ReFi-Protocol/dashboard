@@ -56,17 +56,21 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   const handleStakeClick = async () => {
     if (anchorWallet && umi && selectedPoolIndex !== null) {
       try {
-        const lockPeriod = stakingPoolData[selectedPoolIndex]?.duration || 0;
+        const lockPeriod = stakingPoolData[selectedPoolIndex]?.duration;
+        if (lockPeriod) {
+          const nft = refiNfts.length ? refiNfts[0] : null;
 
-        if (refiNfts.length > 0 && lockPeriod == 0) {
+          if (!nft) {
+            throw Error("No NFT to lock");
+          }
+
+          await stake(walletContext, anchorWallet, amount, {
+            mint: nft,
+            lockPeriod,
+          });
+        } else {
           await stake(walletContext, anchorWallet, amount);
         }
-        const nftToLock = refiNfts[0];
-
-        await stake(walletContext, anchorWallet, amount, {
-          mint: nftToLock,
-          lockPeriod,
-        });
 
         showToast({
           title: "Success",
@@ -90,7 +94,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   return (
     <Modal onClose={onClose} size={"sm"} isOpen={isOpen} isCentered>
       <ModalOverlay />
-      <ModalContent className="w-fit min-w-[700px] justify-center !rounded-[15px] border-[1px] border-[#333333] !bg-[#000000] p-5 !drop-shadow-[0_1px_2px_rgba(255,255,255,0.30)]">
+      <ModalContent className="m-auto w-fit max-w-[300px] justify-center !rounded-[15px] border-[1px] border-[#333333] !bg-[#000000] p-5 !drop-shadow-[0_1px_2px_rgba(255,255,255,0.30)] md:min-w-[700px] md:max-w-fit">
         <ModalHeader className="flex w-full justify-between pb-4 text-white">
           <p>Select Staking Option</p>
           <Button onClick={onClose} className="!bg-[#25AC88] !p-0">
@@ -131,7 +135,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
               );
             })}
           </div>
-          <div className="flex items-center  justify-between gap-3 pt-6">
+          <div className="flex flex-col items-center justify-between gap-3 pt-6 md:flex-row">
             <div className="flex-grow">
               <label className="pb-2.5 text-[15px] font-normal text-white">
                 Amount in $REFI
@@ -165,8 +169,12 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
             <Button
               variant="brand"
               rounded={"16px"}
+              background={"#25AC88"}
               onClick={() => setAmount(REFI_BALANCE)}
-              className="inset-y-0 h-11 w-fit max-w-20 rounded-[16px] bg-[#25AC88] !px-6 !py-3.5 text-base font-semibold text-[#000000]"
+              textColor={"#1A1A1A"}
+              _hover={{ background: "#ffffff", color: "#25AC88" }}
+              _active={{ background: "#ffffff", color: "#25AC88" }}
+              className="rounded-[16px]] inset-y-0 h-11 w-fit !px-6 !py-3.5 text-base font-semibold"
             >
               Max
             </Button>
@@ -185,8 +193,12 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
             <Button
               variant="brand"
               onClick={() => handleStakeClick()}
+              background={"#25AC88"}
+              textColor={"#1A1A1A"}
+              _hover={{ background: "#ffffff", color: "#25AC88" }}
+              _active={{ background: "#ffffff", color: "#25AC88" }}
               borderRadius={"26px"}
-              className="inset-y-0 w-fit rounded-[26px] bg-[#25AC88] !px-32 py-2 text-[14px] font-semibold text-[#000000]"
+              className="inset-y-0 w-fit rounded-[26px] !px-32 py-2 text-[14px] font-semibold text-[#000000]"
             >
               Stake Now
             </Button>
