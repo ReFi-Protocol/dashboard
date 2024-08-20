@@ -111,7 +111,6 @@ const StakingContent: FC = () => {
   useEffect(() => {
     if (anchorWallet && umi) {
       getReFiNfts(umi, anchorWallet.publicKey).then((refiNfts) => {
-        console.log(refiNfts.length > 0, "refiNfts.length");
         setUserHasNfts(refiNfts.length > 0);
       });
     }
