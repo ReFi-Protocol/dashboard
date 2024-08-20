@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -37,6 +37,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   onSelectPool,
 }) => {
   const [amount, setAmount] = useState<number>(0);
+  const [refiNfts, setRefiNfts] = useState<PublicKey[]>([]);
   const REFI_BALANCE = 5000;
 
   const anchorWallet = useAnchorWallet();
@@ -44,12 +45,23 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   const umi = useUmi(walletContext);
   const showToast = useCustomToast();
 
+  useEffect(() => {
+    if (anchorWallet && umi) {
+      getReFiNfts(umi, anchorWallet.publicKey).then((nfts) => {
+        setRefiNfts(nfts.map((nft) => new PublicKey(nft.publicKey)));
+      });
+    }
+  }, [anchorWallet, umi]);
+
   const handleStakeClick = async () => {
-    if (anchorWallet && umi && selectedPoolIndex) {
+    if (anchorWallet && umi && selectedPoolIndex !== null) {
       try {
-        const refiNfts = await getReFiNfts(umi, anchorWallet.publicKey);
-        const nftToLock = new PublicKey(refiNfts[0].publicKey);
         const lockPeriod = stakingPoolData[selectedPoolIndex]?.duration || 0;
+
+        if (refiNfts.length > 0 && lockPeriod == 0) {
+          await stake(walletContext, anchorWallet, amount);
+        }
+        const nftToLock = refiNfts[0];
 
         await stake(walletContext, anchorWallet, amount, {
           mint: nftToLock,
@@ -87,29 +99,37 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
         </ModalHeader>
         <ModalBody>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
-            {stakingPoolData.map((pool, index) => (
-              <div
-                key={index}
-                onClick={() => onSelectPool(index)}
-                className={`cursor-pointer rounded-[10px] py-4 text-center ${
-                  selectedPoolIndex === index
-                    ? "border-2 border-[#25AC88] bg-[#0A2C1D]"
-                    : "border-2 border-[#061A11] bg-[#061A11]"
-                }`}
-              >
-                <p className="text-nowrap pb-2.5 text-base font-semibold text-white">
-                  {index !== stakingPoolData.length - 1
-                    ? `${pool.duration} Days Lockup`
-                    : `No Lock-in period`}
-                </p>
-                <p className="text-base font-semibold text-white">
-                  {pool.apy} APY
-                </p>
-                <p className="pt-2.5 text-[10px] font-normal text-[#D0D0D0]">
-                  1 pCRBN NFT will be automatically locked
-                </p>
-              </div>
-            ))}
+            {stakingPoolData.map((pool, index) => {
+              const isDisabled = refiNfts.length === 0 && pool.duration;
+              return (
+                <div
+                  key={index}
+                  onClick={() => !isDisabled && onSelectPool(index)}
+                  className={`cursor-pointer rounded-[10px] py-4 text-center ${
+                    selectedPoolIndex === index
+                      ? "border-2 border-[#25AC88] bg-[#0A2C1D]"
+                      : "border-2 border-[#061A11] bg-[#061A11]"
+                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                >
+                  <p className="text-nowrap pb-2.5 text-base font-semibold text-white">
+                    {index !== stakingPoolData.length - 1
+                      ? `${pool.duration} Days Lockup`
+                      : `No Lock-in period`}
+                  </p>
+                  <p className="text-base font-semibold text-white">
+                    {pool.apy} APY
+                  </p>
+                  <p className="pt-2.5 text-[10px] font-normal text-[#D0D0D0]">
+                    1 pCRBN NFT will be automatically locked
+                  </p>
+                  {isDisabled && (
+                    <p className="pt-2.5 text-[10px] font-normal text-red-400">
+                      Requires pCRBN NFT to stake.
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
           <div className="flex items-center  justify-between gap-3 pt-6">
             <div className="flex-grow">

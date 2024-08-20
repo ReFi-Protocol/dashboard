@@ -23,6 +23,7 @@ import { getStakes } from "../../web3/solana/staking/service/getStakes";
 import { useAppSelector } from "../../store";
 import ConnectWalletModal from "../connect-wallet-modal";
 import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
+import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -100,11 +101,21 @@ const StakingContent: FC = () => {
     null,
   );
   const [stakes, setStakes] = useState<Stake[]>([]);
+  const [userHasNfts, setUserHasNfts] = useState<boolean>(false);
   const [isConnectWalletModalOpen, setConnectWalletModalOpen] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const anchorWallet = useAnchorWallet();
   const walletContext = useWallet();
   const umi = useUmi(walletContext);
+
+  useEffect(() => {
+    if (anchorWallet && umi) {
+      getReFiNfts(umi, anchorWallet.publicKey).then((refiNfts) => {
+        console.log(refiNfts.length > 0, "refiNfts.length");
+        setUserHasNfts(refiNfts.length > 0);
+      });
+    }
+  }, [anchorWallet, umi]);
 
   useEffect(() => {
     if (anchorWallet && umi && walletContext.connected) {
@@ -144,6 +155,7 @@ const StakingContent: FC = () => {
         stakingPoolData={stakingPoolData}
         selectedPoolIndex={selectedPoolIndex}
         onSelectPool={handleSelectPool}
+        userHasNfts={userHasNfts}
       />
       <StakesAndRewardsTable
         currentPrice={currentPrice}

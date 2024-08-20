@@ -6,12 +6,14 @@ interface StakingPoolsProps {
   stakingPoolData: StakingPoolData[];
   selectedPoolIndex: number | null;
   onSelectPool: (index: number) => void;
+  userHasNfts: boolean;
 }
 
 const StakingPools: FC<StakingPoolsProps> = ({
   stakingPoolData,
   selectedPoolIndex,
   onSelectPool,
+  userHasNfts,
 }) => (
   <div>
     <div className="mb-4 flex items-center">
@@ -30,6 +32,7 @@ const StakingPools: FC<StakingPoolsProps> = ({
           onSelect={() => onSelectPool(index)}
           selectedPoolIndex={selectedPoolIndex}
           stakingPoolData={stakingPoolData}
+          userHasNfts={userHasNfts}
         />
       ))}
     </div>

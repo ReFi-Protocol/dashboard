@@ -11,6 +11,7 @@ export interface StakingPoolCardProps {
   onSelect: () => void;
   selectedPoolIndex: number | null;
   stakingPoolData: StakingPoolData[];
+  userHasNfts: boolean;
 }
 
 const StakingPoolCard: FC<StakingPoolCardProps> = ({
@@ -21,21 +22,24 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
   onSelect,
   selectedPoolIndex,
   stakingPoolData,
+  userHasNfts,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const isDisabled = duration !== null && !userHasNfts;
   const openModal = () => {
-    onSelect();
-    setModalOpen(true);
+    if (!isDisabled) {
+      onSelect();
+      setModalOpen(true);
+    }
   };
   const closeModal = () => setModalOpen(false);
-
   return (
     <div
       className={`rounded-[20px] p-4 ${
         isSelected
           ? "border-2 border-[#25AC88] bg-[#0A2C1D]"
           : "border-2 border-[#061A11] bg-[#061A11]"
-      }`}
+      } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
     >
       <h4 className="pb-[6px] text-lg font-semibold text-white">
         {duration ? `${duration} Days Lockup` : "No Lock-in period"}
@@ -49,11 +53,17 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
       <Button
         variant="brand"
         onClick={openModal}
+        disabled={isDisabled}
         borderRadius={"26px"}
         className="inset-y-0 w-full min-w-fit flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2 text-[14px] font-semibold text-[#000000]"
       >
         Stake Now
       </Button>
+      {isDisabled && (
+        <p className="pt-2.5 text-[10px] font-normal text-red-400">
+          * Requires pCRBN NFT to stake.
+        </p>
+      )}
       <StakingPoolOptionsModal
         isOpen={isModalOpen}
         onClose={closeModal}
