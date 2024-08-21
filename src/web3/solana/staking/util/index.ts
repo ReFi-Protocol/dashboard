@@ -15,6 +15,21 @@ export const getStakeInfoAddress = (
   )[0];
 };
 
+export const getConfigAddress = (programId: PublicKey) => {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from("config")],
+    programId,
+  )[0];
+};
+
+export async function getConfig(program: Program<ViridisStaking>) {
+  const configAddress = getConfigAddress(program.programId);
+
+  const config = await program.account.config.fetch(configAddress);
+
+  return config;
+}
+
 export async function getStakeInfo(
   wallet: Wallet,
   program: Program<ViridisStaking>,

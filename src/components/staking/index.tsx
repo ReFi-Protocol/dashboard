@@ -24,6 +24,7 @@ import { useAppSelector } from "../../store";
 import ConnectWalletModal from "../connect-wallet-modal";
 import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
+import { getConfig } from "../../web3/solana/staking/service/getConfig";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -101,6 +102,9 @@ const StakingContent: FC = () => {
     null,
   );
   const [stakes, setStakes] = useState<Stake[]>([]);
+  const [config, setConfig] = useState<Awaited<
+    ReturnType<typeof getConfig>
+  > | null>(null);
   const [userHasNfts, setUserHasNfts] = useState<boolean>(false);
   const [isConnectWalletModalOpen, setConnectWalletModalOpen] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -121,6 +125,10 @@ const StakingContent: FC = () => {
       getStakes(anchorWallet).then((stakes) => {
         setStakes(stakes);
       });
+
+      getConfig(anchorWallet).then((config) => {
+        setConfig(config);
+      });
     } else {
       setStakes([]);
     }
@@ -128,6 +136,8 @@ const StakingContent: FC = () => {
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+
+  console.log(config);
 
   const handleSelectPool = (index: number) => {
     setSelectedPoolIndex(index);
