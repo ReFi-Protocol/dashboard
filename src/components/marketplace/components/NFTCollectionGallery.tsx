@@ -1,19 +1,16 @@
 import { FC, useState } from "react";
 import NFTCard from "./NFTCard";
 import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
-import { fetchCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
-import { CANDY_MACHINE_ADDRESS } from "../../../web3/solana/const";
-import { publicKey } from "@metaplex-foundation/umi";
-import { Button, Image, useToast } from "@chakra-ui/react";
+import { Button, Image } from "@chakra-ui/react";
 import NFTModal from "./NFTModal";
 import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
-import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Umi } from "@metaplex-foundation/umi";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import RevealNFTModal from "./RevealNFTModal";
+import StakeNowModal from "./StakeNowModal";
 import { Spinner } from "@chakra-ui/react";
 import { useCustomToast } from "../../../utils";
 import { env } from "../../../env";
@@ -25,26 +22,30 @@ const NFTCollectionGallery: FC = () => {
   const candyMachine = useCandyMachine();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isRevealModalOpen, setRevealModalOpen] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [isStakeModalOpen, setStakeModalOpen] = useState(false);
   const [nftInfo, setNftInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const FREEZED_NFTS =
-    (candyMachine?.items?.length || 0) - env.VITE_MAX_NFT_AVAILABLE;
-
   const availableNFTs = candyMachine?.items?.length
-    ? candyMachine?.items?.length -
-      FREEZED_NFTS -
-      Number(candyMachine?.itemsRedeemed)
+    ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed)
     : 0;
 
   const wallet = useWallet();
   const umi = useUmi(wallet);
 
   const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const closeModal = () => {
+    setModalOpen(false);
+    openStakeModal();
+  };
   const openRevealModal = () => setRevealModalOpen(true);
-  const closeRevealModal = () => setRevealModalOpen(false);
+  const closeRevealModal = () => {
+    setRevealModalOpen(false);
+    setModalOpen(true);
+  };
+  const openStakeModal = () => setStakeModalOpen(true);
 
   const buyNft = async (umi: Umi) => {
     setIsLoading(true);
@@ -56,11 +57,10 @@ const NFTCollectionGallery: FC = () => {
       const metadata = await fetchMetadata(digitalAsset.metadata.uri);
 
       setNftInfo(metadata);
-      closeRevealModal();
-      openModal();
+      setIsRevealed(true);
     } catch (error: any) {
       console.error("Error purchasing NFT:", error);
-
+      closeRevealModal();
       console.log(JSON.stringify(error));
       console.log(error.name);
       function getDescription(error: { name: string }) {
@@ -183,7 +183,15 @@ const NFTCollectionGallery: FC = () => {
           </Button>
         </div>
       )}
-      <RevealNFTModal isOpen={isRevealModalOpen} onClose={closeRevealModal} />
+      <RevealNFTModal
+        isOpen={isRevealModalOpen}
+        onClose={closeRevealModal}
+        isRevealed={isRevealed}
+      />
+      <StakeNowModal
+        isOpen={isStakeModalOpen}
+        onClose={() => setStakeModalOpen(false)}
+      />
       {nftInfo && (
         <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} />
       )}

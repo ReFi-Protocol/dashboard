@@ -5,7 +5,6 @@ import ProjectStats from "./components/ProjectStats";
 import { useCandyMachine } from "../../web3/solana/hook";
 import { useWallet } from "@solana/wallet-adapter-react";
 import ConnectWalletModal from "../connect-wallet-modal";
-import { env } from "../../env";
 
 const tabOptions = [
   "NFT Collection",
