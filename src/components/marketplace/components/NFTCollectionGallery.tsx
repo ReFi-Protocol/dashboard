@@ -1,19 +1,16 @@
 import { FC, useState } from "react";
 import NFTCard from "./NFTCard";
 import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
-import { fetchCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
-import { CANDY_MACHINE_ADDRESS } from "../../../web3/solana/const";
-import { publicKey } from "@metaplex-foundation/umi";
-import { Button, Image, useToast } from "@chakra-ui/react";
+import { Button, Image } from "@chakra-ui/react";
 import NFTModal from "./NFTModal";
 import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
-import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Umi } from "@metaplex-foundation/umi";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import RevealNFTModal from "./RevealNFTModal";
+import StakeNowModal from "./StakeNowModal";
 import { Spinner } from "@chakra-ui/react";
 import { useCustomToast } from "../../../utils";
 import { env } from "../../../env";
@@ -25,26 +22,30 @@ const NFTCollectionGallery: FC = () => {
   const candyMachine = useCandyMachine();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isRevealModalOpen, setRevealModalOpen] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [isStakeModalOpen, setStakeModalOpen] = useState(false);
   const [nftInfo, setNftInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const FREEZED_NFTS =
-    (candyMachine?.items?.length || 0) - env.VITE_MAX_NFT_AVAILABLE;
-
   const availableNFTs = candyMachine?.items?.length
-    ? candyMachine?.items?.length -
-      FREEZED_NFTS -
-      Number(candyMachine?.itemsRedeemed)
+    ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed)
     : 0;
 
   const wallet = useWallet();
   const umi = useUmi(wallet);
 
   const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const closeModal = () => {
+    setModalOpen(false);
+    openStakeModal();
+  };
   const openRevealModal = () => setRevealModalOpen(true);
-  const closeRevealModal = () => setRevealModalOpen(false);
+  const closeRevealModal = () => {
+    setRevealModalOpen(false);
+    setModalOpen(true);
+  };
+  const openStakeModal = () => setStakeModalOpen(true);
 
   const buyNft = async (umi: Umi) => {
     setIsLoading(true);
@@ -56,11 +57,10 @@ const NFTCollectionGallery: FC = () => {
       const metadata = await fetchMetadata(digitalAsset.metadata.uri);
 
       setNftInfo(metadata);
-      closeRevealModal();
-      openModal();
+      setIsRevealed(true);
     } catch (error: any) {
       console.error("Error purchasing NFT:", error);
-
+      closeRevealModal();
       console.log(JSON.stringify(error));
       console.log(error.name);
       function getDescription(error: { name: string }) {
@@ -108,8 +108,8 @@ const NFTCollectionGallery: FC = () => {
 
   return candyMachine ? (
     <div>
-      <div className="mb-9  flex  h-fit items-center justify-between rounded-[20px] bg-[#061A11] py-6 pl-16 pr-2.5 text-white">
-        <div className="mr-6 w-1/2">
+      <div className="mb-9 flex h-fit flex-col items-center justify-between rounded-[20px] bg-[#061A11] py-6 pl-2.5 pr-2.5 text-white lg:flex-row lg:pl-16">
+        <div className="m-0 mb-6 flex w-full flex-col justify-center px-4 text-center lg:mb-0 lg:mr-6 lg:w-1/2 lg:justify-start lg:text-start">
           <h3 className="text-[34px] font-bold">Purchase pCRBN NFT</h3>
           <p className="mb-6 mt-2.5">
             These pCRBN NFTs represent partial ownership of the surface of the
@@ -123,7 +123,7 @@ const NFTCollectionGallery: FC = () => {
               isLoading={isLoading}
               loadingText="Revealing NFT..."
               borderRadius={"26px"}
-              className="inset-y-0 min-w-fit flex-grow bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
+              className="inset-y-0 m-auto max-w-fit flex-grow bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000] lg:m-0"
             >
               Buy NFT for 125,000 $REFI
             </Button>
@@ -134,22 +134,22 @@ const NFTCollectionGallery: FC = () => {
             />
           )}
         </div>
-        <div className="max-w-1/2 relative w-[538px]">
-          <div className="flex min-h-[300px]  items-center">
+        <div className="lg:max-w-1/2 relative w-[538px]">
+          <div className="flex flex-col items-center justify-center md:min-h-[300px] md:flex-row">
             <Image
               src="./images/1.webp"
-              className="h-[230px] w-[230px] rounded-[27px]"
+              className="h-[200px] max-h-full w-[200px] max-w-full rounded-[27px] object-cover sm:h-[230px] sm:w-[230px]"
               alt="First NFT Example"
             />
             <Image
               src="./images/5.webp"
-              className="h-[230px] w-[230px] rounded-[27px]"
+              className="h-[200px] max-h-full w-[200px] max-w-full rounded-[27px] object-cover sm:h-[230px] sm:w-[230px]"
               alt="Third NFT Example"
             />
           </div>
           <Image
             src="./images/3.webp"
-            className="z-1 absolute left-[45%] top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 transform rounded-[27px]"
+            className="z-1 absolute left-1/2 top-1/2 h-[230px] max-h-full w-[230px] max-w-full -translate-x-1/2 -translate-y-1/2 transform rounded-[27px] object-cover sm:h-[300px] sm:w-[300px] md:left-[45%]"
             alt="Second NFT Example"
           />
         </div>
@@ -158,10 +158,9 @@ const NFTCollectionGallery: FC = () => {
         Explore NFT Collection
       </h3>
       <p className="font-sans text-base font-medium text-white">
-        {/* {candyMachine.items.length}  */}
-        50 unique NFTs part of this project
+        {candyMachine.items.length} unique NFTs part of this project
       </p>
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {paginatedItems.map((item) => (
           <NFTCard
             name={item.name}
@@ -178,13 +177,21 @@ const NFTCollectionGallery: FC = () => {
             onClick={handleViewMore}
             variant="brand"
             borderRadius={"26px"}
-            className="inset-y-0 mt-8 w-full max-w-40 flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
+            className="inset-y-0 mt-8 w-full max-w-40 flex-grow !text-wrap rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
           >
             View More
           </Button>
         </div>
       )}
-      <RevealNFTModal isOpen={isRevealModalOpen} onClose={closeRevealModal} />
+      <RevealNFTModal
+        isOpen={isRevealModalOpen}
+        onClose={closeRevealModal}
+        isRevealed={isRevealed}
+      />
+      <StakeNowModal
+        isOpen={isStakeModalOpen}
+        onClose={() => setStakeModalOpen(false)}
+      />
       {nftInfo && (
         <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} />
       )}

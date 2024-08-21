@@ -14,26 +14,16 @@ import { WidgetData, StakingPoolData } from "../../types";
 import StakingPromoBanner from "./components/StakingPromoBanner";
 import MetricsSection from "../MetricSection";
 import StakingPools from "./components/StakingPools";
-import {
-  useAnchorWallet,
-  useWallet,
-  WalletContextState,
-} from "@solana/wallet-adapter-react";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 
-import { Stake, Wallet } from "../../web3/solana/staking/types";
+import { Stake } from "../../web3/solana/staking/types";
 
-import { PublicKey } from "@solana/web3.js";
 import { useUmi } from "../../web3/solana/hook";
-import { Umi } from "@metaplex-foundation/umi";
-import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import { getStakes } from "../../web3/solana/staking/service/getStakes";
 import { useAppSelector } from "../../store";
-import { stake } from "../../web3/solana/staking/service/stake";
-import { useToast } from "@chakra-ui/react";
-import { useCustomToast } from "../../utils";
-import { claim } from "../../web3/solana/staking/service/claim";
-import { destake } from "../../web3/solana/staking/service/destake";
-import { restake } from "../../web3/solana/staking/service/restake";
+import ConnectWalletModal from "../connect-wallet-modal";
+import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
+import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -83,22 +73,22 @@ const userMetricsWidgets: WidgetData[] = [
 
 const stakingPoolData: StakingPoolData[] = [
   {
-    duration: "45 Days",
+    duration: 45,
     maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
     apy: "20%",
   },
   {
-    duration: "80 Days",
+    duration: 80,
     maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
     apy: "50%",
   },
   {
-    duration: "90 Days",
+    duration: 90,
     maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
     apy: "110%",
   },
   {
-    duration: "No lock-in period",
+    duration: null,
     maxStake:
       "Stake or de-stake anytime. There is no limit to the $REFI staked.",
     apy: "5.5%",
@@ -106,15 +96,25 @@ const stakingPoolData: StakingPoolData[] = [
 ];
 
 const StakingContent: FC = () => {
-  const showToast = useCustomToast();
   const { currentPrice } = useAppSelector((state) => state.price);
-  const [selectedPoolIndex, setSelectedPoolIndex] = useState<number>(
-    stakingPoolData.length - 1,
+  const [selectedPoolIndex, setSelectedPoolIndex] = useState<number | null>(
+    null,
   );
   const [stakes, setStakes] = useState<Stake[]>([]);
+  const [userHasNfts, setUserHasNfts] = useState<boolean>(false);
+  const [isConnectWalletModalOpen, setConnectWalletModalOpen] = useState(true);
+  const [isModalOpen, setModalOpen] = useState(false);
   const anchorWallet = useAnchorWallet();
   const walletContext = useWallet();
   const umi = useUmi(walletContext);
+
+  useEffect(() => {
+    if (anchorWallet && umi) {
+      getReFiNfts(umi, anchorWallet.publicKey).then((refiNfts) => {
+        setUserHasNfts(refiNfts.length > 0);
+      });
+    }
+  }, [anchorWallet, umi]);
 
   useEffect(() => {
     if (anchorWallet && umi && walletContext.connected) {
@@ -126,88 +126,6 @@ const StakingContent: FC = () => {
     }
   }, [anchorWallet, umi]);
 
-  async function test(
-    wallet: Wallet,
-    umi: Umi,
-    walletContext: WalletContextState,
-  ) {
-    const refiNfts = await getReFiNfts(umi, wallet.publicKey);
-    const amount = 10_000;
-    const nftToLock = new PublicKey(refiNfts[0].publicKey);
-    const lockPeriod = 90;
-
-    try {
-      await stake(walletContext, wallet, amount, {
-        mint: nftToLock,
-        lockPeriod,
-      });
-    } catch (e: any) {
-      showToast({
-        title: "Error",
-        description: e.message,
-        status: "error",
-      });
-
-      console.error(e);
-    }
-  }
-
-  async function test1(
-    wallet: Wallet,
-    walletContext: WalletContextState,
-    stakeIndex: number,
-  ) {
-    try {
-      await claim(walletContext, wallet, stakeIndex);
-    } catch (e: any) {
-      showToast({
-        title: "Error",
-        description: e.message,
-        status: "error",
-      });
-
-      console.error(e);
-    }
-  }
-
-  async function test2(
-    wallet: Wallet,
-    walletContext: WalletContextState,
-    stakeIndex: number,
-  ) {
-    try {
-      await destake(walletContext, wallet, stakeIndex);
-    } catch (e: any) {
-      showToast({
-        title: "Error",
-        description: e.message,
-        status: "error",
-      });
-
-      console.error(e);
-    }
-  }
-
-  async function test3(
-    wallet: Wallet,
-    walletContext: WalletContextState,
-    stakeIndex: number,
-  ) {
-    try {
-      await restake(walletContext, wallet, stakeIndex);
-    } catch (e: any) {
-      showToast({
-        title: "Error",
-        description: e.message,
-        status: "error",
-      });
-
-      console.error(e);
-    }
-  }
-
-  const [isModalOpen, setModalOpen] = useState(false);
-
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
@@ -215,28 +133,17 @@ const StakingContent: FC = () => {
     setSelectedPoolIndex(index);
   };
 
+  if (!walletContext.publicKey) {
+    return (
+      <ConnectWalletModal
+        isOpen={isConnectWalletModalOpen}
+        onClose={() => setConnectWalletModalOpen(false)}
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col gap-12 text-white">
-      {anchorWallet && umi && (
-        <button onClick={() => test(anchorWallet, umi, walletContext)}>
-          test stake
-        </button>
-      )}
-      {anchorWallet && (
-        <button onClick={() => test1(anchorWallet, walletContext, 0)}>
-          test claim
-        </button>
-      )}
-      {anchorWallet && (
-        <button onClick={() => test2(anchorWallet, walletContext, 0)}>
-          test destake
-        </button>
-      )}
-      {anchorWallet && (
-        <button onClick={() => test3(anchorWallet, walletContext, 0)}>
-          test restake
-        </button>
-      )}
       <StakingPromoBanner />
       <MetricsSection
         metricsWidgets={globalMetricsWidgets}
@@ -247,11 +154,19 @@ const StakingContent: FC = () => {
         stakingPoolData={stakingPoolData}
         selectedPoolIndex={selectedPoolIndex}
         onSelectPool={handleSelectPool}
+        userHasNfts={userHasNfts}
       />
       <StakesAndRewardsTable
         currentPrice={currentPrice}
         stakes={stakes}
         onStakeNow={openModal}
+      />
+      <StakingPoolOptionsModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        stakingPoolData={stakingPoolData}
+        selectedPoolIndex={selectedPoolIndex}
+        onSelectPool={handleSelectPool}
       />
     </div>
   );

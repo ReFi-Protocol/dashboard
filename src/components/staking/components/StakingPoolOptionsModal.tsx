@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -12,114 +12,199 @@ import {
   NumberIncrementStepper,
   Button,
 } from "@chakra-ui/react";
+import { StakingPoolData } from "../../../types";
+import { IoClose } from "react-icons/io5";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import { useCustomToast } from "../../../utils";
+import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
+import { stake } from "../../../web3/solana/staking/service/stake";
+import { useUmi } from "../../../web3/solana/hook";
 
 interface StakingPoolOptionsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  stakingPoolData: StakingPoolData[];
+  selectedPoolIndex: number | null;
+  onSelectPool: (index: number) => void;
 }
-
-const stakingPools = [
-  {
-    duration: "30 Days",
-    maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
-    apy: "35%",
-  },
-  {
-    duration: "60 Days",
-    maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
-    apy: "65%",
-  },
-  {
-    duration: "90 Days",
-    maxStake: "Maximum $REFI staked per wallet 750,000 $REFI.",
-    apy: "110%",
-  },
-  {
-    duration: "No lock-in period",
-    maxStake:
-      "Stake or de-stake anytime. There is no limit to the $REFI staked.",
-    apy: "5.5%",
-  },
-];
 
 const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   isOpen,
   onClose,
+  stakingPoolData,
+  selectedPoolIndex,
+  onSelectPool,
 }) => {
+  const [amount, setAmount] = useState<number>(0);
+  const [refiNfts, setRefiNfts] = useState<PublicKey[]>([]);
+  const REFI_BALANCE = 5000;
+
+  const anchorWallet = useAnchorWallet();
+  const walletContext = useWallet();
+  const umi = useUmi(walletContext);
+  const showToast = useCustomToast();
+
+  useEffect(() => {
+    if (anchorWallet && umi) {
+      getReFiNfts(umi, anchorWallet.publicKey).then((nfts) => {
+        setRefiNfts(nfts.map((nft) => new PublicKey(nft.publicKey)));
+      });
+    }
+  }, [anchorWallet, umi]);
+
+  const handleStakeClick = async () => {
+    if (anchorWallet && umi && selectedPoolIndex !== null) {
+      try {
+        const lockPeriod = stakingPoolData[selectedPoolIndex]?.duration;
+        if (lockPeriod) {
+          const nft = refiNfts.length ? refiNfts[0] : null;
+
+          if (!nft) {
+            throw Error("No NFT to lock");
+          }
+
+          await stake(walletContext, anchorWallet, amount, {
+            mint: nft,
+            lockPeriod,
+          });
+        } else {
+          await stake(walletContext, anchorWallet, amount);
+        }
+
+        showToast({
+          title: "Success",
+          description: `You have successfully staked ${amount} $REFI`,
+          status: "success",
+        });
+
+        onClose();
+      } catch (e: any) {
+        showToast({
+          title: "Error",
+          description: e.message,
+          status: "error",
+        });
+
+        console.error(e);
+      }
+    }
+  };
+
   return (
     <Modal onClose={onClose} size={"sm"} isOpen={isOpen} isCentered>
       <ModalOverlay />
-      <ModalContent className="w-fit max-w-[700px] justify-center rounded-[40px] border-[1px] border-[#333333] !bg-[#000000] p-5">
+      <ModalContent className="m-auto w-fit max-w-[300px] justify-center !rounded-[15px] border-[1px] border-[#333333] !bg-[#000000] p-5 !drop-shadow-[0_1px_2px_rgba(255,255,255,0.30)] md:min-w-[700px] md:max-w-fit">
         <ModalHeader className="flex w-full justify-between pb-4 text-white">
           <p>Select Staking Option</p>
-          <Button
-            onClick={onClose}
-            className="bg-[ h-[18px] w-[18px]"
-            style={{
-              width: "18px",
-              height: "18px",
-              backgroundImage: "url('./icons/close-icon.svg')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          ></Button>
+          <Button onClick={onClose} className="!bg-[#25AC88] !p-0">
+            <IoClose className="h-5 w-5" />
+          </Button>
         </ModalHeader>
         <ModalBody>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-            {stakingPools.map((pool, index) => (
-              <div
-                key={index}
-                className="rounded-[10px] bg-[#061A11] px-4 py-7 text-center"
-              >
-                <p className="pb-2.5 text-base font-semibold text-white">
-                  {index !== stakingPools.length - 1
-                    ? `${pool.duration} Lockup`
-                    : `${pool.duration}`}
-                </p>
-                <p className="text-base font-semibold text-white">
-                  {pool.apy} APY
-                </p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+            {stakingPoolData.map((pool, index) => {
+              const isDisabled = refiNfts.length === 0 && pool.duration;
+              return (
+                <div
+                  key={index}
+                  onClick={() => !isDisabled && onSelectPool(index)}
+                  className={`cursor-pointer rounded-[10px] py-4 text-center ${
+                    selectedPoolIndex === index
+                      ? "border-2 border-[#25AC88] bg-[#0A2C1D]"
+                      : "border-2 border-[#061A11] bg-[#061A11]"
+                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                >
+                  <p className="text-nowrap pb-2.5 text-base font-semibold text-white">
+                    {index !== stakingPoolData.length - 1
+                      ? `${pool.duration} Days Lockup`
+                      : `No Lock-in period`}
+                  </p>
+                  <p className="text-base font-semibold text-white">
+                    {pool.apy} APY
+                  </p>
+                  <p className="pt-2.5 text-[10px] font-normal text-[#D0D0D0]">
+                    1 pCRBN NFT will be automatically locked
+                  </p>
+                  {isDisabled && (
+                    <p className="pt-2.5 text-[10px] font-normal text-red-400">
+                      Requires pCRBN NFT to stake.
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
-          <div className="flex items-center  justify-between gap-3 pt-6">
+          <div className="flex flex-col items-center justify-between gap-3 pt-6 md:flex-row">
             <div className="flex-grow">
               <label className="pb-2.5 text-[15px] font-normal text-white">
                 Amount in $REFI
               </label>
               <NumberInput
                 min={0}
-                defaultValue={15}
-                max={30}
+                value={amount}
+                size="md"
+                // max={}
                 clampValueOnBlur={false}
-                className="mb-4 min-h-11 w-full rounded-[16px] bg-[#061A11] py-3 pl-4 text-white"
+                onChange={(valueString) => setAmount(Number(valueString))}
+                className="mb-4 min-h-11 w-full !rounded-[16px] bg-[#061A11] !py-3 !pl-4 text-white"
               >
-                <NumberInputField className="border-none bg-[#061A11] p-0 text-white outline-none focus:border-none focus:outline-none active:border-none active:outline-none" />
-                <NumberInputStepper className="!right-6">
-                  <NumberIncrementStepper className="bg-transparent border-none focus:outline-none">
-                    <img
-                      src="./icons/increment-icon.svg"
-                      alt="Increment"
-                      className="h-2 w-4 text-[#25AC88]"
-                    />
-                  </NumberIncrementStepper>
-                  <NumberDecrementStepper className="bg-transparent border-none focus:outline-none">
-                    <img
-                      src="./icons/decrement-icon.svg"
-                      alt="Decrement"
-                      className="h-2 w-4 text-[#25AC88]"
-                    />
-                  </NumberDecrementStepper>
+                <NumberInputField className="!focus:ring-0 !active:ring-0 !focus:border-none !focus:outline-none !active:border-none !active:outline-none !max-h-6 !border-none bg-[#061A11] !p-0 text-white !outline-none !ring-0" />
+                <NumberInputStepper className="!border-none !pr-5">
+                  <NumberIncrementStepper
+                    bg="none"
+                    border="none"
+                    color={"#25AC88"}
+                    _active={{ bg: "none" }}
+                  />
+                  <NumberDecrementStepper
+                    bg="none"
+                    border="none"
+                    color={"#25AC88"}
+                    _active={{ bg: "none" }}
+                  />
                 </NumberInputStepper>
               </NumberInput>
             </div>
-
             <Button
               variant="brand"
-              className="inset-y-0 h-11 w-fit max-w-20 rounded-[16px] bg-[#25AC88] px-6 py-3 text-base font-semibold text-[#000000]"
+              rounded={"16px"}
+              background={"#25AC88"}
+              onClick={() => setAmount(REFI_BALANCE)}
+              textColor={"#1A1A1A"}
+              _hover={{ background: "#ffffff", color: "#25AC88" }}
+              _active={{ background: "#ffffff", color: "#25AC88" }}
+              className="rounded-[16px]] inset-y-0 h-11 w-fit !px-6 !py-3.5 text-base font-semibold"
             >
               Max
             </Button>
+          </div>
+          <div className="flex flex-col items-center gap-2.5">
+            <div className="flex items-center gap-2 text-white">
+              <img
+                src="./images/Refi_logo.png"
+                alt="Refi Protocol Logo"
+                className="h-8 w-8"
+              />
+              <span className="font-sans text-base font-normal">
+                $REFI Balance: <b>{REFI_BALANCE} $REFI</b>
+              </span>
+            </div>
+            <Button
+              variant="brand"
+              onClick={() => handleStakeClick()}
+              background={"#25AC88"}
+              textColor={"#1A1A1A"}
+              _hover={{ background: "#ffffff", color: "#25AC88" }}
+              _active={{ background: "#ffffff", color: "#25AC88" }}
+              borderRadius={"26px"}
+              className="inset-y-0 w-fit rounded-[26px] !px-32 py-2 text-[14px] font-semibold text-[#000000]"
+            >
+              Stake Now
+            </Button>
+            <div className="text-white">
+              You are staking {amount} $REFI tokens.
+            </div>
           </div>
         </ModalBody>
       </ModalContent>
