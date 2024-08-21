@@ -27,6 +27,7 @@ const NFTCollectionGallery: FC = () => {
   const [nftInfo, setNftInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isBoughtNft, setIsBoughtNft] = useState(false);
 
   const availableNFTs = candyMachine?.items?.length
     ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed)
@@ -38,7 +39,9 @@ const NFTCollectionGallery: FC = () => {
   const openModal = () => setModalOpen(true);
   const closeModal = () => {
     setModalOpen(false);
-    openStakeModal();
+    if (isBoughtNft) {
+      openStakeModal();
+    }
   };
   const openRevealModal = () => setRevealModalOpen(true);
   const closeRevealModal = () => {
@@ -58,6 +61,7 @@ const NFTCollectionGallery: FC = () => {
 
       setNftInfo(metadata);
       setIsRevealed(true);
+      setIsBoughtNft(true);
     } catch (error: any) {
       console.error("Error purchasing NFT:", error);
       closeRevealModal();
