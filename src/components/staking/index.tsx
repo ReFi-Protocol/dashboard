@@ -1,12 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import {
-  LockIcon,
-  GraphIcon,
-  MoneyIcon,
-  ShieldILockIcon,
-  ConfettiIcon,
-  SumIcon,
-} from "../icons";
+import { LockIcon, GraphIcon, MoneyIcon, ShieldILockIcon } from "../icons";
 
 import StakesAndRewardsTable from "./components/StakesAndRewardsTable";
 
@@ -25,6 +18,7 @@ import ConnectWalletModal from "../connect-wallet-modal";
 import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import { getConfig } from "../../web3/solana/staking/service/getConfig";
+import MyMetrics from "../MyMetrics";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -46,29 +40,6 @@ const globalMetricsWidgets: WidgetData[] = [
     icon: <ShieldILockIcon width={28} height={28} fill="white" />,
     title: "Total Value Locked",
     subtitle: "$REFI 200",
-  },
-];
-
-const userMetricsWidgets: WidgetData[] = [
-  {
-    icon: <SumIcon width={28} height={28} fill="white" />,
-    title: "Total Owned",
-    subtitle: "350.4 $REFI",
-  },
-  {
-    icon: <LockIcon width={28} height={28} fill="white" />,
-    title: "Locked in Staking",
-    subtitle: "1130 $REFI",
-  },
-  {
-    icon: <ConfettiIcon width={28} height={28} fill="white" />,
-    title: "Expected Rewards",
-    subtitle: "540 $REFI",
-  },
-  {
-    icon: <LockIcon width={28} height={28} fill="white" />,
-    title: "Owned/Locked pCRBN",
-    subtitle: `22 pCRBN`,
   },
 ];
 
@@ -155,11 +126,11 @@ const StakingContent: FC = () => {
   return (
     <div className="flex flex-col gap-12 text-white">
       <StakingPromoBanner />
-      <MetricsSection
+      {/* <MetricsSection
         metricsWidgets={globalMetricsWidgets}
         title="Global Metrics"
-      />
-      <MetricsSection metricsWidgets={userMetricsWidgets} title="My Metrics" />
+      /> */}
+      <MyMetrics />
       <StakingPools
         stakingPoolData={stakingPoolData}
         selectedPoolIndex={selectedPoolIndex}
