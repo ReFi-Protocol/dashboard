@@ -126,10 +126,10 @@ const StakingContent: FC = () => {
   return (
     <div className="flex flex-col gap-12 text-white">
       <StakingPromoBanner />
-      <MetricsSection
+      {/* <MetricsSection
         metricsWidgets={globalMetricsWidgets}
         title="Global Metrics"
-      />
+      /> */}
       <MyMetrics />
       <StakingPools
         stakingPoolData={stakingPoolData}
