@@ -24,6 +24,7 @@ import { useAppSelector } from "../../store";
 import ConnectWalletModal from "../connect-wallet-modal";
 import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
+import RestakeModal from "./components/RestakeModal";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -104,6 +105,8 @@ const StakingContent: FC = () => {
   const [userHasNfts, setUserHasNfts] = useState<boolean>(false);
   const [isConnectWalletModalOpen, setConnectWalletModalOpen] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isRestakeModalOpen, setRestakeModalOpen] = useState(false);
+
   const anchorWallet = useAnchorWallet();
   const walletContext = useWallet();
   const umi = useUmi(walletContext);
@@ -167,6 +170,10 @@ const StakingContent: FC = () => {
         stakingPoolData={stakingPoolData}
         selectedPoolIndex={selectedPoolIndex}
         onSelectPool={handleSelectPool}
+      />
+      <RestakeModal
+        isOpen={isRestakeModalOpen}
+        onClose={() => setRestakeModalOpen(false)}
       />
     </div>
   );

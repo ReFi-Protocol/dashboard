@@ -149,16 +149,6 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
         <Td>
           <div className="flex flex-col gap-2">
             <Button
-              variant="outline"
-              size="sm"
-              colorScheme="green"
-              textColor={"#07BA9A"}
-              borderRadius={"8px"}
-              onClick={() => handleRestakeClick(index)}
-            >
-              Restake
-            </Button>
-            <Button
               variant="solid"
               size="sm"
               colorScheme="green"
@@ -166,6 +156,16 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
               textColor={"#1A1A1A"}
               _hover={{ background: "#ffffff", color: "#25AC88" }}
               _active={{ background: "#ffffff", color: "#25AC88" }}
+              borderRadius={"8px"}
+              onClick={() => handleRestakeClick(index)}
+            >
+              Restake
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              colorScheme="green"
+              textColor={"#07BA9A"}
               borderRadius={"8px"}
               onClick={() => handleClaimClick(index)}
             >

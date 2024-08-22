@@ -57,9 +57,13 @@ const NFTModal: FC<NFTModalProps> = ({ isOpen, onClose, nftInfo }) => {
         <ModalFooter>
           <Button
             onClick={onClose}
-            variant="brand"
-            borderRadius="26px"
-            className="mt-6 min-w-fit rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
+            variant="solid"
+            background={"#25AC88"}
+            textColor={"#000000"}
+            borderRadius={"26px"}
+            _hover={{ background: "#ffffff", color: "#25AC88" }}
+            _active={{ background: "#ffffff", color: "#25AC88" }}
+            className="mt-6 min-w-fit rounded-[26px] px-6 py-2.5 text-[14px] font-semibold"
           >
             Close
           </Button>
