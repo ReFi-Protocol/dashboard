@@ -5,11 +5,11 @@ import { getConnection } from "../../connection";
 import { getProgram } from "..";
 import { getStakeInfo, getStakeInfoAddress } from "../util";
 import { Wallet } from "../types";
-import { D } from "../../service/d";
 import { getInitializeStakeInfoIx } from "../instruction/initializeStakeInfo";
 import { getStakeIx } from "../instruction/stake";
 import { getLockNftIx } from "../instruction/lockNft";
 import { sendTransaction } from "./sendTransaction";
+import { D } from "../../../util/d";
 
 export async function stake(
   walletContext: WalletContextState,

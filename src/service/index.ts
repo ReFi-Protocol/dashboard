@@ -90,6 +90,11 @@ export function fetchHistoricalPrice(): Promise<[number, number][]> {
     "coins/refi-protocol/market_chart?vs_currency=usd&days=360&precision=7",
   ).then((data) => data.prices);
 }
+
+export function fetchRefiInfo(): Promise<any> {
+  return fetchFromCoinGecko("coins/refi-protocol").then((data) => data);
+}
+
 export function fetchPrice() {
   return fetchFromCoinGecko("coins/refi-protocol/tickers");
 }

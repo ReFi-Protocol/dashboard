@@ -12,36 +12,14 @@ import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { Stake } from "../../web3/solana/staking/types";
 
 import { useUmi } from "../../web3/solana/hook";
-import { getStakes } from "../../web3/solana/staking/service/getStakes";
+import { getMyStakes } from "../../web3/solana/staking/service/getMyStakes";
 import { useAppSelector } from "../../store";
 import ConnectWalletModal from "../connect-wallet-modal";
 import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import { getConfig } from "../../web3/solana/staking/service/getConfig";
 import MyMetrics from "../MyMetrics";
-
-const globalMetricsWidgets: WidgetData[] = [
-  {
-    icon: <LockIcon width={28} height={28} fill="white" />,
-    title: "Total Supply Locked",
-    subtitle: "50%",
-  },
-  {
-    icon: <GraphIcon width={28} height={28} fill="white" />,
-    title: "Fully Diluted Valuation",
-    subtitle: "$3,232,234",
-  },
-  {
-    icon: <MoneyIcon width={28} height={28} fill="white" />,
-    title: "USD Price",
-    subtitle: "$0.002",
-  },
-  {
-    icon: <ShieldILockIcon width={28} height={28} fill="white" />,
-    title: "Total Value Locked",
-    subtitle: "$REFI 200",
-  },
-];
+import GlobalMetrics from "../GlobalMetrics";
 
 const stakingPoolData: StakingPoolData[] = [
   {
@@ -93,7 +71,7 @@ const StakingContent: FC = () => {
 
   useEffect(() => {
     if (anchorWallet && umi && walletContext.connected) {
-      getStakes(anchorWallet).then((stakes) => {
+      getMyStakes(anchorWallet).then((stakes) => {
         setStakes(stakes);
       });
 
@@ -126,10 +104,7 @@ const StakingContent: FC = () => {
   return (
     <div className="flex flex-col gap-12 text-white">
       <StakingPromoBanner />
-      {/* <MetricsSection
-        metricsWidgets={globalMetricsWidgets}
-        title="Global Metrics"
-      /> */}
+      <GlobalMetrics />
       <MyMetrics />
       <StakingPools
         stakingPoolData={stakingPoolData}
