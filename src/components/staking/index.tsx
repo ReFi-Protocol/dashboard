@@ -41,7 +41,7 @@ const stakingPoolData: StakingPoolData[] = [
     duration: null,
     maxStake:
       "Stake or de-stake anytime. There is no limit to the $REFI staked.",
-    apy: "5.5%",
+    apy: "3.5%",
   },
 ];
 
