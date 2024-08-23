@@ -69,7 +69,7 @@ const GlobalMetrics: FC = () => {
     {
       icon: <ShieldILockIcon width={28} height={28} fill="white" />,
       title: "Total Value Locked",
-      subtitle: `$REFI ${formatReFi(totalRefiLocked, 0)}`,
+      subtitle: `${formatReFi(totalRefiLocked, 0)} $REFI`,
     },
   ];
 
