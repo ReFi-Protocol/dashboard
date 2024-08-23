@@ -1,9 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./layouts";
-import { fetchHistoricalPrice } from "./service";
+import { fetchHistoricalPrice, fetchRefiInfo } from "./service";
 import { useEffect } from "react";
 import { useAppDispatch } from "./store";
-import { setHistoricalPrices, setCurrentPrice } from "./store";
+import {
+  setHistoricalPrices,
+  setCurrentPrice,
+  setFullyDilutedValuation,
+} from "./store";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -11,8 +15,12 @@ function App() {
   useEffect(() => {
     fetchHistoricalPrice().then((prices) => {
       dispatch(setHistoricalPrices(prices));
-      const currentPrice = prices[prices.length - 1]?.[1] || 0;
-      dispatch(setCurrentPrice(currentPrice));
+    });
+    fetchRefiInfo().then((info) => {
+      const { current_price, fully_diluted_valuation } = info.market_data;
+
+      dispatch(setCurrentPrice(current_price["usd"]));
+      dispatch(setFullyDilutedValuation(fully_diluted_valuation["usd"]));
     });
   }, [dispatch]);
 

@@ -77,6 +77,13 @@ const prodRoutes: AppRoute[] = [
     secondary: true,
   },
   {
+    name: "Staking",
+    layout: "/",
+    path: "staking",
+    icon: <MdTrendingUp className="h-6 w-6" />,
+    component: <Staking />,
+  },
+  {
     name: "Contact us",
     layout: "",
     path: "https://refiprotocol.io/contact",

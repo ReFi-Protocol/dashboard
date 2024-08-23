@@ -3,6 +3,9 @@ import { createConfig, http } from "wagmi";
 import { getDefaultConfig } from "connectkit";
 import { CHAIN_ID, RPC_URL } from "../const";
 import { env } from "../../../env";
+import { Address, erc20Abi } from "viem";
+import { REFI_ADDRESS } from "../const";
+import { readContract } from "wagmi/actions";
 
 function getChain(id: number): chains.Chain {
   return (
@@ -25,3 +28,30 @@ export const web3config = createConfig(
     appName: "Dashboard",
   }),
 );
+
+export const refiContractConfig = {
+  address: REFI_ADDRESS as Address,
+  abi: erc20Abi,
+};
+
+export function balanceOf(address: Address) {
+  return readContract(web3config, {
+    ...refiContractConfig,
+    functionName: "balanceOf",
+    args: [address],
+  });
+}
+
+export function totalSupply() {
+  return readContract(web3config, {
+    ...refiContractConfig,
+    functionName: "totalSupply",
+  });
+}
+
+export function decimals() {
+  return readContract(web3config, {
+    ...refiContractConfig,
+    functionName: "decimals",
+  });
+}

@@ -17,7 +17,6 @@ import {
   calculateClaimableReward,
   formatReFi,
 } from "../../../web3/solana/staking/util";
-import { d } from "../../../web3/solana/service/d";
 import { addDays, format, fromUnixTime } from "date-fns";
 import { APY_DECIMALS } from "../../../web3/solana/const";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
@@ -25,6 +24,7 @@ import { useCustomToast } from "../../../utils";
 import { claim } from "../../../web3/solana/staking/service/claim";
 import { destake } from "../../../web3/solana/staking/service/destake";
 import { restake } from "../../../web3/solana/staking/service/restake";
+import { d } from "../../../web3/util/d";
 
 interface StakesAndRewardsTableProps {
   stakes: Stake[];

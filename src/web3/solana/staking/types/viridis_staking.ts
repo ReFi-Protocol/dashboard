@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/viridis_staking.json`.
  */
 export type ViridisStaking = {
-  "address": "4Y3DWRxpDUHfkKfEqX2joWtcTbR2kyd4wNv94jY3eHLv",
+  "address": "A99rMhgutWBjPCAcbhoyknj2FqVQYUpBiu7srmonmnHy",
   "metadata": {
     "name": "viridisStaking",
     "version": "0.1.0",
@@ -1650,6 +1650,35 @@ export type ViridisStaking = {
           {
             "name": "baseApy",
             "type": "u16"
+          },
+          {
+            "name": "nftDaysApy",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "nftApy"
+                  }
+                },
+                3
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "nftApy",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "days",
+            "type": "u16"
+          },
+          {
+            "name": "apy",
+            "type": "u16"
           }
         ]
       }
@@ -1756,6 +1785,10 @@ export type ViridisStaking = {
         "kind": "struct",
         "fields": [
           {
+            "name": "address",
+            "type": "pubkey"
+          },
+          {
             "name": "stakes",
             "type": {
               "vec": {
@@ -1801,6 +1834,21 @@ export type ViridisStaking = {
             "name": "maxNftRewardLamports",
             "type": {
               "option": "u64"
+            }
+          },
+          {
+            "name": "nftDaysApy",
+            "type": {
+              "option": {
+                "array": [
+                  {
+                    "defined": {
+                      "name": "nftApy"
+                    }
+                  },
+                  3
+                ]
+              }
             }
           }
         ]

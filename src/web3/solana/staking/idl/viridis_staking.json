@@ -1,5 +1,5 @@
 {
-  "address": "4Y3DWRxpDUHfkKfEqX2joWtcTbR2kyd4wNv94jY3eHLv",
+  "address": "A99rMhgutWBjPCAcbhoyknj2FqVQYUpBiu7srmonmnHy",
   "metadata": {
     "name": "viridis_staking",
     "version": "0.1.0",
@@ -1644,6 +1644,35 @@
           {
             "name": "base_apy",
             "type": "u16"
+          },
+          {
+            "name": "nft_days_apy",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "NftApy"
+                  }
+                },
+                3
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NftApy",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "days",
+            "type": "u16"
+          },
+          {
+            "name": "apy",
+            "type": "u16"
           }
         ]
       }
@@ -1750,6 +1779,10 @@
         "kind": "struct",
         "fields": [
           {
+            "name": "address",
+            "type": "pubkey"
+          },
+          {
             "name": "stakes",
             "type": {
               "vec": {
@@ -1795,6 +1828,21 @@
             "name": "max_nft_reward_lamports",
             "type": {
               "option": "u64"
+            }
+          },
+          {
+            "name": "nft_days_apy",
+            "type": {
+              "option": {
+                "array": [
+                  {
+                    "defined": {
+                      "name": "NftApy"
+                    }
+                  },
+                  3
+                ]
+              }
             }
           }
         ]
