@@ -10,6 +10,7 @@ import {
   MdTrendingUp,
   MdSwapHoriz,
 } from "react-icons/md";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { AppRoute } from "./types";
 import { env } from "./env";
 
@@ -50,6 +51,13 @@ const devRoutes: AppRoute[] = [
     icon: <MdBarChart className="h-6 w-6" />,
     component: <Leaderboard />,
   },
+  {
+    name: "Contact us",
+    layout: "",
+    path: "https://refiprotocol.io/contact",
+    icon: <FaExternalLinkAlt />,
+    component: "",
+  },
 ];
 
 const prodRoutes: AppRoute[] = [
@@ -67,6 +75,13 @@ const prodRoutes: AppRoute[] = [
     icon: <MdOutlineShoppingCart className="h-6 w-6" />,
     component: <Marketplace />,
     secondary: true,
+  },
+  {
+    name: "Contact us",
+    layout: "",
+    path: "https://refiprotocol.io/contact",
+    icon: <FaExternalLinkAlt />,
+    component: "",
   },
 ];
 
