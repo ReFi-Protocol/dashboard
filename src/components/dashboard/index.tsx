@@ -13,14 +13,15 @@ import ConnectWalletModal from "../connect-wallet-modal";
 import { useAppSelector } from "../../store";
 
 const DashboardContent: FC = () => {
-  const { historicalPrices } = useAppSelector((state) => state.price);
+  const { historicalPrices, currentPrice } = useAppSelector(
+    (state) => state.price,
+  );
   const anchorWallet = useAnchorWallet();
   const [isModalOpen, setModalOpen] = useState(true);
   const wallet = useWallet();
   const umi = useUmi(wallet);
   const [stakes, setStakes] = useState<Stake[]>([]);
   const [myNfts, setMyNfts] = useState<DigitalAsset[]>([]);
-  const currentPrice = historicalPrices[historicalPrices.length - 1]?.[1] || 0;
 
   useEffect(() => {
     if (anchorWallet && umi && wallet.connected) {

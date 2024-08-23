@@ -1,5 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { env } from "../../../env";
+import IDL from "../staking/idl/viridis_staking.json";
 
 export const ORIGIN = "";
 export const CLUSTER = env.VITE_SOLANA_CLUSTER;
@@ -22,3 +23,4 @@ export const ONE_YEAR_SECONDS = ONE_DAY_SECONDS * 365;
 
 export const SPL_MINT_PK = new PublicKey(SPL_MINT_ADDRESS);
 export const COLLECTION_MINT_PK = new PublicKey(COLLECTION_MINT_ADDRESS);
+export const PROGRAM_ID = new PublicKey(IDL.address);

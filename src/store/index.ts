@@ -5,11 +5,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 interface PriceData {
   historicalPrices: [number, number][];
   currentPrice: number;
+  fullyDilutedValuation: number;
 }
 
 const initialState: PriceData = {
   historicalPrices: [],
   currentPrice: 0,
+  fullyDilutedValuation: 0,
 };
 
 const priceSlice = createSlice({
@@ -22,10 +24,17 @@ const priceSlice = createSlice({
     setCurrentPrice: (state, action: PayloadAction<number>) => {
       state.currentPrice = action.payload;
     },
+    setFullyDilutedValuation: (state, action: PayloadAction<number>) => {
+      state.fullyDilutedValuation = action.payload;
+    },
   },
 });
 
-export const { setHistoricalPrices, setCurrentPrice } = priceSlice.actions;
+export const {
+  setHistoricalPrices,
+  setCurrentPrice,
+  setFullyDilutedValuation,
+} = priceSlice.actions;
 
 export const store = configureStore({
   reducer: {
