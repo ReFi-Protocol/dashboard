@@ -1,5 +1,5 @@
 {
-  "address": "6TXTWSeYPwyqzd27jziKjedeLh7bGRx5Gjtpqjz7ZLbA",
+  "address": "A99rMhgutWBjPCAcbhoyknj2FqVQYUpBiu7srmonmnHy",
   "metadata": {
     "name": "viridis_staking",
     "version": "0.1.0",
@@ -1778,6 +1778,10 @@
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "address",
+            "type": "pubkey"
+          },
           {
             "name": "stakes",
             "type": {

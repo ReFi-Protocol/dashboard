@@ -4,7 +4,7 @@ import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { useUmi } from "../../web3/solana/hook";
 import { Stake } from "../../web3/solana/staking/types";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
-import { getStakes } from "../../web3/solana/staking/service/getStakes";
+import { getMyStakes } from "../../web3/solana/staking/service/getMyStakes";
 import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import GrowthChart from "./components/GrowthChart";
 import MyMetrics from "../MyMetrics";
@@ -25,7 +25,7 @@ const DashboardContent: FC = () => {
 
   useEffect(() => {
     if (anchorWallet && umi && wallet.connected) {
-      getStakes(anchorWallet).then((stakes) => {
+      getMyStakes(anchorWallet).then((stakes) => {
         setStakes(stakes);
       });
       getReFiNfts(umi, anchorWallet.publicKey).then(setMyNfts);

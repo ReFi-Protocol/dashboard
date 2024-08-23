@@ -1,26 +1,24 @@
 import React, { FC, useEffect, useState } from "react";
 import MetricsSection from "./MetricSection";
-import {
-  LockIcon,
-  ConfettiIcon,
-  SumIcon,
-  GraphIcon,
-  MoneyIcon,
-  ShieldILockIcon,
-} from "./icons";
+import { LockIcon, GraphIcon, MoneyIcon, ShieldILockIcon } from "./icons";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { useUmi } from "../web3/solana/hook";
-import { Stake } from "../web3/solana/staking/types";
-import { getReFiNfts } from "../web3/solana/service/getReFiNfts";
-import { getStakes } from "../web3/solana/staking/service/getStakes";
-import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
-import { getLockedReFi } from "../web3/solana/staking/service/getLockedReFi";
-import { getTotalReFi } from "../web3/solana/staking/service/getTotalReFi";
-import { formatReFi, formatUSD } from "../web3/solana/staking/util";
-import { getExpectedReward } from "../web3/solana/staking/service/getExpectedReward";
-import { getLockedNftCount } from "../web3/solana/staking/service/getLockedNftCount";
+
+import {
+  calculatePercentage,
+  formatReFi,
+  formatUSD,
+} from "../web3/solana/staking/util";
+
 import { WidgetData } from "../types";
 import { useAppSelector } from "../store";
+import { getTotalValueLocked } from "../web3/evm/service/getTotalValueLocked";
+import { getTotalSupply } from "../web3/evm/service/getTotalSupply";
+import { d } from "../web3/util/d";
+import { ERC_REFI_DECIMALS } from "../web3/evm/const";
+import { getAllStakes } from "../web3/solana/staking/service/getAllStakes";
+import { StakeInfoAccount } from "../web3/solana/staking/types";
+import { getTotalRefiLocked } from "../web3/solana/staking/service/getTotalRefiLocked";
 
 const GlobalMetrics: FC = () => {
   const { currentPrice, fullyDilutedValuation } = useAppSelector(
@@ -29,39 +27,34 @@ const GlobalMetrics: FC = () => {
   const anchorWallet = useAnchorWallet();
   const wallet = useWallet();
   const umi = useUmi(wallet);
-  const [stakes, setStakes] = useState<Stake[]>([]);
-  const [myNfts, setMyNfts] = useState<DigitalAsset[]>([]);
+  const [ethValueLocked, setEthValueLocked] = useState<bigint>(0n);
+  const [dTotalSupply, setDTotaSupply] = useState<bigint>(0n);
+  const [allStakesAccs, setAllStakesAccs] = useState<StakeInfoAccount[]>([]);
+  const totalSplReFiLocked = getTotalRefiLocked(allStakesAccs);
+  const totalSupply = d(Number(dTotalSupply), ERC_REFI_DECIMALS);
 
-  const lockedReFi = getLockedReFi(stakes);
-  const expectedReward = getExpectedReward(stakes);
-  const lockedNftCount = getLockedNftCount(stakes);
-  const [totalReFi, setTotalReFi] = useState(0);
+  const totalRefiLocked =
+    d(Number(ethValueLocked), ERC_REFI_DECIMALS) +
+    d(Number(totalSplReFiLocked));
+  const percentageLocked = calculatePercentage(totalRefiLocked, totalSupply);
 
   useEffect(() => {
     if (anchorWallet && umi && wallet.connected) {
-      getStakes(anchorWallet).then((stakes) => {
-        setStakes(stakes);
-      });
-      getReFiNfts(umi, anchorWallet.publicKey).then(setMyNfts);
     } else {
-      setStakes([]);
-      setMyNfts([]);
     }
   }, [anchorWallet, umi]);
 
   useEffect(() => {
-    if (anchorWallet) {
-      getTotalReFi(anchorWallet.publicKey).then(setTotalReFi);
-    } else {
-      setTotalReFi(0);
-    }
-  }, [anchorWallet]);
+    getTotalValueLocked().then(setEthValueLocked);
+    getTotalSupply().then(setDTotaSupply);
+    getAllStakes().then(setAllStakesAccs);
+  }, []);
 
   const globalMetricsWidgets: WidgetData[] = [
     {
       icon: <LockIcon width={28} height={28} fill="white" />,
       title: "Total Supply Locked",
-      subtitle: "50%",
+      subtitle: `${percentageLocked}%`,
     },
     {
       icon: <GraphIcon width={28} height={28} fill="white" />,
@@ -76,7 +69,7 @@ const GlobalMetrics: FC = () => {
     {
       icon: <ShieldILockIcon width={28} height={28} fill="white" />,
       title: "Total Value Locked",
-      subtitle: "$REFI 200",
+      subtitle: `$REFI ${formatReFi(totalRefiLocked, 0)}`,
     },
   ];
 

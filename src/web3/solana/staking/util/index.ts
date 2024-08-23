@@ -48,8 +48,8 @@ export async function getStakeInfo(
   }
 }
 
-export function formatReFi(lamports: number) {
-  const tokenAmount = lamports / 10 ** SPL_DECIMALS;
+export function formatReFi(lamports: number, decimals: number = SPL_DECIMALS) {
+  const tokenAmount = lamports / 10 ** decimals;
   return tokenAmount.toLocaleString("en-US", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 1,
@@ -118,3 +118,11 @@ export const calculateReward = (
     throw error;
   }
 };
+
+export function calculatePercentage(part: number, whole: number): number {
+  if (whole === 0) {
+    return 0; // Avoid division by zero
+  }
+  const percentage = (part / whole) * 100;
+  return Number(percentage.toFixed(1));
+}

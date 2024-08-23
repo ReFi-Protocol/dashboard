@@ -12,7 +12,7 @@ import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { Stake } from "../../web3/solana/staking/types";
 
 import { useUmi } from "../../web3/solana/hook";
-import { getStakes } from "../../web3/solana/staking/service/getStakes";
+import { getMyStakes } from "../../web3/solana/staking/service/getMyStakes";
 import { useAppSelector } from "../../store";
 import ConnectWalletModal from "../connect-wallet-modal";
 import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
@@ -71,7 +71,7 @@ const StakingContent: FC = () => {
 
   useEffect(() => {
     if (anchorWallet && umi && walletContext.connected) {
-      getStakes(anchorWallet).then((stakes) => {
+      getMyStakes(anchorWallet).then((stakes) => {
         setStakes(stakes);
       });
 
