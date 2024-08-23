@@ -204,7 +204,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
             variant="brand"
             onClick={onStakeNow}
             borderRadius={"26px"}
-            className="text-black mt-6 rounded-[26px] bg-[#25AC88] px-6 py-2 text-[14px] font-semibold"
+            className="mt-6 rounded-[26px] bg-[#25AC88] px-6 py-2 text-[14px] font-semibold text-[#000000]"
           >
             Stake Now
           </Button>

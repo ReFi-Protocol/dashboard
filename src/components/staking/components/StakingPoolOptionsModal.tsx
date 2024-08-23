@@ -94,7 +94,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   return (
     <Modal onClose={onClose} size={"sm"} isOpen={isOpen} isCentered>
       <ModalOverlay />
-      <ModalContent className="m-auto w-fit max-w-[300px] justify-center !rounded-[15px] border-[1px] border-[#333333] !bg-[#000000] p-5 !drop-shadow-[0_1px_2px_rgba(255,255,255,0.30)] md:min-w-[700px] md:max-w-fit">
+      <ModalContent className="m-auto min-w-fit items-center justify-center !rounded-[40px] !bg-[#061A11] px-7 pb-6 pt-5 !text-white">
         <ModalHeader className="flex w-full justify-between pb-4 text-white">
           <p>Select Staking Option</p>
           <Button onClick={onClose} className="!bg-[#25AC88] !p-0">
@@ -112,7 +112,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
                   className={`cursor-pointer rounded-[10px] py-4 text-center ${
                     selectedPoolIndex === index
                       ? "border-2 border-[#25AC88] bg-[#0A2C1D]"
-                      : "border-2 border-[#061A11] bg-[#061A11]"
+                      : "border-2 border-[#0A2C1D] bg-[#0A2C1D]"
                   } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                 >
                   <p className="text-nowrap pb-2.5 text-base font-semibold text-white">
@@ -123,8 +123,10 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
                   <p className="text-base font-semibold text-white">
                     {pool.apy} APY
                   </p>
-                  <p className="pt-2.5 text-[10px] font-normal text-[#D0D0D0]">
-                    1 pCRBN NFT will be automatically locked
+                  <p className="px-2 pt-2.5 text-[10px] font-normal text-[#D0D0D0]">
+                    {index !== stakingPoolData.length - 1
+                      ? `Please note 1 NFT will be automatically locked`
+                      : `No NFT will be locked`}
                   </p>
                   {isDisabled && (
                     <p className="pt-2.5 text-[10px] font-normal text-red-400">
@@ -147,9 +149,9 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
                 // max={}
                 clampValueOnBlur={false}
                 onChange={(valueString) => setAmount(Number(valueString))}
-                className="mb-4 min-h-11 w-full !rounded-[16px] bg-[#061A11] !py-3 !pl-4 text-white"
+                className="mb-4 min-h-11 w-full !rounded-[16px] bg-[#0A2C1D] !py-3 !pl-4 text-white"
               >
-                <NumberInputField className="!focus:ring-0 !active:ring-0 !focus:border-none !focus:outline-none !active:border-none !active:outline-none !max-h-6 !border-none bg-[#061A11] !p-0 text-white !outline-none !ring-0" />
+                <NumberInputField className="!focus:ring-0 !active:ring-0 !focus:border-none !focus:outline-none !active:border-none !active:outline-none !max-h-6 !border-none bg-[#0A2C1D] !p-0 text-white !outline-none !ring-0" />
                 <NumberInputStepper className="!border-none !pr-5">
                   <NumberIncrementStepper
                     bg="none"

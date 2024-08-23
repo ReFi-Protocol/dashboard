@@ -28,7 +28,7 @@ const RestakeModal: FC<RestakeModalProps> = ({ isOpen, onClose }) => {
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay bg="rgba(0, 0, 0, 0.7)" backdropFilter="blur(10px)" />
-      <ModalContent className="m-auto w-fit max-w-[300px] justify-center !rounded-[15px] border-[1px] border-[#333333] !bg-[#000000] p-5 !drop-shadow-[0_1px_2px_rgba(255,255,255,0.30)] md:min-w-[700px] md:max-w-fit">
+      <ModalContent className="m-auto min-w-fit items-center justify-center !rounded-[40px] !bg-[#061A11] px-7 pb-6 pt-5 !text-white">
         <ModalHeader className="flex w-full justify-end !pb-4 text-white">
           <Button onClick={onClose} className="!bg-[#25AC88] !p-0">
             <IoClose className="h-5 w-5" />
@@ -51,17 +51,28 @@ const RestakeModal: FC<RestakeModalProps> = ({ isOpen, onClose }) => {
             </h3>
           </div>
         </ModalBody>
-        <ModalFooter className="!pb-7 !pt-0">
-          <div className="m-auto flex w-full justify-center">
+        <ModalFooter className="w-full !pb-7 !pt-0">
+          <div className="flex w-full justify-evenly">
             <Button
-              variant="brand"
-              onClick={() => handleRestakeClick()}
+              variant="outline"
+              size="sm"
+              colorScheme="green"
+              textColor={"#07BA9A"}
+              borderRadius={"8px"}
+              onClick={onClose}
+            >
+              Maybe Later
+            </Button>
+            <Button
+              variant="solid"
+              size="sm"
+              colorScheme="green"
               background={"#25AC88"}
               textColor={"#1A1A1A"}
               _hover={{ background: "#ffffff", color: "#25AC88" }}
               _active={{ background: "#ffffff", color: "#25AC88" }}
-              borderRadius={"26px"}
-              className="inset-y-0 w-fit rounded-[26px] !px-32 py-2 text-[14px] font-semibold text-[#000000]"
+              borderRadius={"8px"}
+              onClick={handleRestakeClick}
             >
               Restake Now
             </Button>

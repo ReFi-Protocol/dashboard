@@ -27,6 +27,7 @@ const NFTCollectionGallery: FC = () => {
   const [nftInfo, setNftInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isBought, setIsBought] = useState(false);
 
   const availableNFTs = candyMachine?.items?.length
     ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed)
@@ -38,7 +39,9 @@ const NFTCollectionGallery: FC = () => {
   const openModal = () => setModalOpen(true);
   const closeModal = () => {
     setModalOpen(false);
-    openStakeModal();
+    if (isBought) {
+      openStakeModal();
+    }
   };
   const openRevealModal = () => setRevealModalOpen(true);
   const closeRevealModal = () => {
@@ -58,6 +61,7 @@ const NFTCollectionGallery: FC = () => {
 
       setNftInfo(metadata);
       setIsRevealed(true);
+      setIsBought(true);
     } catch (error: any) {
       console.error("Error purchasing NFT:", error);
       closeRevealModal();
@@ -90,6 +94,7 @@ const NFTCollectionGallery: FC = () => {
     try {
       const metadata = await fetchMetadata(uri);
       setNftInfo(metadata);
+      setIsBought(false);
       openModal();
     } catch (error) {
       console.error("Failed to fetch metadata for NFT:", error);
