@@ -80,7 +80,7 @@ const LeaderboardTable: FC<LeaderboardTableProps> = () => {
       <h3 className="mb-4 font-sans text-xl font-semibold text-white">
         Leaderboard table
       </h3>
-      <TableContainer>
+      <TableContainer className="custom-scrollbar">
         <Table
           variant="unstyled"
           className="w-full rounded-[20px] bg-[#061A11] text-center text-sm font-semibold text-white"
@@ -88,7 +88,7 @@ const LeaderboardTable: FC<LeaderboardTableProps> = () => {
           {renderHeader()}
           <Tbody>
             <Tr>
-              <Td colSpan={9} padding="0">
+              <Td colSpan={4} padding="0">
                 <Box
                   as="hr"
                   borderColor="#3C3B3B"

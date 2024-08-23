@@ -1,8 +1,10 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import MetricsSection from "../MetricSection";
 import { LockIcon, GraphIcon, MoneyIcon, ShieldILockIcon } from "../icons";
 import { WidgetData } from "../../types";
 import LeaderboardTable from "./components/LeaderboardTable";
+import ConnectWalletModal from "../connect-wallet-modal";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -28,6 +30,17 @@ const globalMetricsWidgets: WidgetData[] = [
 ];
 
 const LeaderboardContent: FC = () => {
+  const wallet = useWallet();
+  const [isModalOpen, setModalOpen] = useState(true);
+
+  if (!wallet.publicKey) {
+    return (
+      <ConnectWalletModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+      />
+    );
+  }
   return (
     <div>
       <MetricsSection

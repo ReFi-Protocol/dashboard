@@ -1,5 +1,15 @@
 import { FC } from "react";
-import { Table, Thead, Tbody, Tr, Th, Td, Box, Image, TableContainer } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Box,
+  Image,
+  TableContainer,
+} from "@chakra-ui/react";
 
 interface Transaction {
   date: string;
@@ -20,7 +30,7 @@ const TransactionHistoryTable: FC<TransactionHistoryTableProps> = ({
       <h4 className="py-[15px] text-base font-semibold text-white">
         Transaction history
       </h4>
-      <TableContainer>
+      <TableContainer className="custom-scrollbar">
         <Table
           variant="unstyled"
           className="w-full rounded-[20px] bg-[#061A11] text-center text-sm font-semibold text-white"

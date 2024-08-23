@@ -218,7 +218,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
       <h3 className="mb-4 font-sans text-xl font-semibold text-white">
         My Stakes & Rewards
       </h3>
-      <TableContainer>
+      <TableContainer className="custom-scrollbar">
         <Table
           variant="unstyled"
           className="w-full rounded-[20px] bg-[#061A11] text-center text-sm font-semibold text-white"
