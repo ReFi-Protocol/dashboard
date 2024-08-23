@@ -6,7 +6,7 @@ import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
 import { useUmi } from "../../../web3/solana/hook";
 import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
-import { Spinner, Button } from "@chakra-ui/react";
+import { Spinner, Button, Image } from "@chakra-ui/react";
 import { NFTInfo } from "../../../types";
 
 const ITEMS_PER_PAGE = 6;
@@ -76,10 +76,16 @@ const MyNFTsGallery: FC = () => {
           {visibleCount < nfts.length && (
             <div className="flex justify-center">
               <Button
-                onClick={handleViewMore}
-                variant="brand"
-                borderRadius={"26px"}
+                variant="solid"
+                size="sm"
+                colorScheme="green"
+                background={"#25AC88"}
+                textColor={"#1A1A1A"}
+                _hover={{ background: "#ffffff", color: "#25AC88" }}
+                _active={{ background: "#ffffff", color: "#25AC88" }}
                 className="inset-y-0 mt-8 w-full max-w-40 flex-grow rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
+                borderRadius={"26px"}
+                onClick={handleViewMore}
               >
                 View More
               </Button>
@@ -87,7 +93,17 @@ const MyNFTsGallery: FC = () => {
           )}
         </>
       ) : (
-        <p className="text-white">No NFTs found.</p>
+        <div className="m-auto flex flex-col items-center pt-24">
+          <Image
+            src="/icons/empty-box-icon.svg"
+            alt="No transaction"
+            boxSize="210px"
+          />
+          <p className="text-[15px] font-normal text-[#D0D0D0]">
+            Your PCRBN NFT collection is currently empty. Purchased NFTs will be
+            displayed here
+          </p>
+        </div>
       )}
       {nftInfo && (
         <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} />

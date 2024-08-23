@@ -5,6 +5,7 @@ import ProjectStats from "./components/ProjectStats";
 import { useCandyMachine } from "../../web3/solana/hook";
 import { useWallet } from "@solana/wallet-adapter-react";
 import ConnectWalletModal from "../connect-wallet-modal";
+import { Button } from "@chakra-ui/react";
 
 const tabOptions = [
   "NFT Collection",
@@ -57,17 +58,18 @@ const MarketplaceContent: FC = () => {
       <div>
         <div className="mb-11 flex flex-col justify-start gap-4 sm:flex-row">
           {tabOptions.map((tab) => (
-            <button
-              key={tab}
-              className={`rounded-[50px] px-5 py-2.5 font-sans text-base font-semibold ${
-                activeTab === tab
-                  ? "text-black bg-white"
-                  : "bg-[#061A11] text-white"
-              } rounded-[50px]`}
+            <Button
               onClick={() => setActiveTab(tab)}
+              variant="solid"
+              background={`${activeTab === tab ? "#ffffff" : "#061A11"}`}
+              textColor={`${activeTab === tab ? "#000000" : "#ffffff"}`}
+              borderRadius={"50px"}
+              _hover={{ background: "#ffffff", color: "#000000" }}
+              _active={{ background: "#ffffff", color: "#000000" }}
+              className="px-5 py-2.5 font-sans text-base font-semibold "
             >
               {tab}
-            </button>
+            </Button>
           ))}
         </div>
         <div className="mt-4">

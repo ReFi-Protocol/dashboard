@@ -122,12 +122,16 @@ const NFTCollectionGallery: FC = () => {
           </p>
           {wallet.publicKey && umi && availableNFTs > 0 ? (
             <Button
-              variant="brand"
+              variant="solid"
               onClick={() => buyNft(umi)}
               isLoading={isLoading}
+              background={"#25AC88"}
+              textColor={"#000000"}
               loadingText="Revealing NFT..."
               borderRadius={"26px"}
-              className="inset-y-0 m-auto max-w-fit flex-grow bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000] lg:m-0"
+              _hover={{ background: "#ffffff", color: "#25AC88" }}
+              _active={{ background: "#ffffff", color: "#25AC88" }}
+              className="inset-y-0 m-auto max-w-fit flex-grow px-6 py-2.5 text-[14px] font-semibold lg:m-0"
             >
               Buy NFT for 125,000 $REFI
             </Button>
@@ -179,9 +183,14 @@ const NFTCollectionGallery: FC = () => {
         <div className="flex justify-center">
           <Button
             onClick={handleViewMore}
-            variant="brand"
+            variant="solid"
+            colorScheme="green"
+            background={"#25AC88"}
+            textColor={"#000000"}
             borderRadius={"26px"}
-            className="inset-y-0 mt-8 w-full max-w-40 flex-grow !text-wrap rounded-[26px] bg-[#25AC88] px-6 py-2.5 text-[14px] font-semibold text-[#000000]"
+            _hover={{ background: "#ffffff", color: "#25AC88" }}
+            _active={{ background: "#ffffff", color: "#25AC88" }}
+            className="inset-y-0 mt-8 w-full max-w-40 flex-grow !text-wrap rounded-[26px] px-6 py-2.5 text-[14px] font-semibold"
           >
             View More
           </Button>

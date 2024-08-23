@@ -1,11 +1,9 @@
 import { FC, useEffect, useState } from "react";
-import { LockIcon, GraphIcon, MoneyIcon, ShieldILockIcon } from "../icons";
 
 import StakesAndRewardsTable from "./components/StakesAndRewardsTable";
 
-import { WidgetData, StakingPoolData } from "../../types";
+import { StakingPoolData } from "../../types";
 import StakingPromoBanner from "./components/StakingPromoBanner";
-import MetricsSection from "../MetricSection";
 import StakingPools from "./components/StakingPools";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 
@@ -20,6 +18,7 @@ import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import { getConfig } from "../../web3/solana/staking/service/getConfig";
 import MyMetrics from "../MyMetrics";
 import GlobalMetrics from "../GlobalMetrics";
+import RestakeModal from "./components/RestakeModal";
 
 const stakingPoolData: StakingPoolData[] = [
   {
@@ -57,6 +56,7 @@ const StakingContent: FC = () => {
   const [userHasNfts, setUserHasNfts] = useState<boolean>(false);
   const [isConnectWalletModalOpen, setConnectWalletModalOpen] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isRestakeModalOpen, setRestakeModalOpen] = useState(false);
   const anchorWallet = useAnchorWallet();
   const walletContext = useWallet();
   const umi = useUmi(walletContext);
@@ -123,6 +123,10 @@ const StakingContent: FC = () => {
         stakingPoolData={stakingPoolData}
         selectedPoolIndex={selectedPoolIndex}
         onSelectPool={handleSelectPool}
+      />
+      <RestakeModal
+        isOpen={isRestakeModalOpen}
+        onClose={() => setRestakeModalOpen(false)}
       />
     </div>
   );

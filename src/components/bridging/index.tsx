@@ -1,7 +1,9 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import TransactionHistoryTable from "./components/TransactionHistoryTable";
 import BridgeInfo from "./components/BridgeInfo";
 import ConversionInfo from "./components/ConversionInfo";
+import ConnectWalletModal from "../connect-wallet-modal";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 interface Transaction {
   date: string;
@@ -38,9 +40,21 @@ const transactions: Transaction[] = [
 ];
 
 const BridgingContent: FC = () => {
+  const wallet = useWallet();
+  const [isModalOpen, setModalOpen] = useState(true);
+
   const handleSwap = () => {
-    console.log("Swapping tokens");
+    console.log("Swap tokens");
   };
+
+  if (!wallet.publicKey) {
+    return (
+      <ConnectWalletModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col pt-5 text-white">
