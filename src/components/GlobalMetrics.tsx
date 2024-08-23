@@ -53,7 +53,7 @@ const GlobalMetrics: FC = () => {
   const globalMetricsWidgets: WidgetData[] = [
     {
       icon: <LockIcon width={28} height={28} fill="white" />,
-      title: "Total Supply Locked",
+      title: "Total Supply Staked",
       subtitle: `${percentageLocked}%`,
     },
     {
