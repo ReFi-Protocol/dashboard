@@ -23,11 +23,6 @@ import { useUmi } from "../../../web3/solana/hook";
 import { getTotalReFi } from "../../../web3/solana/staking/service/getTotalReFi";
 import { formatReFi } from "../../../web3/solana/staking/util";
 
-const parseReFi = (formattedValue: string) => {
-  const numericValue = parseFloat(formattedValue.replace(/[^0-9.]/g, ""));
-  return isNaN(numericValue) ? 0 : numericValue;
-};
-
 interface StakingPoolOptionsModalProps {
   isOpen: boolean;
   onClose: () => void;
