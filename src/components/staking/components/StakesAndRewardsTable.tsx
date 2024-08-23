@@ -149,16 +149,6 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
         <Td>
           <div className="flex flex-col gap-2">
             <Button
-              variant="outline"
-              size="sm"
-              colorScheme="green"
-              textColor={"#07BA9A"}
-              borderRadius={"8px"}
-              onClick={() => handleRestakeClick(index)}
-            >
-              Restake
-            </Button>
-            <Button
               variant="solid"
               size="sm"
               colorScheme="green"
@@ -166,6 +156,16 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
               textColor={"#1A1A1A"}
               _hover={{ background: "#ffffff", color: "#25AC88" }}
               _active={{ background: "#ffffff", color: "#25AC88" }}
+              borderRadius={"8px"}
+              onClick={() => handleRestakeClick(index)}
+            >
+              Restake
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              colorScheme="green"
+              textColor={"#07BA9A"}
               borderRadius={"8px"}
               onClick={() => handleClaimClick(index)}
             >
@@ -204,7 +204,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
             variant="brand"
             onClick={onStakeNow}
             borderRadius={"26px"}
-            className="text-black mt-6 rounded-[26px] bg-[#25AC88] px-6 py-2 text-[14px] font-semibold"
+            className="mt-6 rounded-[26px] bg-[#25AC88] px-6 py-2 text-[14px] font-semibold text-[#000000]"
           >
             Stake Now
           </Button>
@@ -218,7 +218,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
       <h3 className="mb-4 font-sans text-xl font-semibold text-white">
         My Stakes & Rewards
       </h3>
-      <TableContainer>
+      <TableContainer className="custom-scrollbar">
         <Table
           variant="unstyled"
           className="w-full rounded-[20px] bg-[#061A11] text-center text-sm font-semibold text-white"
