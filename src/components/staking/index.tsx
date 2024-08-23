@@ -25,6 +25,12 @@ import ConnectWalletModal from "../connect-wallet-modal";
 import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import RestakeModal from "./components/RestakeModal";
+import { getLockedReFi } from "../../web3/solana/staking/service/getLockedReFi";
+import { getTotalReFi } from "../../web3/solana/staking/service/getTotalReFi";
+import { formatReFi } from "../../web3/solana/staking/util";
+import { getExpectedReward } from "../../web3/solana/staking/service/getExpectedReward";
+import { getLockedNftCount } from "../../web3/solana/staking/service/getLockedNftCount";
+import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 
 const globalMetricsWidgets: WidgetData[] = [
   {
@@ -46,29 +52,6 @@ const globalMetricsWidgets: WidgetData[] = [
     icon: <ShieldILockIcon width={28} height={28} fill="white" />,
     title: "Total Value Locked",
     subtitle: "$REFI 200",
-  },
-];
-
-const userMetricsWidgets: WidgetData[] = [
-  {
-    icon: <SumIcon width={28} height={28} fill="white" />,
-    title: "Total Owned",
-    subtitle: "350.4 $REFI",
-  },
-  {
-    icon: <LockIcon width={28} height={28} fill="white" />,
-    title: "Locked in Staking",
-    subtitle: "1130 $REFI",
-  },
-  {
-    icon: <ConfettiIcon width={28} height={28} fill="white" />,
-    title: "Expected Rewards",
-    subtitle: "540 $REFI",
-  },
-  {
-    icon: <LockIcon width={28} height={28} fill="white" />,
-    title: "Owned/Locked pCRBN",
-    subtitle: `22 pCRBN`,
   },
 ];
 
@@ -111,6 +94,35 @@ const StakingContent: FC = () => {
   const walletContext = useWallet();
   const umi = useUmi(walletContext);
 
+  const [myNfts, setMyNfts] = useState<DigitalAsset[]>([]);
+  const lockedReFi = getLockedReFi(stakes);
+  const expectedReward = getExpectedReward(stakes);
+  const lockedNftCount = getLockedNftCount(stakes);
+  const [totalReFi, setTotalReFi] = useState(0);
+
+  const userMetricsWidgets: WidgetData[] = [
+    {
+      icon: <SumIcon width={28} height={28} fill="white" />,
+      title: "Total Owned",
+      subtitle: `${formatReFi(totalReFi)} $REFI`,
+    },
+    {
+      icon: <LockIcon width={28} height={28} fill="white" />,
+      title: "Locked in Staking",
+      subtitle: `${formatReFi(lockedReFi)} $REFI`,
+    },
+    {
+      icon: <ConfettiIcon width={28} height={28} fill="white" />,
+      title: "Expected Rewards",
+      subtitle: `${formatReFi(expectedReward)} $REFI`,
+    },
+    {
+      icon: <LockIcon width={28} height={28} fill="white" />,
+      title: "Owned/Locked pCRBN",
+      subtitle: `${myNfts.length + lockedNftCount} pCRBN`,
+    },
+  ];
+
   useEffect(() => {
     if (anchorWallet && umi) {
       getReFiNfts(umi, anchorWallet.publicKey).then((refiNfts) => {
@@ -124,10 +136,20 @@ const StakingContent: FC = () => {
       getStakes(anchorWallet).then((stakes) => {
         setStakes(stakes);
       });
+      getReFiNfts(umi, anchorWallet.publicKey).then(setMyNfts);
     } else {
       setStakes([]);
+      setMyNfts([]);
     }
   }, [anchorWallet, umi]);
+
+  useEffect(() => {
+    if (anchorWallet) {
+      getTotalReFi(anchorWallet.publicKey).then(setTotalReFi);
+    } else {
+      setTotalReFi(0);
+    }
+  }, [anchorWallet]);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
