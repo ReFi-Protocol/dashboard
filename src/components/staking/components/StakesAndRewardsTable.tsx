@@ -25,6 +25,7 @@ import { claim } from "../../../web3/solana/staking/service/claim";
 import { destake } from "../../../web3/solana/staking/service/destake";
 import { restake } from "../../../web3/solana/staking/service/restake";
 import { d } from "../../../web3/util/d";
+import { GaEvent, registerEvent } from "../../../events";
 
 interface StakesAndRewardsTableProps {
   stakes: Stake[];
@@ -54,6 +55,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
   const showToast = useCustomToast();
 
   const handleClaimClick = async (stakeIndex: number) => {
+    registerEvent({ event: GaEvent.CLAIM });
     if (anchorWallet) {
       try {
         await claim(walletContext, anchorWallet, stakeIndex);
@@ -70,6 +72,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
   };
 
   const handleRestakeClick = async (stakeIndex: number) => {
+    registerEvent({ event: GaEvent.RESTAKE });
     if (anchorWallet) {
       try {
         await restake(walletContext, anchorWallet, stakeIndex);
@@ -86,6 +89,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
   };
 
   const handleDestakeClick = async (stakeIndex: number) => {
+    registerEvent({ event: GaEvent.DESTAKE });
     if (anchorWallet) {
       try {
         await destake(walletContext, anchorWallet, stakeIndex);

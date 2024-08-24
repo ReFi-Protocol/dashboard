@@ -22,6 +22,7 @@ import { stake } from "../../../web3/solana/staking/service/stake";
 import { useUmi } from "../../../web3/solana/hook";
 import { getTotalReFi } from "../../../web3/solana/staking/service/getTotalReFi";
 import { formatReFi } from "../../../web3/solana/staking/util";
+import { GaEvent, registerEvent } from "../../../events";
 
 interface StakingPoolOptionsModalProps {
   isOpen: boolean;
@@ -58,7 +59,11 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   const handleStakeClick = async () => {
     if (anchorWallet && umi && selectedPoolIndex !== null) {
       try {
-        const lockPeriod = stakingPoolData[selectedPoolIndex]?.duration;
+        const lockPeriod = stakingPoolData[selectedPoolIndex]?.duration || 0;
+        registerEvent({
+          event: GaEvent.STAKE,
+          additional_info: `${lockPeriod}`,
+        });
         if (lockPeriod) {
           const nft = refiNfts.length ? refiNfts[0] : null;
 
