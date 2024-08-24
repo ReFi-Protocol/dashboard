@@ -86,8 +86,6 @@ const StakingContent: FC = () => {
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
-  console.log(config);
-
   const handleSelectPool = (index: number) => {
     setSelectedPoolIndex(index);
   };

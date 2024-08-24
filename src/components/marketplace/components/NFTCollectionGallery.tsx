@@ -14,6 +14,7 @@ import StakeNowModal from "./StakeNowModal";
 import { Spinner } from "@chakra-ui/react";
 import { useCustomToast } from "../../../utils";
 import { env } from "../../../env";
+import { GaEvent, registerEvent } from "../../../events";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -51,6 +52,7 @@ const NFTCollectionGallery: FC = () => {
   const openStakeModal = () => setStakeModalOpen(true);
 
   const buyNft = async (umi: Umi) => {
+    registerEvent({ event: GaEvent.NFT_PURCHASE });
     setIsLoading(true);
     openRevealModal();
 
