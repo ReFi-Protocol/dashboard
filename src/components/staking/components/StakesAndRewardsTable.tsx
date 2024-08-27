@@ -132,6 +132,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
         ? "Destaked"
         : "Confirmed";
     const canDestake = compareDesc(lockEndDate, new Date()) > 0;
+    const canRestake = !stake.parentStakeIndex && stake.nft;
 
     const claimableReward = calculateClaimableReward(stake);
     const actualReward = Math.max(
@@ -161,7 +162,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
           <div className="flex min-h-[112px] flex-col justify-center gap-2">
             {!stake.destakeTime && (
               <>
-                {stake.nft && (
+                {canRestake && (
                   <Button
                     variant="solid"
                     size="sm"
