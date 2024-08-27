@@ -17,7 +17,13 @@ import {
   calculateClaimableReward,
   formatReFi,
 } from "../../../web3/solana/staking/util";
-import { addDays, format, fromUnixTime } from "date-fns";
+import {
+  addDays,
+  format,
+  fromUnixTime,
+  compareAsc,
+  compareDesc,
+} from "date-fns";
 import { APY_DECIMALS } from "../../../web3/solana/const";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { useCustomToast } from "../../../utils";
@@ -116,8 +122,8 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
   );
 
   const renderStakeRow = (stake: Stake, index: number) => {
-    const date = fromUnixTime(stake.startTime.toNumber());
-    const lockEndDate = addDays(date, stake.nftLockDays || 0);
+    const startDate = fromUnixTime(stake.startTime.toNumber());
+    const lockEndDate = addDays(startDate, stake.nftLockDays || 0);
     const dApy = stake.baseApy + (stake.nftApy || 0);
     const apy = dApy / 10 ** APY_DECIMALS;
     const status = stake.restakeTime
@@ -125,6 +131,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
       : stake.destakeTime
         ? "Destaked"
         : "Confirmed";
+    const canDestake = compareDesc(lockEndDate, new Date()) > 0;
 
     const claimableReward = calculateClaimableReward(stake);
     const actualReward = Math.max(
@@ -136,8 +143,8 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
       <Tr key={index}>
         <Td>{index}</Td>
         <Td>{formatReFi(stake.amount.toNumber())}</Td>
-        <Td>{d(stake.amount.toNumber()) * currentPrice}</Td>
-        <Td>{format(date, "MMM dd")}</Td>
+        <Td>{formatReFi(stake.amount.toNumber() * currentPrice)}</Td>
+        <Td>{format(startDate, "MMM dd")}</Td>
         <Td>{format(lockEndDate, "MMM dd")}</Td>
         <Td>{`${apy}%`}</Td>
         <Td>
@@ -151,43 +158,53 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
         </Td>
         <Td>{formatReFi(actualReward)}</Td>
         <Td>
-          <div className="flex flex-col gap-2">
-            <Button
-              variant="solid"
-              size="sm"
-              colorScheme="green"
-              background={"#25AC88"}
-              textColor={"#1A1A1A"}
-              _hover={{ background: "#ffffff", color: "#25AC88" }}
-              _active={{ background: "#ffffff", color: "#25AC88" }}
-              borderRadius={"8px"}
-              onClick={() => handleRestakeClick(index)}
-            >
-              Restake
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              colorScheme="green"
-              textColor={"#07BA9A"}
-              borderRadius={"8px"}
-              onClick={() => handleClaimClick(index)}
-            >
-              Claim
-            </Button>
-            <Button
-              variant="solid"
-              size="sm"
-              colorScheme="red"
-              background={"#DB3545"}
-              textColor={"#ffffff"}
-              _hover={{ background: "#ffffff", color: "#DB3545" }}
-              _active={{ background: "#ffffff", color: "#DB3545" }}
-              borderRadius={"8px"}
-              onClick={() => handleDestakeClick(index)}
-            >
-              Destake
-            </Button>
+          <div className="flex min-h-[112px] flex-col justify-center gap-2">
+            {!stake.destakeTime && (
+              <>
+                {stake.nft && (
+                  <Button
+                    variant="solid"
+                    size="sm"
+                    colorScheme="green"
+                    background={"#25AC88"}
+                    textColor={"#1A1A1A"}
+                    _hover={{ background: "#ffffff", color: "#25AC88" }}
+                    _active={{ background: "#ffffff", color: "#25AC88" }}
+                    borderRadius={"8px"}
+                    onClick={() => handleRestakeClick(index)}
+                  >
+                    Restake
+                  </Button>
+                )}
+                {actualReward > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    colorScheme="green"
+                    textColor={"#07BA9A"}
+                    borderRadius={"8px"}
+                    onClick={() => handleClaimClick(index)}
+                  >
+                    Claim
+                  </Button>
+                )}
+                {canDestake && (
+                  <Button
+                    variant="solid"
+                    size="sm"
+                    colorScheme="red"
+                    background={"#DB3545"}
+                    textColor={"#ffffff"}
+                    _hover={{ background: "#ffffff", color: "#DB3545" }}
+                    _active={{ background: "#ffffff", color: "#DB3545" }}
+                    borderRadius={"8px"}
+                    onClick={() => handleDestakeClick(index)}
+                  >
+                    Destake
+                  </Button>
+                )}
+              </>
+            )}
           </div>
         </Td>
       </Tr>
