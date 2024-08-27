@@ -7,7 +7,7 @@ import StakingPromoBanner from "./components/StakingPromoBanner";
 import StakingPools from "./components/StakingPools";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 
-import { Stake } from "../../web3/solana/staking/types";
+import { Stake, StakeInfoAccount } from "../../web3/solana/staking/types";
 
 import { useUmi } from "../../web3/solana/hook";
 import { getMyStakes } from "../../web3/solana/staking/service/getMyStakes";
@@ -19,6 +19,7 @@ import { getConfig } from "../../web3/solana/staking/service/getConfig";
 import MyMetrics from "../MyMetrics";
 import GlobalMetrics from "../GlobalMetrics";
 import RestakeModal from "./components/RestakeModal";
+import { getAllStakes } from "../../web3/solana/staking/service/getAllStakes";
 
 const stakingPoolData: StakingPoolData[] = [
   {
@@ -60,6 +61,11 @@ const StakingContent: FC = () => {
   const anchorWallet = useAnchorWallet();
   const walletContext = useWallet();
   const umi = useUmi(walletContext);
+  const [allStakesAccs, setAllStakesAccs] = useState<StakeInfoAccount[]>([]);
+
+  useEffect(() => {
+    getAllStakes().then(setAllStakesAccs);
+  }, []);
 
   useEffect(() => {
     if (anchorWallet && umi) {
@@ -102,7 +108,7 @@ const StakingContent: FC = () => {
   return (
     <div className="flex flex-col gap-12 text-white">
       <StakingPromoBanner />
-      <GlobalMetrics />
+      <GlobalMetrics stakeAccounts={allStakesAccs} />
       <MyMetrics />
       <StakingPools
         stakingPoolData={stakingPoolData}
