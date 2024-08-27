@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import ExchangeRateChart from "./components/ExchangeRateChart";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { useUmi } from "../../web3/solana/hook";
-import { Stake } from "../../web3/solana/staking/types";
+import { Stake, StakeInfoAccount } from "../../web3/solana/staking/types";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import { getMyStakes } from "../../web3/solana/staking/service/getMyStakes";
 import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
@@ -11,6 +11,8 @@ import MyMetrics from "../MyMetrics";
 import MyNFTsGallery from "../marketplace/components/MyNFTsGallery";
 import ConnectWalletModal from "../connect-wallet-modal";
 import { useAppSelector } from "../../store";
+import GlobalMetrics from "../GlobalMetrics";
+import { getAllStakes } from "../../web3/solana/staking/service/getAllStakes";
 
 const DashboardContent: FC = () => {
   const { historicalPrices, currentPrice } = useAppSelector(
@@ -22,6 +24,11 @@ const DashboardContent: FC = () => {
   const umi = useUmi(wallet);
   const [stakes, setStakes] = useState<Stake[]>([]);
   const [myNfts, setMyNfts] = useState<DigitalAsset[]>([]);
+  const [allStakesAccs, setAllStakesAccs] = useState<StakeInfoAccount[]>([]);
+
+  useEffect(() => {
+    getAllStakes().then(setAllStakesAccs);
+  }, []);
 
   useEffect(() => {
     if (anchorWallet && umi && wallet.connected) {
@@ -46,6 +53,7 @@ const DashboardContent: FC = () => {
 
   return (
     <div>
+      <GlobalMetrics stakeAccounts={allStakesAccs} />
       <MyMetrics />
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2">
         <ExchangeRateChart
