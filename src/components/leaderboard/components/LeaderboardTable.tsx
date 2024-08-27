@@ -11,8 +11,14 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { useCustomToast } from "../../../utils";
+import { StakeInfoAccount } from "../../../web3/solana/staking/types";
+import { createLeaderboardTable } from "../utils";
+import { formatReFi } from "../../../web3/solana/staking/util";
 
-interface LeaderboardTableProps {}
+interface LeaderboardTableProps {
+  stakeAccounts: StakeInfoAccount[];
+  currentPrice: number;
+}
 
 const tableHeaders = [
   "Rank",
@@ -21,22 +27,12 @@ const tableHeaders = [
   "Number of PCBN",
 ];
 
-const mockData = [
-  {
-    rank: 1,
-    walletAddress: "0xABC123...DEF456",
-    stakedAmount: "5000",
-    numberOfPCBN: 10,
-  },
-  {
-    rank: 2,
-    walletAddress: "0x789XYZ...GHI012",
-    stakedAmount: "3000",
-    numberOfPCBN: 7,
-  },
-];
-const LeaderboardTable: FC<LeaderboardTableProps> = () => {
+const LeaderboardTable: FC<LeaderboardTableProps> = ({
+  stakeAccounts,
+  currentPrice,
+}) => {
   const showToast = useCustomToast();
+  const tableData = createLeaderboardTable(stakeAccounts, currentPrice);
 
   const renderHeader = () => (
     <Thead>
@@ -49,12 +45,12 @@ const LeaderboardTable: FC<LeaderboardTableProps> = () => {
   );
 
   const renderDataRows = () =>
-    mockData.map((row, index) => (
+    tableData.map((row, index) => (
       <Tr key={index}>
-        <Td>{row.rank}</Td>
+        <Td>{index + 1}</Td>
         <Td>{row.walletAddress}</Td>
-        <Td>{row.stakedAmount}</Td>
-        <Td>{row.numberOfPCBN}</Td>
+        <Td>{`${formatReFi(row.totalStaked.toNumber())} ($${formatReFi(row.totalStakedUsd)})`}</Td>
+        <Td>{row.distinctNftCount}</Td>
       </Tr>
     ));
 
@@ -97,7 +93,7 @@ const LeaderboardTable: FC<LeaderboardTableProps> = () => {
                 />
               </Td>
             </Tr>
-            {mockData.length > 0 ? renderDataRows() : renderNoDataMessage()}
+            {tableData.length > 0 ? renderDataRows() : renderNoDataMessage()}
           </Tbody>
         </Table>
       </TableContainer>
