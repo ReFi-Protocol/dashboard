@@ -22,6 +22,10 @@ export const getConfigAddress = (programId: PublicKey) => {
   )[0];
 };
 
+export const getVaultAddress = (programId: PublicKey) => {
+  return PublicKey.findProgramAddressSync([Buffer.from("vault")], programId)[0];
+};
+
 export async function getConfig(program: Program<ViridisStaking>) {
   const configAddress = getConfigAddress(program.programId);
 

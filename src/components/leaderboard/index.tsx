@@ -26,7 +26,7 @@ const LeaderboardContent: FC = () => {
     );
   }
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       <GlobalMetrics stakeAccounts={allStakesAccs} />
       <LeaderboardTable
         stakeAccounts={allStakesAccs}
