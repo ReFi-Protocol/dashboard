@@ -38,7 +38,11 @@ const GlobalMetrics: FC<GlobalMetricsProps> = ({ stakeAccounts }) => {
   const totalRefiLocked =
     d(Number(ethValueLocked), ERC_REFI_DECIMALS) +
     d(Number(totalSplReFiLocked));
-  const percentageLocked = calculatePercentage(totalRefiLocked, totalSupply);
+
+  const percentageLocked = calculatePercentage(
+    d(Number(totalSplReFiLocked)),
+    totalSupply,
+  );
 
   useEffect(() => {
     getTotalValueLocked().then(setEthValueLocked);
