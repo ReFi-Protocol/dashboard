@@ -1,45 +1,31 @@
 import { FC, useState } from "react";
 import { Button } from "@chakra-ui/react";
 import { StakingPoolData } from "../../../types";
-import StakingPoolOptionsModal from "./StakingPoolOptionsModal";
 
 export interface StakingPoolCardProps {
   duration: number | null;
   maxStake: string;
   apy: string;
-  isSelected: boolean;
-  onSelect: () => void;
-  selectedPoolIndex: number | null;
-  stakingPoolData: StakingPoolData[];
   userHasNfts: boolean;
+  onStakeClick: () => void;
 }
 
 const StakingPoolCard: FC<StakingPoolCardProps> = ({
   duration,
   maxStake,
   apy,
-  isSelected,
-  onSelect,
-  selectedPoolIndex,
-  stakingPoolData,
   userHasNfts,
+  onStakeClick,
 }) => {
-  const [isModalOpen, setModalOpen] = useState(false);
   const isDisabled = duration !== null && !userHasNfts;
-  const openModal = () => {
-    if (!isDisabled) {
-      onSelect();
-      setModalOpen(true);
-    }
-  };
-  const closeModal = () => setModalOpen(false);
+
   return (
     <div
-      className={`flex flex-col justify-between rounded-[20px] p-4 ${
-        isSelected
-          ? "border-2 border-[#25AC88] bg-[#0A2C1D]"
-          : "border-2 border-[#061A11] bg-[#061A11]"
-      } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+      className={`
+        flex flex-col justify-between rounded-[20px] p-4 
+        border-2 border-[#061A11] bg-[#061A11] 
+        ${isDisabled ? "cursor-not-allowed opacity-50" : ""}
+      `}
     >
       <div className="flex flex-col">
         <h4 className="pb-[6px] text-lg font-semibold text-white">
@@ -54,7 +40,7 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
       </div>
       <Button
         variant="brand"
-        onClick={openModal}
+        onClick={onStakeClick}
         disabled={isDisabled}
         borderRadius={"26px"}
         background={"#25AC88"}
@@ -70,13 +56,6 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
           * Requires pCRBN NFT to stake.
         </p>
       )}
-      <StakingPoolOptionsModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        stakingPoolData={stakingPoolData}
-        selectedPoolIndex={selectedPoolIndex}
-        onSelectPool={onSelect}
-      />
     </div>
   );
 };

@@ -130,7 +130,8 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
                     selectedPoolIndex === index
                       ? "border-2 border-[#25AC88] bg-[#0A2C1D]"
                       : "border-2 border-[#0A2C1D] bg-[#0A2C1D]"
-                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                  } 
+                  ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                 >
                   <p className="text-nowrap pb-2.5 text-base font-semibold text-white">
                     {index !== stakingPoolData.length - 1
@@ -165,7 +166,11 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
                 size="md"
                 max={totalHumanReFi}
                 clampValueOnBlur={false}
-                onChange={(valueString) => setHumanAmount(Number(valueString))}
+                onChange={(valueString) => {
+                  let numValue = Number(valueString);
+                  numValue = numValue > totalHumanReFi ? totalHumanReFi : numValue;
+                  setHumanAmount(numValue);
+                }}
                 className="mb-4 min-h-11 w-full !rounded-[16px] bg-[#0A2C1D] !py-3 !pl-4 text-white"
               >
                 <NumberInputField className="!focus:ring-0 !active:ring-0 !focus:border-none !focus:outline-none !active:border-none !active:outline-none !max-h-6 !border-none bg-[#0A2C1D] !p-0 text-white !outline-none !ring-0" />
@@ -206,7 +211,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
                 className="h-8 w-8"
               />
               <span className="font-sans text-base font-normal">
-                $REFI Balance: <b>{formatReFi(totalHumanReFi)} $REFI</b>
+                $REFI Balance: <b>{formatReFi(toLamportsReFi(totalHumanReFi))} $REFI</b>
               </span>
             </div>
             <Button
