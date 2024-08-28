@@ -52,9 +52,16 @@ export async function getStakeInfo(
   }
 }
 
+export function toHumanReFi(lamports: number, decimals: number = SPL_DECIMALS) {
+  return lamports / (10 ** decimals);
+}
+
+export function toLamportsReFi(humanValue: number,  decimals: number = SPL_DECIMALS) {
+  return humanValue * (10 ** decimals)
+}
+
 export function formatReFi(lamports: number, decimals: number = SPL_DECIMALS) {
-  const tokenAmount = lamports / 10 ** decimals;
-  return tokenAmount.toLocaleString("en-US", {
+  return toHumanReFi(lamports, decimals).toLocaleString("en-US", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 1,
   });

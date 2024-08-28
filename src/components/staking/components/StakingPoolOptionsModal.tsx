@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useMemo } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -21,7 +21,7 @@ import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
 import { stake } from "../../../web3/solana/staking/service/stake";
 import { useUmi } from "../../../web3/solana/hook";
 import { getTotalReFi } from "../../../web3/solana/staking/service/getTotalReFi";
-import { formatReFi } from "../../../web3/solana/staking/util";
+import { formatReFi, toHumanReFi, toLamportsReFi } from "../../../web3/solana/staking/util";
 import { GaEvent, registerEvent } from "../../../events";
 
 interface StakingPoolOptionsModalProps {
@@ -39,9 +39,9 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   selectedPoolIndex,
   onSelectPool,
 }) => {
-  const [amount, setAmount] = useState<number>(0);
+  const [humanAmount, setHumanAmount] = useState<number>(0);
   const [refiNfts, setRefiNfts] = useState<PublicKey[]>([]);
-  const [totalReFi, setTotalReFi] = useState(0);
+  const [totalHumanReFi, setTotalHumanReFi] = useState(0);
 
   const anchorWallet = useAnchorWallet();
   const walletContext = useWallet();
@@ -71,17 +71,17 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
             throw Error("No NFT to lock");
           }
 
-          await stake(walletContext, anchorWallet, amount, {
+          await stake(walletContext, anchorWallet, humanAmount, {
             mint: nft,
             lockPeriod,
           });
         } else {
-          await stake(walletContext, anchorWallet, amount);
+          await stake(walletContext, anchorWallet, humanAmount);
         }
 
         showToast({
           title: "Success",
-          description: `You have successfully staked ${amount} $REFI`,
+          description: `You have successfully staked ${humanAmount} $REFI`,
           status: "success",
         });
 
@@ -100,9 +100,11 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
 
   useEffect(() => {
     if (anchorWallet) {
-      getTotalReFi(anchorWallet.publicKey).then(setTotalReFi);
+      getTotalReFi(anchorWallet.publicKey).then((value) => {
+        setTotalHumanReFi(Math.trunc(toHumanReFi(value)))
+      });
     } else {
-      setTotalReFi(0);
+      setTotalHumanReFi(0);
     }
   }, [anchorWallet]);
 
@@ -159,11 +161,11 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
               </label>
               <NumberInput
                 min={0}
-                value={amount}
+                value={humanAmount}
                 size="md"
-                max={totalReFi}
+                max={totalHumanReFi}
                 clampValueOnBlur={false}
-                onChange={(valueString) => setAmount(Number(valueString))}
+                onChange={(valueString) => setHumanAmount(Number(valueString))}
                 className="mb-4 min-h-11 w-full !rounded-[16px] bg-[#0A2C1D] !py-3 !pl-4 text-white"
               >
                 <NumberInputField className="!focus:ring-0 !active:ring-0 !focus:border-none !focus:outline-none !active:border-none !active:outline-none !max-h-6 !border-none bg-[#0A2C1D] !p-0 text-white !outline-none !ring-0" />
@@ -187,7 +189,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
               variant="brand"
               rounded={"16px"}
               background={"#25AC88"}
-              onClick={() => setAmount(totalReFi)}
+              onClick={() => setHumanAmount(totalHumanReFi)}
               textColor={"#1A1A1A"}
               _hover={{ background: "#ffffff", color: "#25AC88" }}
               _active={{ background: "#ffffff", color: "#25AC88" }}
@@ -204,7 +206,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
                 className="h-8 w-8"
               />
               <span className="font-sans text-base font-normal">
-                $REFI Balance: <b>{formatReFi(totalReFi)} $REFI</b>
+                $REFI Balance: <b>{formatReFi(totalHumanReFi)} $REFI</b>
               </span>
             </div>
             <Button
@@ -220,7 +222,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
               Stake Now
             </Button>
             <div className="text-white">
-              You are staking {formatReFi(amount)} $REFI tokens.
+              You are staking {formatReFi(toLamportsReFi(humanAmount))} $REFI tokens.
             </div>
           </div>
         </ModalBody>
