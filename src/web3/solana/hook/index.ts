@@ -10,6 +10,9 @@ import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import { CANDY_MACHINE_ADDRESS, RPC_URL } from "../const";
 import { useEffect, useState } from "react";
 import { publicKey, Umi } from "@metaplex-foundation/umi";
+import { getStakeInfo } from "../staking/util";
+import { Stake, Wallet } from "../staking/types";
+import { getProgram } from "../staking";
 
 export const useUmi = (wallet?: WalletContextState) => {
   const [umi, setUmi] = useState<Umi>();
@@ -45,3 +48,28 @@ export const useCandyMachine = (wallet?: WalletContextState) => {
 
   return candyMachine;
 };
+
+export function useStakes(wallet?: Wallet | null) {
+  const [stakes, setStakes] = useState<Stake[]>([]);
+
+  useEffect(() => {
+    if (!wallet) return;
+    let intervalId;
+
+    const fetchStakeInfo = async () => {
+      getStakeInfo(wallet, getProgram(wallet)).then((info) => {
+        setStakes((prev) => {
+          const newStakes = info?.stakes || [];
+          return newStakes.length !== prev.length ? newStakes : prev;
+        });
+      });
+    };
+
+    fetchStakeInfo();
+    intervalId = setInterval(fetchStakeInfo, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [wallet]);
+
+  return { stakes };
+}

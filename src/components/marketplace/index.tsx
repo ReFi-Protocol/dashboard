@@ -59,6 +59,7 @@ const MarketplaceContent: FC = () => {
         <div className="mb-11 flex flex-col justify-start gap-4 sm:flex-row">
           {tabOptions.map((tab) => (
             <Button
+              key={tab}
               onClick={() => setActiveTab(tab)}
               variant="solid"
               background={`${activeTab === tab ? "#ffffff" : "#061A11"}`}
