@@ -45,9 +45,13 @@ const StakingPoolCard: FC<StakingPoolCardProps> = ({
         borderRadius={"26px"}
         background={"#25AC88"}
         textColor={"#1A1A1A"}
-        _hover={{ background: "#ffffff", color: "#25AC88" }}
-        _active={{ background: "#ffffff", color: "#25AC88" }}
-        className="inset-y-0 w-full min-w-fit rounded-[26px] px-6 py-2 text-[14px] font-semibold text-[#000000]"
+        _hover={!isDisabled ? { background: "#ffffff", color: "#25AC88" } : {}}
+        _active={!isDisabled ? { background: "#ffffff", color: "#25AC88" } : {}}
+        className={`
+          inset-y-0 w-full min-w-fit rounded-[26px] px-6 py-2
+          text-[14px] font-semibold text-[#000000]
+           ${isDisabled ? "cursor-not-allowed" : ""}
+        `}
       >
         Stake Now
       </Button>

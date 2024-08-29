@@ -30,6 +30,7 @@ interface StakingPoolOptionsModalProps {
   stakingPoolData: StakingPoolData[];
   selectedPoolIndex: number | null;
   onSelectPool: (index: number) => void;
+  onNewStake?: () => void;
 }
 
 const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
@@ -84,7 +85,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
           description: `You have successfully staked ${humanAmount} $REFI`,
           status: "success",
         });
-
+        
         onClose();
       } catch (e: any) {
         showToast({

@@ -18,12 +18,7 @@ const StakingPools: FC<StakingPoolsProps> = ({
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const openModal = () => {
-    if (userHasNfts) {
-      setModalOpen(true);
-    }
-  };
-  
+  const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
   return (
@@ -42,7 +37,9 @@ const StakingPools: FC<StakingPoolsProps> = ({
             apy={pool.apy}
             onStakeClick={() => {
               onSelectPool(index);
-              openModal();
+              if (userHasNfts || index === 3) {
+                openModal();
+              }
             }}
             userHasNfts={userHasNfts}
           />
