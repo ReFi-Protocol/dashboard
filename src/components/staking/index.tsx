@@ -2,24 +2,22 @@ import { FC, useEffect, useState } from "react";
 
 import StakesAndRewardsTable from "./components/StakesAndRewardsTable";
 
-import { StakingPoolData } from "../../types";
-import StakingPromoBanner from "./components/StakingPromoBanner";
-import StakingPools from "./components/StakingPools";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import { StakingPoolData } from "../../types";
+import StakingPools from "./components/StakingPools";
+import StakingPromoBanner from "./components/StakingPromoBanner";
 
-import { Stake, StakeInfoAccount } from "../../web3/solana/staking/types";
+import { StakeInfoAccount } from "../../web3/solana/staking/types";
 
-import { useUmi } from "../../web3/solana/hook";
-import { getMyStakes } from "../../web3/solana/staking/service/getMyStakes";
 import { useAppSelector } from "../../store";
-import ConnectWalletModal from "../connect-wallet-modal";
-import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
+import { useStakes, useUmi } from "../../web3/solana/hook";
 import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
-import { getConfig } from "../../web3/solana/staking/service/getConfig";
-import MyMetrics from "../MyMetrics";
-import GlobalMetrics from "../GlobalMetrics";
-import RestakeModal from "./components/RestakeModal";
 import { getAllStakes } from "../../web3/solana/staking/service/getAllStakes";
+import ConnectWalletModal from "../connect-wallet-modal";
+import GlobalMetrics from "../GlobalMetrics";
+import MyMetrics from "../MyMetrics";
+import RestakeModal from "./components/RestakeModal";
+import StakingPoolOptionsModal from "./components/StakingPoolOptionsModal";
 
 const stakingPoolData: StakingPoolData[] = [
   {
@@ -50,10 +48,6 @@ const StakingContent: FC = () => {
   const [selectedPoolIndex, setSelectedPoolIndex] = useState<number | null>(
     null,
   );
-  const [stakes, setStakes] = useState<Stake[]>([]);
-  const [config, setConfig] = useState<Awaited<
-    ReturnType<typeof getConfig>
-  > | null>(null);
   const [userHasNfts, setUserHasNfts] = useState<boolean>(false);
   const [isConnectWalletModalOpen, setConnectWalletModalOpen] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -62,6 +56,7 @@ const StakingContent: FC = () => {
   const walletContext = useWallet();
   const umi = useUmi(walletContext);
   const [allStakesAccs, setAllStakesAccs] = useState<StakeInfoAccount[]>([]);
+  const { stakes } = useStakes(anchorWallet);
 
   useEffect(() => {
     getAllStakes().then(setAllStakesAccs);
@@ -72,20 +67,6 @@ const StakingContent: FC = () => {
       getReFiNfts(umi, anchorWallet.publicKey).then((refiNfts) => {
         setUserHasNfts(refiNfts.length > 0);
       });
-    }
-  }, [anchorWallet, umi]);
-
-  useEffect(() => {
-    if (anchorWallet && umi && walletContext.connected) {
-      getMyStakes(anchorWallet).then((stakes) => {
-        setStakes(stakes);
-      });
-
-      getConfig(anchorWallet).then((config) => {
-        setConfig(config);
-      });
-    } else {
-      setStakes([]);
     }
   }, [anchorWallet, umi]);
 
@@ -115,6 +96,7 @@ const StakingContent: FC = () => {
         selectedPoolIndex={selectedPoolIndex}
         onSelectPool={handleSelectPool}
         userHasNfts={userHasNfts}
+        // onNewStake={() => setTimeout(fetchStakes, 3000)}
       />
       <StakesAndRewardsTable
         currentPrice={currentPrice}

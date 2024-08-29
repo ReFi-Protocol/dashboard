@@ -1,9 +1,10 @@
-import { PublicKey } from "@solana/web3.js";
-import { ViridisStaking } from "../types/viridis_staking";
 import { Program } from "@coral-xyz/anchor";
-import { Stake, Wallet } from "../types";
-import { APY_DECIMALS, ONE_DAY_SECONDS, SPL_DECIMALS } from "../../const";
+import { PublicKey } from "@solana/web3.js";
 import Big from "big.js";
+import { d } from "../../../util/d";
+import { APY_DECIMALS, ONE_DAY_SECONDS, SPL_DECIMALS } from "../../const";
+import { Stake, Wallet } from "../types";
+import { ViridisStaking } from "../types/viridis_staking";
 
 export const getStakeInfoAddress = (
   address: PublicKey,
@@ -53,8 +54,7 @@ export async function getStakeInfo(
 }
 
 export function formatReFi(lamports: number, decimals: number = SPL_DECIMALS) {
-  const tokenAmount = lamports / 10 ** decimals;
-  return tokenAmount.toLocaleString("en-US", {
+  return d(lamports, decimals).toLocaleString("en-US", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 1,
   });
