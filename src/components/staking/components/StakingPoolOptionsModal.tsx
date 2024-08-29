@@ -21,8 +21,9 @@ import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
 import { stake } from "../../../web3/solana/staking/service/stake";
 import { useUmi } from "../../../web3/solana/hook";
 import { getTotalReFi } from "../../../web3/solana/staking/service/getTotalReFi";
-import { formatReFi, toHumanReFi, toLamportsReFi } from "../../../web3/solana/staking/util";
+import { formatReFi } from "../../../web3/solana/staking/util";
 import { GaEvent, registerEvent } from "../../../events";
+import { D, d } from "../../../web3/util/d";
 
 interface StakingPoolOptionsModalProps {
   isOpen: boolean;
@@ -102,7 +103,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
   useEffect(() => {
     if (anchorWallet) {
       getTotalReFi(anchorWallet.publicKey).then((value) => {
-        setTotalHumanReFi(Math.trunc(toHumanReFi(value)))
+        setTotalHumanReFi(Math.trunc(d(value)))
       });
     } else {
       setTotalHumanReFi(0);
@@ -212,7 +213,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
                 className="h-8 w-8"
               />
               <span className="font-sans text-base font-normal">
-                $REFI Balance: <b>{formatReFi(toLamportsReFi(totalHumanReFi))} $REFI</b>
+                $REFI Balance: <b>{formatReFi(D(totalHumanReFi))} $REFI</b>
               </span>
             </div>
             <Button
@@ -228,7 +229,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
               Stake Now
             </Button>
             <div className="text-white">
-              You are staking {formatReFi(toLamportsReFi(humanAmount))} $REFI tokens.
+              You are staking {formatReFi(D(humanAmount))} $REFI tokens.
             </div>
           </div>
         </ModalBody>
