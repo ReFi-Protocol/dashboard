@@ -4,7 +4,7 @@ import evm from "@wormhole-foundation/sdk/evm";
 import solana from "@wormhole-foundation/sdk/solana";
 
 const rpc =
-  "https://mainnet.helius-rpc.com/?api-key=effe41bd-6409-4446-b31a-a2353e4c4ebb";
+  "https://mainnet.helius-rpc.com/?api-key=0cb9cd1b-d738-4f13-9a5c-a1967d205f11";
 
 export const wh = await wormhole("Mainnet", [evm, solana], {
   chains: {
