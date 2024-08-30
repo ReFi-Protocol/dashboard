@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   Button,
   NumberInput,
@@ -7,6 +7,8 @@ import {
 } from "@chakra-ui/react";
 import { ConnectKitButton } from "connectkit";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
+import { useAccount } from "wagmi";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 interface Chain {
   name: string;
@@ -14,7 +16,8 @@ interface Chain {
 }
 
 interface BridgeInfoProps {
-  onSwap: () => void;
+  onSwap: (value: number, sourceChain: "Ethereum" | "Solana") => void;
+  onChange: (value: number) => void;
 }
 
 const chains: [Chain, Chain] = [
@@ -22,23 +25,35 @@ const chains: [Chain, Chain] = [
   { name: "Solana", icon: "./icons/sol.svg" },
 ];
 
-const BridgeInfo: FC<BridgeInfoProps> = ({ onSwap }) => {
+const BridgeInfo: FC<BridgeInfoProps> = ({ onSwap, onChange }) => {
   const [isSwapped, setIsSwapped] = useState(false);
-  const format = (val: number) => `$` + val;
-  const parse = (val: string) => val.replace(/^\$/, "");
+  const ethAccount = useAccount();
+  const walletContext = useWallet();
+  const canSwap = ethAccount.address && walletContext.connected;
 
   const [value, setValue] = useState(0);
 
   const handleSwap = () => setIsSwapped(!isSwapped);
 
+  const onSwapClick = () => {
+    onSwap(value, isSwapped ? "Solana" : "Ethereum");
+  };
+
   const renderChainBlock = (chain: Chain, walletComponent: JSX.Element) => (
     <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
       <NumberInput
-        onChange={(valueString) => setValue(Number(valueString))}
-        value={format(value)}
+        onChange={(valueString) => {
+          const normalizedValue = Number(valueString);
+
+          setValue(normalizedValue);
+          onChange(normalizedValue);
+        }}
         className="min-h-11 w-full !rounded-[12px] !border-[1px] !border-[#494949] !py-3 !pl-4 text-white"
-        max={50}
+        max={5_000_000}
         min={0}
+        step={1}
+        value={value}
+        precision={0}
       >
         <NumberInputField className="!focus:ring-0 !active:ring-0 !focus:border-none !focus:outline-none !active:border-none !active:outline-none !border-none !p-0 text-white !outline-none !ring-0" />
         <NumberInputStepper />
@@ -116,8 +131,9 @@ const BridgeInfo: FC<BridgeInfoProps> = ({ onSwap }) => {
         </div>
         <Button
           variant="brand"
-          onClick={onSwap}
+          onClick={onSwapClick}
           borderRadius={"30px"}
+          disabled={!canSwap}
           className="w-full rounded-[30px] bg-[#07BA9A] p-3 text-center text-base font-semibold text-[#000000]"
         >
           Swap
