@@ -39,8 +39,12 @@ const GlobalMetrics: FC<GlobalMetricsProps> = ({ stakeAccounts }) => {
     d(Number(ethValueLocked), ERC_REFI_DECIMALS) +
     d(Number(totalSplReFiLocked));
 
-  const percentageLocked = calculatePercentage(
+  const percentageStaked = calculatePercentage(
     d(Number(totalSplReFiLocked)),
+    totalSupply,
+  );
+  const percentageLocked = calculatePercentage(
+    Number(totalRefiLocked),
     totalSupply,
   );
 
@@ -53,7 +57,7 @@ const GlobalMetrics: FC<GlobalMetricsProps> = ({ stakeAccounts }) => {
     {
       icon: <LockIcon width={28} height={28} fill="white" />,
       title: "Total Supply Staked",
-      subtitle: `${percentageLocked}%`,
+      subtitle: `${percentageStaked}%`,
     },
     {
       icon: <GraphIcon width={28} height={28} fill="white" />,
@@ -68,7 +72,7 @@ const GlobalMetrics: FC<GlobalMetricsProps> = ({ stakeAccounts }) => {
     {
       icon: <ShieldILockIcon width={28} height={28} fill="white" />,
       title: "Total Value Locked",
-      subtitle: `${formatReFi(totalRefiLocked, 0)} $REFI`,
+      subtitle: `${percentageLocked}%`,
     },
   ];
 

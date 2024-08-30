@@ -19,7 +19,9 @@ export function createLeaderboardTable(
     const distinctNfts = new Set<string>();
 
     account.account.stakes.forEach((stake) => {
-      totalStaked = totalStaked.add(stake.amount);
+      if (!stake.destakeTime) {
+        totalStaked = totalStaked.add(stake.amount);
+      }
       if (stake.nft) {
         distinctNfts.add(stake.nft.toString());
       }

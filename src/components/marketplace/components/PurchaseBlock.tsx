@@ -59,10 +59,16 @@ const PurchaseBlock: FC = () => {
   const buyNft = async (umi: Umi) => {
     registerEvent({ event: GaEvent.NFT_PURCHASE });
     setIsLoading(true);
-    openRevealModal();
 
     try {
       const mint = await mintNftFromCandyMachine(umi, wallet, anchorWallet);
+
+      openRevealModal();
+
+      if (!mint) {
+        throw new Error("Error purchasing NFT");
+      }
+
       const digitalAsset = await fetchDigitalAsset(umi, mint);
       const metadata = await fetchMetadata(digitalAsset.metadata.uri);
 
