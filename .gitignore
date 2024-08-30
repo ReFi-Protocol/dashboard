@@ -23,5 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
-.env
+# Ignore all .env files
+.env*
+# But don't ignore .env.example
+!.env.example
 .vscode

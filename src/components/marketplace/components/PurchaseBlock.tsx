@@ -4,9 +4,12 @@ import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
 import { Button, Image } from "@chakra-ui/react";
 import NFTModal from "./NFTModal";
 import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { Umi } from "@metaplex-foundation/umi";
-import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
+import {
+  UnifiedWalletButton,
+  useAnchorWallet,
+  useWallet,
+} from "@jup-ag/wallet-adapter";
 import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import RevealNFTModal from "./RevealNFTModal";
@@ -18,7 +21,7 @@ import { GaEvent, registerEvent } from "../../../events";
 
 const ITEMS_PER_PAGE = 12;
 
-const NFTCollectionGallery: FC = () => {
+const PurchaseBlock: FC = () => {
   const showToast = useCustomToast();
   const candyMachine = useCandyMachine();
   const [isModalOpen, setModalOpen] = useState(false);
@@ -29,12 +32,14 @@ const NFTCollectionGallery: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isBoughtNft, setIsBoughtNft] = useState(false);
+  const anchorWallet = useAnchorWallet();
 
   const availableNFTs = candyMachine?.items?.length
     ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed)
     : 0;
 
   const wallet = useWallet();
+
   const umi = useUmi(wallet);
 
   const openModal = () => setModalOpen(true);
@@ -57,7 +62,7 @@ const NFTCollectionGallery: FC = () => {
     openRevealModal();
 
     try {
-      const mint = await mintNftFromCandyMachine(umi);
+      const mint = await mintNftFromCandyMachine(umi, wallet, anchorWallet);
       const digitalAsset = await fetchDigitalAsset(umi, mint);
       const metadata = await fetchMetadata(digitalAsset.metadata.uri);
 
@@ -218,4 +223,4 @@ const NFTCollectionGallery: FC = () => {
   );
 };
 
-export default NFTCollectionGallery;
+export default PurchaseBlock;

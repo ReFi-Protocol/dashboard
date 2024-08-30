@@ -6,7 +6,7 @@ import {
   fetchCandyMachine,
   mplCandyMachine,
 } from "@metaplex-foundation/mpl-candy-machine";
-import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
+import { WalletContextState } from "@solana/wallet-adapter-react";
 import { CANDY_MACHINE_ADDRESS, RPC_URL } from "../const";
 import { useEffect, useState } from "react";
 import { publicKey, Umi } from "@metaplex-foundation/umi";
