@@ -11,3 +11,5 @@ export interface SignerStuff<N extends Network, C extends Chain = Chain> {
   signer: Signer<N, C>;
   address: ChainAddress<C>;
 }
+
+export type BridgeSupportedChain = "Ethereum" | "Solana";

@@ -9,6 +9,7 @@ import { ConnectKitButton } from "connectkit";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import { useAccount } from "wagmi";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { BridgeSupportedChain } from "../../../web3/bridge/type";
 
 interface Chain {
   name: string;
@@ -16,8 +17,9 @@ interface Chain {
 }
 
 interface BridgeInfoProps {
-  onSwap: (value: number, sourceChain: "Ethereum" | "Solana") => void;
-  onChange: (value: number) => void;
+  onSwap: (value: number, sourceChain: BridgeSupportedChain) => void;
+  onChange: (value: number, sourceChain: BridgeSupportedChain) => void;
+  hasAllowance: boolean;
 }
 
 const chains: [Chain, Chain] = [
@@ -25,15 +27,22 @@ const chains: [Chain, Chain] = [
   { name: "Solana", icon: "./icons/sol.svg" },
 ];
 
-const BridgeInfo: FC<BridgeInfoProps> = ({ onSwap, onChange }) => {
+const BridgeInfo: FC<BridgeInfoProps> = ({
+  onSwap,
+  onChange,
+  hasAllowance,
+}) => {
   const [isSwapped, setIsSwapped] = useState(false);
   const ethAccount = useAccount();
   const walletContext = useWallet();
   const canSwap = ethAccount.address && walletContext.connected;
 
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(1);
 
-  const handleSwap = () => setIsSwapped(!isSwapped);
+  const handleSwap = () => {
+    onChange(value, isSwapped ? "Ethereum" : "Solana");
+    return setIsSwapped(!isSwapped);
+  };
 
   const onSwapClick = () => {
     onSwap(value, isSwapped ? "Solana" : "Ethereum");
@@ -46,11 +55,11 @@ const BridgeInfo: FC<BridgeInfoProps> = ({ onSwap, onChange }) => {
           const normalizedValue = Number(valueString);
 
           setValue(normalizedValue);
-          onChange(normalizedValue);
+          onChange(normalizedValue, isSwapped ? "Solana" : "Ethereum");
         }}
         className="min-h-11 w-full !rounded-[12px] !border-[1px] !border-[#494949] !py-3 !pl-4 text-white"
         max={5_000_000}
-        min={0}
+        min={1}
         step={1}
         value={value}
         precision={0}
@@ -136,7 +145,7 @@ const BridgeInfo: FC<BridgeInfoProps> = ({ onSwap, onChange }) => {
           disabled={!canSwap}
           className="w-full rounded-[30px] bg-[#07BA9A] p-3 text-center text-base font-semibold text-[#000000]"
         >
-          Swap
+          {hasAllowance ? "Swap" : "Increase allowance"}
         </Button>
       </div>
     </div>
