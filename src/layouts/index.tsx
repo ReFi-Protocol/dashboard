@@ -5,6 +5,7 @@ import routes from "../routes";
 import PageTitle from "../components/page-contents/PageTitle";
 import { AppRoute } from "../types";
 import NotFound from "../components/not-found";
+import Bridging from "../components/bridging";
 
 const Layout: FC = () => {
   const [currentRoute, setCurrentRoute] = useState("Dashboard");
@@ -50,7 +51,8 @@ const Layout: FC = () => {
             <Routes>
               {getRoutes(routes)}
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="*" element={<NotFound />} />{" "}
+              <Route path="bridging-test" element={<Bridging />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
         </main>
