@@ -55,3 +55,11 @@ export function decimals() {
     functionName: "decimals",
   });
 }
+
+export function getAllowance(owner: Address, spender: Address) {
+  return readContract(web3config, {
+    ...refiContractConfig,
+    functionName: "allowance",
+    args: [owner, spender],
+  });
+}
