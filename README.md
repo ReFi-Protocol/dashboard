@@ -25,30 +25,33 @@ The ReFi Protocol Dashboard is an intuitive interface designed to manage, monito
 
 ## Installation
 
-Before you begin, ensure you have the following prerequisites installed:
-
-- **Node.js** (v14.x or later)
-- **pnpm** (v6.x or later)
-
-To install the necessary dependencies, execute the following command in your terminal:
-
 ```bash
-pnpm i
+npm ci
 ```
 
-This command will install all required packages and dependencies.
+## Develop
 
-## Development
-
-To start the development server and begin working on the dashboard, use the following command:
+If using the node version specified in `.nvmrc`, run with
 
 ```bash
-pnpm run dev
+npm start
 ```
 
-This will start the server on `http://localhost:3000`, or you can view the dashboard at the URL provided in your terminal.
+If on latest LTS, run with
 
-During development, you can leverage hot-reloading to see your changes in real-time without restarting the server.
+```bash
+NODE_OPTIONS=--openssl-legacy-provider npm start
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+```bash
+NODE_OPTIONS=--openssl-legacy-provider npm run build
+```
 
 ## Contributing
 

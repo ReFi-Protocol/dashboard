@@ -107,6 +107,6 @@ const prodRoutes: AppRoute[] = [
 ];
 
 const routes: AppRoute[] =
-  env.VITE_ENVIRONMENT === "development" ? devRoutes : prodRoutes;
+  env.REACT_APP_ENVIRONMENT === "development" ? devRoutes : prodRoutes;
 
 export default routes;

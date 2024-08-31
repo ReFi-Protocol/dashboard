@@ -16,14 +16,14 @@ import {
 export interface Provider {
   publicKey: PublicKey | null;
   signAndSendTransaction: (
-    transaction: Transaction | VersionedTransaction,
-    opts?: SendOptions,
+    transaction: Transaction,
+    opts?: SendOptions
   ) => Promise<{ signature: string; publicKey: PublicKey }>;
   signTransaction: (
-    transaction: Transaction | VersionedTransaction,
+    transaction: Transaction | VersionedTransaction
   ) => Promise<Transaction | VersionedTransaction>;
   signAllTransactions: (
-    transactions: (Transaction | VersionedTransaction)[],
+    transactions: (Transaction | VersionedTransaction)[]
   ) => Promise<(Transaction | VersionedTransaction)[]>;
 }
 
@@ -35,7 +35,7 @@ export class Signer implements SignAndSendSigner<"Mainnet", "Solana"> {
   private constructor(
     private connection: Connection,
     private provider: Provider,
-    private _address: string,
+    private _address: string
   ) {}
 
   static async fromProvider(wh: Wormhole<Network>, provider: Provider) {
@@ -46,7 +46,7 @@ export class Signer implements SignAndSendSigner<"Mainnet", "Solana"> {
     return new Signer(
       await ctx.getRpc(),
       provider,
-      provider.publicKey.toBase58(),
+      provider.publicKey.toBase58()
     );
   }
 
@@ -88,12 +88,13 @@ export class Signer implements SignAndSendSigner<"Mainnet", "Solana"> {
       // Partial sign with any signers passed in
       // NOTE: this _must_ come after any modifications to the transaction
       // otherwise, the signature wont verify
-      const { signature: txid } =
-        await this.provider.signAndSendTransaction(tx);
+      const { signature: txid } = await this.provider.signAndSendTransaction(
+        tx
+      );
 
       if (!txid)
         throw new Error(
-          "Could not determine if transaction was signed and sent",
+          "Could not determine if transaction was signed and sent"
         );
 
       txids.push(txid);
@@ -102,8 +103,8 @@ export class Signer implements SignAndSendSigner<"Mainnet", "Solana"> {
     // Make sure they're all finalized
     await Promise.all(
       txids.map(async (txid) =>
-        this.connection.confirmTransaction(txid, "confirmed"),
-      ),
+        this.connection.confirmTransaction(txid, "confirmed")
+      )
     );
 
     return txids;
