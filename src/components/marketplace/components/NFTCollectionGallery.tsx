@@ -4,12 +4,9 @@ import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
 import { Button, Image } from "@chakra-ui/react";
 import NFTModal from "./NFTModal";
 import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { Umi } from "@metaplex-foundation/umi";
-import {
-  UnifiedWalletButton,
-  useAnchorWallet,
-  useWallet,
-} from "@jup-ag/wallet-adapter";
+import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import RevealNFTModal from "./RevealNFTModal";
@@ -21,7 +18,7 @@ import { GaEvent, registerEvent } from "../../../events";
 
 const ITEMS_PER_PAGE = 12;
 
-const PurchaseBlock: FC = () => {
+const NFTCollectionGallery: FC = () => {
   const showToast = useCustomToast();
   const candyMachine = useCandyMachine();
   const [isModalOpen, setModalOpen] = useState(false);
@@ -32,14 +29,12 @@ const PurchaseBlock: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isBoughtNft, setIsBoughtNft] = useState(false);
-  const anchorWallet = useAnchorWallet();
 
   const availableNFTs = candyMachine?.items?.length
     ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed)
     : 0;
 
   const wallet = useWallet();
-
   const umi = useUmi(wallet);
 
   const openModal = () => setModalOpen(true);
@@ -59,16 +54,10 @@ const PurchaseBlock: FC = () => {
   const buyNft = async (umi: Umi) => {
     registerEvent({ event: GaEvent.NFT_PURCHASE });
     setIsLoading(true);
+    openRevealModal();
 
     try {
-      const mint = await mintNftFromCandyMachine(umi, wallet, anchorWallet);
-
-      openRevealModal();
-
-      if (!mint) {
-        throw new Error("Error purchasing NFT");
-      }
-
+      const mint = await mintNftFromCandyMachine(umi);
       const digitalAsset = await fetchDigitalAsset(umi, mint);
       const metadata = await fetchMetadata(digitalAsset.metadata.uri);
 
@@ -229,4 +218,4 @@ const PurchaseBlock: FC = () => {
   );
 };
 
-export default PurchaseBlock;
+export default NFTCollectionGallery;

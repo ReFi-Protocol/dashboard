@@ -11,15 +11,18 @@ import { SignerStuff } from "./type";
 import { getEvmSigner, getSignerStuff, getSolanaSigner } from "./evm-signer";
 import { AnchorWallet, Wallet } from "@solana/wallet-adapter-react";
 import { Connection } from "@solana/web3.js";
-import { TOKEN_ADDRESS, ethChain, solChain, wh } from "./config";
+import { getWh, TOKEN_ADDRESS } from "./config";
 
 export async function tokenBridge(
   amount: number,
   anchorWallet: AnchorWallet,
   wallet: Wallet,
   address: string,
-  connection: Connection,
+  connection: Connection
 ) {
+  const wh = await getWh();
+  const ethChain = wh.getChain("Ethereum");
+  const solChain = wh.getChain("Solana");
   const automatic = false;
   const nativeGas = automatic ? "1" : undefined;
   const roundTrip: boolean = false;
@@ -46,7 +49,7 @@ export async function tokenBridge(
           : undefined,
       },
     },
-    roundTrip,
+    roundTrip
   );
 }
 
@@ -63,7 +66,7 @@ async function tokenTransfer<N extends Network>(
     };
     payload?: Uint8Array;
   },
-  roundTrip?: boolean,
+  roundTrip?: boolean
 ) {
   const xfer = await wh.tokenTransfer(
     route.token,
@@ -72,14 +75,14 @@ async function tokenTransfer<N extends Network>(
     route.destination.address,
     route.delivery?.automatic ?? false,
     route.payload,
-    route.delivery?.nativeGas,
+    route.delivery?.nativeGas
   );
 
   const quote = await TokenTransfer.quoteTransfer(
     wh,
     route.source.chain,
     route.destination.chain,
-    xfer.transfer,
+    xfer.transfer
   );
   console.log(quote);
 

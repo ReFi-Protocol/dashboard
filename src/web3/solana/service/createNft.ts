@@ -1,12 +1,12 @@
 import {
   Umi,
+  PublicKey,
   generateSigner,
   some,
   isSome,
   transactionBuilder,
   publicKey,
   TransactionBuilderSendAndConfirmOptions,
-  Instruction,
 } from "@metaplex-foundation/umi";
 import {
   mintV2,
@@ -20,42 +20,28 @@ import {
 } from "@metaplex-foundation/mpl-toolbox";
 import { CANDY_MACHINE_ADDRESS } from "../const";
 import { getConnection } from "../connection";
-import { AnchorWallet, WalletContextState } from "@solana/wallet-adapter-react";
-import { sendTransaction } from "../staking/service/sendTransaction";
-import {
-  PublicKey,
-  TransactionInstruction,
-  TransactionMessage,
-  VersionedTransaction,
-} from "@solana/web3.js";
 
 export async function mintNftFromCandyMachine(
   umi: Umi,
-  wallet: WalletContextState,
-  anchorWallet: AnchorWallet | undefined,
   nftMint = generateSigner(umi),
 ) {
-  if (!wallet.publicKey || !anchorWallet) {
-    return;
-  }
-
-  const connection = getConnection();
-
   const candyMachineAddress = publicKey(CANDY_MACHINE_ADDRESS);
   const candyMachine = await fetchCandyMachine(umi, candyMachineAddress);
   const candyGuard = await fetchCandyGuard(umi, candyMachine.mintAuthority);
 
   const sendAndConfirmOptions: TransactionBuilderSendAndConfirmOptions = {
-    send: {
-      maxRetries: 5,
-    },
     confirm: { commitment: "finalized" },
   };
+  const latestBlockhash = await umi.rpc.getLatestBlockhash();
 
-  const builder = transactionBuilder();
+  const builder = transactionBuilder()
+    .setFeePayer(umi.identity)
+    .setBlockhash(latestBlockhash);
 
   try {
-    const ixs = await builder
+    const result = await builder
+      .add(setComputeUnitLimit(umi, { units: 1_000_000 }))
+      .add(setComputeUnitPrice(umi, { microLamports: 1000 }))
       .add(
         mintV2(umi, {
           candyMachine: candyMachine.publicKey,
@@ -78,32 +64,8 @@ export async function mintNftFromCandyMachine(
           },
         }),
       )
-      .add(setComputeUnitLimit(umi, { units: 1_000_000 }))
-      .add(setComputeUnitPrice(umi, { microLamports: 1_000 }))
-      .getInstructions();
-
-    const tixs = convertInstructionsToTransactionInstructions(ixs);
-
-    const { blockhash } = await connection.getLatestBlockhash("confirmed");
-
-    const messageV0 = new TransactionMessage({
-      payerKey: wallet.publicKey,
-      recentBlockhash: blockhash,
-      instructions: tixs,
-    }).compileToV0Message();
-
-    const transactionV0 = new VersionedTransaction(messageV0);
-
-    // Simulate the versioned transaction
-    const simulateResult = await connection.simulateTransaction(transactionV0);
-
-    console.log(simulateResult);
-
-    await wallet.sendTransaction(transactionV0, connection, {
-      maxRetries: 5,
-    });
+      .sendAndConfirm(umi, sendAndConfirmOptions);
   } catch (e: any) {
-    console.log(e);
     /// TODO: remove after TransactionExpiredBlockheightExceededError resolved
     if (e.signature) {
       const { value: status } = await getConnection().getSignatureStatus(
@@ -120,25 +82,7 @@ export async function mintNftFromCandyMachine(
       } else {
       }
     }
-
-    throw e;
   }
 
   return nftMint.publicKey;
-}
-
-function convertInstructionsToTransactionInstructions(
-  ixs: Instruction[],
-): TransactionInstruction[] {
-  return ixs.map((ix) => {
-    return new TransactionInstruction({
-      programId: new PublicKey(ix.programId.toString()),
-      keys: ix.keys.map((key) => ({
-        pubkey: new PublicKey(key.pubkey.toString()),
-        isSigner: key.isSigner,
-        isWritable: key.isWritable,
-      })),
-      data: Buffer.from(ix.data),
-    });
-  });
 }

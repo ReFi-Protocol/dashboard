@@ -2,7 +2,6 @@ import * as chains from "viem/chains";
 import { createConfig, http } from "wagmi";
 import { getDefaultConfig } from "connectkit";
 import { CHAIN_ID, RPC_URL } from "../const";
-import { env } from "../../../env";
 import { Address, erc20Abi } from "viem";
 import { REFI_ADDRESS } from "../const";
 import { readContract } from "wagmi/actions";
@@ -24,9 +23,9 @@ export const web3config = createConfig(
     transports: {
       [chain.id]: http(RPC_URL),
     },
-    walletConnectProjectId: env.VITE_WALLETCONNECT_PROJECT_ID,
+    walletConnectProjectId: "",
     appName: "Dashboard",
-  }),
+  })
 );
 
 export const refiContractConfig = {
