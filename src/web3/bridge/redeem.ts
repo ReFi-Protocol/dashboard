@@ -2,7 +2,7 @@ import { AnchorWallet, Wallet } from "@solana/wallet-adapter-react";
 
 import { TokenTransfer } from "@wormhole-foundation/sdk";
 import { getEvmSigner, getSolanaSigner } from "./evm-signer";
-import { getBridgeConnection, wh } from "./config";
+import { getBridgeConnection, getWh } from "./config";
 import { Operation } from "./types";
 import { getConnection } from "../solana/connection";
 
@@ -12,8 +12,9 @@ export async function redeem(
   wallet: Wallet,
   chain: "Ethereum" | "Solana",
   address: string,
-  operation: Operation,
+  operation: Operation
 ) {
+  const wh = await getWh();
   const xfer = await TokenTransfer.from(wh, {
     chain,
     txid: tx,
