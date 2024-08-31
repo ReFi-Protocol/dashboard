@@ -26,6 +26,9 @@ html {
   text-align: center;
 }
 
+
+
+
 .css-qvr9d9-CurrentUserBadge {
   border-radius: 1.5rem !important;
   background-color: #25ac88 !important;
@@ -60,7 +63,7 @@ html {
 .custom-scrollbar::-webkit-scrollbar-track {
   background-color: #3c3b3b;
 }
-*/ .custom-scrollbar {
+.custom-scrollbar {
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: transparent #3c3b3b;

@@ -20,7 +20,7 @@ import { web3config } from "../evm/config";
 
 export function getSignerStuff<N extends Network, C extends Chain>(
   signer: SignAndSendSigner<N, C>,
-  chain: ChainContext<N, C>,
+  chain: ChainContext<N, C>
 ): SignerStuff<N, C> {
   return {
     signer,
@@ -33,18 +33,18 @@ export function getSolanaSigner(
   wh: Wormhole<"Mainnet">,
   anchorWallet: AnchorWallet,
   wallet: Wallet,
-  connection: Connection,
+  connection: Connection
 ): Promise<SignAndSendSigner<"Mainnet", "Solana">> {
   return Signer.fromProvider(wh, {
     ...anchorWallet,
     signAndSendTransaction: async (
       transaction: Transaction | VersionedTransaction,
-      opts?: SendOptions,
+      opts?: SendOptions
     ) => {
       const signature = await wallet.adapter.sendTransaction(
         transaction,
         connection,
-        opts,
+        opts
       );
 
       return { signature, publicKey: anchorWallet.publicKey };
@@ -53,7 +53,7 @@ export function getSolanaSigner(
 }
 
 export function getEvmSigner(
-  address: string,
+  address: string
 ): SignAndSendSigner<"Mainnet", "Ethereum"> {
   return {
     chain: () => "Ethereum",
@@ -72,7 +72,7 @@ export function getEvmSigner(
 
         if (!txid)
           throw new Error(
-            "Could not determine if transaction was sign and sent",
+            "Could not determine if transaction was sign and sent"
           );
 
         txids.push(txid);

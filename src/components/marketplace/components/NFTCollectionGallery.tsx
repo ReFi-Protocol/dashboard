@@ -61,7 +61,7 @@ const PurchaseBlock: FC = () => {
     setIsLoading(true);
 
     try {
-      const mint = await mintNftFromCandyMachine(umi, wallet, anchorWallet);
+      const mint = await mintNftFromCandyMachine(umi);
 
       openRevealModal();
 
@@ -119,7 +119,7 @@ const PurchaseBlock: FC = () => {
 
   const paginatedItems = candyMachine
     ? candyMachine.items
-        .slice(0, env.VITE_MAX_NFT_AVAILABLE)
+        .slice(0, env.REACT_APP_MAX_NFT_AVAILABLE)
         .slice(0, currentPage * ITEMS_PER_PAGE)
     : [];
 
@@ -192,7 +192,7 @@ const PurchaseBlock: FC = () => {
         ))}
       </div>
       {paginatedItems.length <
-        candyMachine.items.slice(0, env.VITE_MAX_NFT_AVAILABLE).length && (
+        candyMachine.items.slice(0, env.REACT_APP_MAX_NFT_AVAILABLE).length && (
         <div className="flex justify-center">
           <Button
             onClick={handleViewMore}

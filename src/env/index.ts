@@ -8,23 +8,23 @@ export const SUPPORTED_CLUSTERS = [
 ] as const;
 
 const envSchema = z.object({
-  VITE_WALLETCONNECT_PROJECT_ID: z.string(),
-  VITE_EVM_RPC_URL: z.string(),
-  VITE_EVM_CHAIN_ID: z.number({ coerce: true }),
-  VITE_SOLANA_RPC_URL: z.string(),
-  VITE_SOLANA_CLUSTER: z.enum(SUPPORTED_CLUSTERS),
-  VITE_SOLANA_CANDY_MACHINE: z.string(),
-  VITE_SOLANA_SPL: z.string(),
-  VITE_SOLANA_COLLECTION: z.string(),
-  VITE_SOLANA_SPL_DECIMALS: z.number({ coerce: true }),
-  VITE_ENVIRONMENT: z.nativeEnum(Env),
-  VITE_MAX_NFT_AVAILABLE: z.number({ coerce: true }),
+  REACT_APP_WALLETCONNECT_PROJECT_ID: z.string(),
+  REACT_APP_EVM_RPC_URL: z.string(),
+  REACT_APP_EVM_CHAIN_ID: z.number({ coerce: true }),
+  REACT_APP_SOLANA_RPC_URL: z.string(),
+  REACT_APP_SOLANA_CLUSTER: z.enum(SUPPORTED_CLUSTERS),
+  REACT_APP_SOLANA_CANDY_MACHINE: z.string(),
+  REACT_APP_SOLANA_SPL: z.string(),
+  REACT_APP_SOLANA_COLLECTION: z.string(),
+  REACT_APP_SOLANA_SPL_DECIMALS: z.number({ coerce: true }),
+  REACT_APP_ENVIRONMENT: z.nativeEnum(Env),
+  REACT_APP_MAX_NFT_AVAILABLE: z.number({ coerce: true }),
 });
 
 let env: z.infer<typeof envSchema>;
 
 try {
-  env = envSchema.parse(import.meta.env);
+  env = envSchema.parse(process.env);
 } catch (error: any) {
   console.error("Environment variables validation failed:", error.errors);
   throw new Error("Invalid environment variables");
