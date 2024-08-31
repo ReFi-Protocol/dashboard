@@ -1,5 +1,5 @@
 import { chainIdToChain, Wormhole } from "@wormhole-foundation/sdk";
-import { ethChain, getBridgeConnection, TOKEN_ADDRESS, wh } from "./config";
+import {  getBridgeConnection, TOKEN_ADDRESS } from "./config";
 import { d } from "../util/d";
 import { Operation } from "./types";
 

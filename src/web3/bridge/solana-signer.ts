@@ -16,7 +16,7 @@ import {
 export interface Provider {
   publicKey: PublicKey | null;
   signAndSendTransaction: (
-    transaction: Transaction,
+    transaction: Transaction | VersionedTransaction,
     opts?: SendOptions
   ) => Promise<{ signature: string; publicKey: PublicKey }>;
   signTransaction: (

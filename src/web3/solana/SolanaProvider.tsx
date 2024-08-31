@@ -49,7 +49,7 @@ export const SolanaProvider = ({ children }: { children: React.ReactNode }) => {
       new WalletConnectWalletAdapter({
         network: CLUSTER,
         options: {
-          projectId: env.VITE_WALLETCONNECT_PROJECT_ID,
+          projectId: env.REACT_APP_WALLETCONNECT_PROJECT_ID,
           metadata: {
             name: "",
             description: "",
