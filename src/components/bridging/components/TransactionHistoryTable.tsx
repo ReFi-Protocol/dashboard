@@ -114,7 +114,7 @@ const TransactionHistoryTable: FC<TransactionHistoryTableProps> = ({
               ))
             ) : (
               <Tr>
-                <Td colSpan={4} textAlign="center" padding="60px">
+                <Td colSpan={7} textAlign="center" padding="60px">
                   <div className="flex flex-col items-center">
                     <Image
                       src="/icons/no-transactions-icon.svg"
