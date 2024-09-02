@@ -2,10 +2,10 @@ import * as chains from "viem/chains";
 import { createConfig, http } from "wagmi";
 import { getDefaultConfig } from "connectkit";
 import { CHAIN_ID, RPC_URL } from "../const";
-import { env } from "../../../env";
 import { Address, erc20Abi } from "viem";
 import { REFI_ADDRESS } from "../const";
 import { readContract } from "wagmi/actions";
+import { env } from "../../../env";
 
 function getChain(id: number): chains.Chain {
   return (
@@ -24,9 +24,9 @@ export const web3config = createConfig(
     transports: {
       [chain.id]: http(RPC_URL),
     },
-    walletConnectProjectId: env.VITE_WALLETCONNECT_PROJECT_ID,
+    walletConnectProjectId: env.REACT_APP_WALLETCONNECT_PROJECT_ID,
     appName: "Dashboard",
-  }),
+  })
 );
 
 export const refiContractConfig = {
@@ -53,5 +53,13 @@ export function decimals() {
   return readContract(web3config, {
     ...refiContractConfig,
     functionName: "decimals",
+  });
+}
+
+export function getAllowance(owner: Address, spender: Address) {
+  return readContract(web3config, {
+    ...refiContractConfig,
+    functionName: "allowance",
+    args: [owner, spender],
   });
 }

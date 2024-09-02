@@ -6,6 +6,7 @@ import { useCandyMachine } from "../../web3/solana/hook";
 import { useWallet } from "@solana/wallet-adapter-react";
 import ConnectWalletModal from "../connect-wallet-modal";
 import { Button } from "@chakra-ui/react";
+import { env } from "../../env";
 
 const tabOptions = [
   "NFT Collection",
@@ -21,20 +22,23 @@ const MarketplaceContent: FC = () => {
   const candyMachine = useCandyMachine();
 
   const STARTING_FROM_PRICE = 125_000;
+  const hiddenNftCount = (candyMachine?.items?.length || 250) - env.REACT_APP_MAX_NFT_AVAILABLE
+
+
   const availableNFTs = candyMachine?.items?.length
-    ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed)
+    ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed) - hiddenNftCount
     : 0;
   const volumeTraded =
     Number(candyMachine?.itemsRedeemed) * STARTING_FROM_PRICE;
   const mockData = [
     {
-      value: `${availableNFTs}/${candyMachine?.items?.length}`,
+      value: `${availableNFTs}/${env.REACT_APP_MAX_NFT_AVAILABLE}`,
       name: "NFTs Available",
     },
     { value: "110%", name: "Maximum APY" },
     { value: "125,000 $REFI", name: "Starting from" },
     { value: `${volumeTraded.toLocaleString()} $REFI`, name: "Volume traded" },
-    { value: "92 days", name: "Ownership Duration" },
+    { value: "90 days", name: "Ownership Duration" },
   ];
 
   if (!wallet.publicKey) {
@@ -59,6 +63,7 @@ const MarketplaceContent: FC = () => {
         <div className="mb-11 flex flex-col justify-start gap-4 sm:flex-row">
           {tabOptions.map((tab) => (
             <Button
+              key={tab}
               onClick={() => setActiveTab(tab)}
               variant="solid"
               background={`${activeTab === tab ? "#ffffff" : "#061A11"}`}

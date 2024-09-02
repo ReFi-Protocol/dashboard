@@ -61,13 +61,13 @@ const devRoutes: AppRoute[] = [
 ];
 
 const prodRoutes: AppRoute[] = [
-  {
-    name: "Dashboard",
-    layout: "/",
-    path: "dashboard",
-    icon: <MdHome className="h-6 w-6" />,
-    component: <Dashboard />,
-  },
+  // {
+  //   name: "Dashboard",
+  //   layout: "/",
+  //   path: "dashboard",
+  //   icon: <MdHome className="h-6 w-6" />,
+  //   component: <Dashboard />,
+  // },
   {
     name: "Marketplace",
     layout: "/",
@@ -76,20 +76,27 @@ const prodRoutes: AppRoute[] = [
     component: <Marketplace />,
     secondary: true,
   },
+  // {
+  //   name: "Staking",
+  //   layout: "/",
+  //   path: "staking",
+  //   icon: <MdTrendingUp className="h-6 w-6" />,
+  //   component: <Staking />,
+  // },
   {
-    name: "Staking",
+    name: "Bridging",
     layout: "/",
-    path: "staking",
-    icon: <MdTrendingUp className="h-6 w-6" />,
-    component: <Staking />,
+    path: "bridging",
+    icon: <MdSwapHoriz className="h-6 w-6" />,
+    component: <Bridging />,
   },
-  {
-    name: "Leaderboard",
-    layout: "/",
-    path: "leaderboard",
-    icon: <MdBarChart className="h-6 w-6" />,
-    component: <Leaderboard />,
-  },
+  // {
+  //   name: "Leaderboard",
+  //   layout: "/",
+  //   path: "leaderboard",
+  //   icon: <MdBarChart className="h-6 w-6" />,
+  //   component: <Leaderboard />,
+  // },
   {
     name: "Contact us",
     layout: "",
@@ -100,6 +107,6 @@ const prodRoutes: AppRoute[] = [
 ];
 
 const routes: AppRoute[] =
-  env.VITE_ENVIRONMENT === "development" ? devRoutes : prodRoutes;
+  env.REACT_APP_ENVIRONMENT === "development" ? devRoutes : prodRoutes;
 
 export default routes;

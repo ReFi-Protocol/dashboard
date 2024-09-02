@@ -1,6 +1,10 @@
 import { FC } from "react";
 
-const ConversionInfo: FC = () => (
+type ConversionInfoProps = {
+  value: number;
+};
+
+const ConversionInfo: FC<ConversionInfoProps> = ({ value }) => (
   <div className="2xl:max-w-1/4 flex flex-1">
     <div className="h-fit w-full rounded-[20px] bg-[#061A11] p-[15px]">
       <div className="flex flex-col">
@@ -9,11 +13,11 @@ const ConversionInfo: FC = () => (
         <div className="flex flex-col gap-2">
           <div className="flex justify-between gap-10 text-nowrap">
             <span>$REFI (ETH)</span>
-            <span>1253</span>
+            <span>{value}</span>
           </div>
           <div className="flex justify-between">
             <span>$REFI (SOL)</span>
-            <span>1253</span>
+            <span>{value}</span>
           </div>
           <div className="flex justify-between">
             <span>Difference</span>

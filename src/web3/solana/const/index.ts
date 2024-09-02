@@ -1,14 +1,14 @@
 import { PublicKey } from "@solana/web3.js";
-import { env } from "../../../env";
 import IDL from "../staking/idl/viridis_staking.json";
+import { env } from "../../../env";
 
 export const ORIGIN = "";
-export const CLUSTER = env.VITE_SOLANA_CLUSTER;
-export const RPC_URL = env.VITE_SOLANA_RPC_URL;
-export const CANDY_MACHINE_ADDRESS = env.VITE_SOLANA_CANDY_MACHINE;
-export const SPL_MINT_ADDRESS = env.VITE_SOLANA_SPL;
-export const SPL_DECIMALS = env.VITE_SOLANA_SPL_DECIMALS;
-export const COLLECTION_MINT_ADDRESS = env.VITE_SOLANA_COLLECTION;
+export const CLUSTER = env.REACT_APP_SOLANA_CLUSTER;
+export const RPC_URL = env.REACT_APP_SOLANA_RPC_URL;
+export const CANDY_MACHINE_ADDRESS = env.REACT_APP_SOLANA_CANDY_MACHINE;
+export const SPL_MINT_ADDRESS = env.REACT_APP_SOLANA_SPL;
+export const SPL_DECIMALS = env.REACT_APP_SOLANA_SPL_DECIMALS;
+export const COLLECTION_MINT_ADDRESS = env.REACT_APP_SOLANA_COLLECTION;
 
 export const APY_DECIMALS = 2;
 

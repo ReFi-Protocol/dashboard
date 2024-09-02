@@ -9,21 +9,19 @@ import {
   Box,
   Image,
   TableContainer,
+  Button,
 } from "@chakra-ui/react";
-
-interface Transaction {
-  date: string;
-  refiEth: string;
-  refiSol: string;
-  gasFee: string;
-}
+import { Operation } from "../../../web3/bridge/types";
+import { format } from "date-fns";
 
 interface TransactionHistoryTableProps {
-  transactions: Transaction[];
+  operations: Operation[];
+  onRedeemClick: (operation: Operation) => void;
 }
 
 const TransactionHistoryTable: FC<TransactionHistoryTableProps> = ({
-  transactions,
+  operations,
+  onRedeemClick,
 }) => {
   return (
     <div className="mt-5 w-full">
@@ -41,19 +39,28 @@ const TransactionHistoryTable: FC<TransactionHistoryTableProps> = ({
                 <div className="pb-4 pt-6">Date</div>
               </Th>
               <Th>
-                <div className="pb-4 pt-6">$REFI Eth</div>
+                <div className="pb-4 pt-6">Amount</div>
               </Th>
               <Th>
-                <div className="pb-4 pt-6">$REFI Sol</div>
+                <div className="pb-4 pt-6">Source</div>
               </Th>
               <Th>
-                <div className="pb-4 pt-6">Gas Fee in USD</div>
+                <div className="pb-4 pt-6">Destination</div>
+              </Th>
+              <Th>
+                <div className="pb-4 pt-6">Fee</div>
+              </Th>
+              <Th>
+                <div className="pb-4 pt-6">Status</div>
+              </Th>
+              <Th>
+                <div className="pb-4 pt-6">Action</div>
               </Th>
             </Tr>
           </Thead>
           <Tbody>
             <Tr>
-              <Td colSpan={4} padding="0">
+              <Td colSpan={7} padding="0">
                 <Box
                   as="hr"
                   borderColor="#3C3B3B"
@@ -62,26 +69,52 @@ const TransactionHistoryTable: FC<TransactionHistoryTableProps> = ({
                 />
               </Td>
             </Tr>
-            {transactions.length > 0 ? (
-              transactions.map((transaction, index) => (
+            {operations.length > 0 ? (
+              operations.map((operation, index) => (
                 <Tr key={index}>
                   <Td>
-                    <div className="px-1 py-2.5">{transaction.date}</div>
+                    <div className="px-1 py-2.5">
+                      {format(operation.timestamp, "MMM dd")}
+                    </div>
                   </Td>
                   <Td>
-                    <div className="px-1 py-2.5">{transaction.refiEth}</div>
+                    <div className="px-1 py-2.5">{operation.amount}</div>
                   </Td>
                   <Td>
-                    <div className="py2.5 px-1">{transaction.refiSol}</div>
+                    <div className="py2.5 px-1">{operation.sourceChain}</div>
                   </Td>
                   <Td>
-                    <div className="px-1 py-2.5">{transaction.gasFee}</div>
+                    <div className="py2.5 px-1">{operation.destChain}</div>
+                  </Td>
+                  <Td>
+                    <div className="px-1 py-2.5">
+                      {parseFloat(operation.fee).toFixed(6)}
+                    </div>
+                  </Td>
+                  <Td>
+                    <div className="px-1 py-2.5">{operation.status}</div>
+                  </Td>
+                  <Td>
+                    {operation.status === "VAA EMITTED" && (
+                      <div className="px-1 py-2.5">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          colorScheme="green"
+                          textColor={"#07BA9A"}
+                          borderRadius={"8px"}
+                          onClick={() => onRedeemClick(operation)}
+                        >
+                          Redeem
+                        </Button>
+                      </div>
+                    )}
                   </Td>
                 </Tr>
               ))
             ) : (
               <Tr>
-                <Td colSpan={4} textAlign="center" padding="60px">
+                <Td colSpan={7} textAlign="center" padding="60px">
                   <div className="flex flex-col items-center">
                     <Image
                       src="/icons/no-transactions-icon.svg"

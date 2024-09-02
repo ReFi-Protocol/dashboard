@@ -4,9 +4,12 @@ import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
 import { Button, Image } from "@chakra-ui/react";
 import NFTModal from "./NFTModal";
 import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { Umi } from "@metaplex-foundation/umi";
-import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
+import {
+  UnifiedWalletButton,
+  useAnchorWallet,
+  useWallet,
+} from "@jup-ag/wallet-adapter";
 import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import RevealNFTModal from "./RevealNFTModal";
@@ -18,7 +21,7 @@ import { GaEvent, registerEvent } from "../../../events";
 
 const ITEMS_PER_PAGE = 12;
 
-const NFTCollectionGallery: FC = () => {
+const PurchaseBlock: FC = () => {
   const showToast = useCustomToast();
   const candyMachine = useCandyMachine();
   const [isModalOpen, setModalOpen] = useState(false);
@@ -29,12 +32,14 @@ const NFTCollectionGallery: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isBoughtNft, setIsBoughtNft] = useState(false);
+  const anchorWallet = useAnchorWallet();
 
   const availableNFTs = candyMachine?.items?.length
     ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed)
     : 0;
 
   const wallet = useWallet();
+
   const umi = useUmi(wallet);
 
   const openModal = () => setModalOpen(true);
@@ -54,10 +59,16 @@ const NFTCollectionGallery: FC = () => {
   const buyNft = async (umi: Umi) => {
     registerEvent({ event: GaEvent.NFT_PURCHASE });
     setIsLoading(true);
-    openRevealModal();
 
     try {
       const mint = await mintNftFromCandyMachine(umi);
+
+      openRevealModal();
+
+      if (!mint) {
+        throw new Error("Error purchasing NFT");
+      }
+
       const digitalAsset = await fetchDigitalAsset(umi, mint);
       const metadata = await fetchMetadata(digitalAsset.metadata.uri);
 
@@ -108,7 +119,7 @@ const NFTCollectionGallery: FC = () => {
 
   const paginatedItems = candyMachine
     ? candyMachine.items
-        .slice(0, env.VITE_MAX_NFT_AVAILABLE)
+        .slice(0, env.REACT_APP_MAX_NFT_AVAILABLE)
         .slice(0, currentPage * ITEMS_PER_PAGE)
     : [];
 
@@ -181,7 +192,7 @@ const NFTCollectionGallery: FC = () => {
         ))}
       </div>
       {paginatedItems.length <
-        candyMachine.items.slice(0, env.VITE_MAX_NFT_AVAILABLE).length && (
+        candyMachine.items.slice(0, env.REACT_APP_MAX_NFT_AVAILABLE).length && (
         <div className="flex justify-center">
           <Button
             onClick={handleViewMore}
@@ -218,4 +229,4 @@ const NFTCollectionGallery: FC = () => {
   );
 };
 
-export default NFTCollectionGallery;
+export default PurchaseBlock;

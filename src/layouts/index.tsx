@@ -62,8 +62,8 @@ const Layout: FC = () => {
           <div className="mx-auto mb-auto h-full min-h-[84vh] p-2 pt-5">
             <Routes>
               {getRoutes(routes)}
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="*" element={<NotFound />} />{" "}
+              <Route path="/" element={<Navigate to="/marketplace" replace />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
         </main>

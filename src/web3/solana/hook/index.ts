@@ -41,7 +41,7 @@ export const useCandyMachine = (wallet?: WalletContextState) => {
       fetchCandyMachine(umi, publicKey(CANDY_MACHINE_ADDRESS)).then(
         (candyMachine) => {
           setCandyMachine(candyMachine);
-        },
+        }
       );
     }
   }, [umi]);
