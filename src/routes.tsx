@@ -37,13 +37,13 @@ const devRoutes: AppRoute[] = [
     icon: <MdTrendingUp className="h-6 w-6" />,
     component: <Staking />,
   },
-  {
-    name: "Bridging",
-    layout: "/",
-    path: "bridging",
-    icon: <MdSwapHoriz className="h-6 w-6" />,
-    component: <Bridging />,
-  },
+  // {
+  //   name: "Bridging",
+  //   layout: "/",
+  //   path: "bridging",
+  //   icon: <MdSwapHoriz className="h-6 w-6" />,
+  //   component: <Bridging />,
+  // },
   {
     name: "Leaderboard",
     layout: "/",
