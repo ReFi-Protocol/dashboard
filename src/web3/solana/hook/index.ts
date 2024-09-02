@@ -58,10 +58,7 @@ export function useStakes(wallet?: Wallet | null) {
 
     const fetchStakeInfo = async () => {
       getStakeInfo(wallet, getProgram(wallet)).then((info) => {
-        setStakes((prev) => {
-          const newStakes = info?.stakes || [];
-          return newStakes.length !== prev.length ? newStakes : prev;
-        });
+        setStakes(info?.stakes || []);
       });
     };
 
