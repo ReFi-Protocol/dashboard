@@ -1,18 +1,18 @@
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
-import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 import {
   CandyMachine,
   fetchCandyMachine,
   mplCandyMachine,
 } from "@metaplex-foundation/mpl-candy-machine";
-import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
-import { CANDY_MACHINE_ADDRESS, RPC_URL } from "../const";
-import { useEffect, useState } from "react";
+import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 import { publicKey, Umi } from "@metaplex-foundation/umi";
-import { getStakeInfo } from "../staking/util";
-import { Stake, Wallet } from "../staking/types";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
+import { WalletContextState } from "@solana/wallet-adapter-react";
+import { useEffect, useState } from "react";
+import { CANDY_MACHINE_ADDRESS, RPC_URL } from "../const";
 import { getProgram } from "../staking";
+import { Stake, Wallet } from "../staking/types";
+import { getStakeInfo } from "../staking/util";
 
 export const useUmi = (wallet?: WalletContextState) => {
   const [umi, setUmi] = useState<Umi>();

@@ -1,30 +1,29 @@
 import {
-  Umi,
-  PublicKey,
-  generateSigner,
-  some,
-  isSome,
-  transactionBuilder,
-  publicKey,
-  TransactionBuilderSendAndConfirmOptions,
-} from "@metaplex-foundation/umi";
-import {
-  mintV2,
-  fetchCandyMachine,
   fetchCandyGuard,
+  fetchCandyMachine,
+  mintV2,
 } from "@metaplex-foundation/mpl-candy-machine";
-import {} from "@metaplex-foundation/umi";
 import {
   setComputeUnitLimit,
   setComputeUnitPrice,
 } from "@metaplex-foundation/mpl-toolbox";
-import { CANDY_MACHINE_ADDRESS } from "../const";
+import {
+  generateSigner,
+  isSome,
+  publicKey,
+  some,
+  transactionBuilder,
+  TransactionBuilderSendAndConfirmOptions,
+  Umi
+} from "@metaplex-foundation/umi";
 import { getConnection } from "../connection";
+import { CANDY_MACHINE_ADDRESS } from "../const";
 
 export async function mintNftFromCandyMachine(
   umi: Umi,
   nftMint = generateSigner(umi),
 ) {
+  // const nftMint = generateSigner(umi);
   const candyMachineAddress = publicKey(CANDY_MACHINE_ADDRESS);
   const candyMachine = await fetchCandyMachine(umi, candyMachineAddress);
   const candyGuard = await fetchCandyGuard(umi, candyMachine.mintAuthority);
@@ -83,6 +82,6 @@ export async function mintNftFromCandyMachine(
       }
     }
   }
-
+console.log(nftMint.publicKey)
   return nftMint.publicKey;
 }

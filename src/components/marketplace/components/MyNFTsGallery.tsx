@@ -1,13 +1,13 @@
+import { Button, Image, Spinner } from "@chakra-ui/react";
+import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { FC, useEffect, useState } from "react";
+import { NFTInfo } from "../../../types";
+import { useUmi } from "../../../web3/solana/hook";
+import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
+import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
 import NFTCard from "./NFTCard";
 import NFTModal from "./NFTModal";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
-import { useUmi } from "../../../web3/solana/hook";
-import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
-import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
-import { Spinner, Button, Image } from "@chakra-ui/react";
-import { NFTInfo } from "../../../types";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -26,6 +26,7 @@ const MyNFTsGallery: FC = () => {
         setLoading(true);
         try {
           const fetchedNfts = await getReFiNfts(umi, wallet.publicKey);
+          console.log(fetchedNfts)
           setNfts(fetchedNfts);
         } catch (error) {
           console.error("Failed to fetch NFTs:", error);

@@ -1,45 +1,45 @@
-import React, { useMemo } from "react";
+import { UnifiedWalletProvider } from "@jup-ag/wallet-adapter";
+import { Adapter } from "@solana/wallet-adapter-base";
 import {
+  AlphaWalletAdapter,
+  AvanaWalletAdapter,
   BitgetWalletAdapter,
+  BitpieWalletAdapter,
   CloverWalletAdapter,
   Coin98WalletAdapter,
   CoinbaseWalletAdapter,
+  CoinhubWalletAdapter,
+  FractalWalletAdapter,
   HuobiWalletAdapter,
+  HyperPayWalletAdapter,
+  KeystoneWalletAdapter,
+  KrystalWalletAdapter,
+  LedgerWalletAdapter,
   MathWalletAdapter,
   NekoWalletAdapter,
   NightlyWalletAdapter,
-  PhantomWalletAdapter,
-  SalmonWalletAdapter,
-  SolflareWalletAdapter,
-  TorusWalletAdapter,
-  TrustWalletAdapter,
-  WalletConnectWalletAdapter,
-  ParticleAdapter,
-  AlphaWalletAdapter,
-  AvanaWalletAdapter,
-  BitpieWalletAdapter,
-  CoinhubWalletAdapter,
-  FractalWalletAdapter,
-  KeystoneWalletAdapter,
-  KrystalWalletAdapter,
-  HyperPayWalletAdapter,
-  LedgerWalletAdapter,
   NufiWalletAdapter,
   OntoWalletAdapter,
+  ParticleAdapter,
+  PhantomWalletAdapter,
   SafePalWalletAdapter,
   SaifuWalletAdapter,
+  SalmonWalletAdapter,
   SkyWalletAdapter,
+  SolflareWalletAdapter,
   SolongWalletAdapter,
   SpotWalletAdapter,
   TokenaryWalletAdapter,
-  TrezorWalletAdapter,
   TokenPocketWalletAdapter,
+  TorusWalletAdapter,
+  TrezorWalletAdapter,
+  TrustWalletAdapter,
+  WalletConnectWalletAdapter,
   XDEFIWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { Adapter } from "@solana/wallet-adapter-base";
-import { UnifiedWalletProvider } from "@jup-ag/wallet-adapter";
-import { ORIGIN, CLUSTER } from "./const";
+import React, { useMemo } from "react";
 import { env } from "../../env";
+import { CLUSTER, ORIGIN } from "./const";
 
 export const SolanaProvider = ({ children }: { children: React.ReactNode }) => {
   const wallets: Adapter[] = useMemo(() => {
