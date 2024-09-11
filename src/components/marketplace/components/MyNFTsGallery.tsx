@@ -1,43 +1,76 @@
 import { Button, Image, Spinner } from "@chakra-ui/react";
 import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { FC, useEffect, useState } from "react";
 import { NFTInfo } from "../../../types";
-import { useUmi } from "../../../web3/solana/hook";
+import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
 import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
 import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
+import { getStakedNfts } from "../../../web3/solana/service/getStakedNfts";
+import { getMyStakes } from "../../../web3/solana/staking/service/getMyStakes";
+import { Stake } from "../../../web3/solana/staking/types";
 import NFTCard from "./NFTCard";
 import NFTModal from "./NFTModal";
 
 const ITEMS_PER_PAGE = 6;
 
 const MyNFTsGallery: FC = () => {
+  const anchorWallet = useAnchorWallet();
+  const wallet = useWallet();
+  const umi = useUmi(wallet);
+  const candyMachine = useCandyMachine();
+
   const [isModalOpen, setModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [stakes, setStakes] = useState<Stake[]>([]);
   const [nftInfo, setNftInfo] = useState<NFTInfo | null>(null);
   const [nfts, setNfts] = useState<DigitalAsset[]>([]);
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
-  const wallet = useWallet();
-  const umi = useUmi(wallet);
+
+  useEffect(() => {
+    const loadStakesAndNFTs = async () => {
+      if (!anchorWallet || !umi || !wallet.connected) {
+        setStakes([]);
+        setNfts([]);
+        return;
+      }
+
+      try {
+        const [fetchedStakes, fetchedNfts] = await Promise.all([
+          getMyStakes(anchorWallet),
+          getReFiNfts(umi, anchorWallet.publicKey),
+        ]);
+        setStakes(fetchedStakes);
+        setNfts(fetchedNfts);
+      } catch (error) {
+        console.error("Error fetching stakes or NFTs:", error);
+      }
+    };
+
+    loadStakesAndNFTs();
+  }, [anchorWallet, umi, wallet.connected]);
 
   useEffect(() => {
     const fetchNfts = async () => {
-      if (wallet.publicKey && umi) {
-        setLoading(true);
-        try {
-          const fetchedNfts = await getReFiNfts(umi, wallet.publicKey);
-          console.log(fetchedNfts)
-          setNfts(fetchedNfts);
-        } catch (error) {
-          console.error("Failed to fetch NFTs:", error);
-        } finally {
-          setLoading(false);
-        }
+      if (!wallet.publicKey || !umi) return;
+
+      setLoading(true);
+      try {
+        const [ownedNfts, stakedNfts] = await Promise.all([
+          getReFiNfts(umi, wallet.publicKey),
+          getStakedNfts(umi, stakes),
+        ]);
+        setNfts([...ownedNfts, ...stakedNfts]);
+      } catch (error) {
+        console.error("Failed to fetch NFTs:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchNfts();
-  }, [wallet.publicKey, umi]);
+  }, [wallet.publicKey, umi, stakes]);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -101,8 +134,7 @@ const MyNFTsGallery: FC = () => {
             boxSize="210px"
           />
           <p className="text-[15px] font-normal text-[#D0D0D0]">
-            Your PCRBN NFT collection is currently empty. Purchased NFTs will be
-            displayed here
+            Your PCRBN NFT collection is currently empty. Purchased NFTs will be displayed here
           </p>
         </div>
       )}

@@ -70,6 +70,6 @@ export function useStakes(wallet?: Wallet | null) {
 
     return () => clearInterval(intervalId);
   }, [wallet]);
-
+console.log(stakes)
   return { stakes };
 }

@@ -11,7 +11,6 @@ export const SPL_DECIMALS = env.REACT_APP_SOLANA_SPL_DECIMALS;
 export const COLLECTION_MINT_ADDRESS = env.REACT_APP_SOLANA_COLLECTION;
 
 export const APY_DECIMALS = 2;
-console.log(RPC_URL)
 export const NFT_APY: Record<30 | 60 | 90, number> = {
   30: 2950,
   60: 5950,

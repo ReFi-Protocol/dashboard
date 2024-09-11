@@ -1,11 +1,11 @@
-import { PublicKey } from "@solana/web3.js";
-import { getNftMints } from "./getNfts";
 import {
   DigitalAsset,
   fetchAllDigitalAsset,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { Umi } from "@metaplex-foundation/umi";
+import { PublicKey } from "@solana/web3.js";
 import { COLLECTION_MINT_ADDRESS } from "../const";
+import { getNftMints } from "./getNfts";
 
 export async function getReFiNfts(umi: Umi, address: PublicKey) {
   const nftMints = await getNftMints(address);

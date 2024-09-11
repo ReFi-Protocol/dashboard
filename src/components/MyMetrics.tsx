@@ -1,18 +1,18 @@
-import { FC, useEffect, useState } from "react";
-import MetricsSection from "./MetricSection";
-import { LockIcon, ConfettiIcon, SumIcon } from "./icons";
-import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
-import { useUmi } from "../web3/solana/hook";
-import { Stake } from "../web3/solana/staking/types";
-import { getReFiNfts } from "../web3/solana/service/getReFiNfts";
-import { getMyStakes } from "../web3/solana/staking/service/getMyStakes";
 import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
-import { getLockedReFi } from "../web3/solana/staking/service/getLockedReFi";
-import { getTotalReFi } from "../web3/solana/staking/service/getTotalReFi";
-import { formatReFi } from "../web3/solana/staking/util";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import { FC, useEffect, useState } from "react";
+import { WidgetData } from "../types";
+import { useUmi } from "../web3/solana/hook";
+import { getReFiNfts } from "../web3/solana/service/getReFiNfts";
 import { getExpectedReward } from "../web3/solana/staking/service/getExpectedReward";
 import { getLockedNftCount } from "../web3/solana/staking/service/getLockedNftCount";
-import { WidgetData } from "../types";
+import { getLockedReFi } from "../web3/solana/staking/service/getLockedReFi";
+import { getMyStakes } from "../web3/solana/staking/service/getMyStakes";
+import { getTotalReFi } from "../web3/solana/staking/service/getTotalReFi";
+import { Stake } from "../web3/solana/staking/types";
+import { formatReFi } from "../web3/solana/staking/util";
+import MetricsSection from "./MetricSection";
+import { ConfettiIcon, LockIcon, SumIcon } from "./icons";
 
 const MyMetrics: FC = () => {
   const anchorWallet = useAnchorWallet();
