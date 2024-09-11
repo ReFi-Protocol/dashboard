@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -8,20 +8,16 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
-import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
-import { useUmi } from "../../web3/solana/hook";
 
 interface ConnectWalletModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-
 const ConnectWalletModal: FC<ConnectWalletModalProps> = ({
   isOpen,
   onClose,
 }) => {
-
   return (
     <Modal
       onClose={onClose}

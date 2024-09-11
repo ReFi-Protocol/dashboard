@@ -140,8 +140,7 @@ const PurchaseBlock: FC = () => {
               isLoading={isLoading}
               background={"#25AC88"}
               textColor={"#000000"}
-              // loadingText="Revealing NFT..."
-              loadingText="Loading... This may take 2 minutes"
+              loadingText="Revealing NFT..."
               borderRadius={"26px"}
               _hover={{ background: "#ffffff", color: "#25AC88" }}
               _active={{ background: "#ffffff", color: "#25AC88" }}

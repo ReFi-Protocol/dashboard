@@ -130,8 +130,6 @@ const BridgingContent: FC = () => {
     );
   }
 
-
-
   return (
     <div className="flex flex-col pt-5 text-white">
       <Modal onClose={() => {}} isOpen={isLoading} isCentered>
