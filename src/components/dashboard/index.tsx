@@ -1,18 +1,18 @@
-import { FC, useEffect, useState } from "react";
-import ExchangeRateChart from "./components/ExchangeRateChart";
-import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
-import { useUmi } from "../../web3/solana/hook";
-import { Stake, StakeInfoAccount } from "../../web3/solana/staking/types";
-import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
-import { getMyStakes } from "../../web3/solana/staking/service/getMyStakes";
 import { DigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
-import GrowthChart from "./components/GrowthChart";
-import MyMetrics from "../MyMetrics";
-import MyNFTsGallery from "../marketplace/components/MyNFTsGallery";
-import ConnectWalletModal from "../connect-wallet-modal";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import { FC, useEffect, useState } from "react";
 import { useAppSelector } from "../../store";
-import GlobalMetrics from "../GlobalMetrics";
+import { useUmi } from "../../web3/solana/hook";
+import { getReFiNfts } from "../../web3/solana/service/getReFiNfts";
 import { getAllStakes } from "../../web3/solana/staking/service/getAllStakes";
+import { getMyStakes } from "../../web3/solana/staking/service/getMyStakes";
+import { Stake, StakeInfoAccount } from "../../web3/solana/staking/types";
+import GlobalMetrics from "../GlobalMetrics";
+import MyMetrics from "../MyMetrics";
+import ConnectWalletModal from "../connect-wallet-modal";
+import MyNFTsGallery from "../marketplace/components/MyNFTsGallery";
+import ExchangeRateChart from "./components/ExchangeRateChart";
+import GrowthChart from "./components/GrowthChart";
 
 const DashboardContent: FC = () => {
   const { historicalPrices, currentPrice } = useAppSelector(

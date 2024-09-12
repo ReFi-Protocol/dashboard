@@ -1,23 +1,22 @@
-import { FC, useState } from "react";
-import NFTCard from "./NFTCard";
-import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
-import { Button, Image } from "@chakra-ui/react";
-import NFTModal from "./NFTModal";
-import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
-import { Umi } from "@metaplex-foundation/umi";
+import { Button, Image, Spinner } from "@chakra-ui/react";
 import {
   UnifiedWalletButton,
   useAnchorWallet,
   useWallet,
 } from "@jup-ag/wallet-adapter";
-import { fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
-import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
-import RevealNFTModal from "./RevealNFTModal";
-import StakeNowModal from "./StakeNowModal";
-import { Spinner } from "@chakra-ui/react";
-import { useCustomToast } from "../../../utils";
+import { DigitalAsset, fetchDigitalAsset } from "@metaplex-foundation/mpl-token-metadata";
+import { Umi } from "@metaplex-foundation/umi";
+import { FC, useState } from "react";
 import { env } from "../../../env";
 import { GaEvent, registerEvent } from "../../../events";
+import { useCustomToast } from "../../../utils";
+import { useCandyMachine, useUmi } from "../../../web3/solana/hook";
+import { mintNftFromCandyMachine } from "../../../web3/solana/service/createNft";
+import { fetchMetadata } from "../../../web3/solana/service/fetchMetadata";
+import NFTCard from "./NFTCard";
+import NFTModal from "./NFTModal";
+import RevealNFTModal from "./RevealNFTModal";
+import StakeNowModal from "./StakeNowModal";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -56,6 +55,19 @@ const PurchaseBlock: FC = () => {
   };
   const openStakeModal = () => setStakeModalOpen(true);
 
+  async function fetchWithRetry(umi: Umi, mint:any, retries = 5): Promise<DigitalAsset> {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const digitalAsset = await fetchDigitalAsset(umi, mint);
+        return digitalAsset;
+      } catch (err) {
+        console.error(`Attempt ${i + 1}: Failed to fetch digital asset, retrying...`);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+    }
+    throw new Error("Failed to fetch digital asset after retries");
+  }
+
   const buyNft = async (umi: Umi) => {
     registerEvent({ event: GaEvent.NFT_PURCHASE });
     setIsLoading(true);
@@ -66,10 +78,11 @@ const PurchaseBlock: FC = () => {
       openRevealModal();
 
       if (!mint) {
-        throw new Error("Error purchasing NFT");
+        throw new Error("Error purchasing NFT: Mint address not generated");
       }
 
-      const digitalAsset = await fetchDigitalAsset(umi, mint);
+      const digitalAsset = await fetchWithRetry(umi, mint);
+      console.log("digitalAsset", digitalAsset)
       const metadata = await fetchMetadata(digitalAsset.metadata.uri);
 
       setNftInfo(metadata);
@@ -119,8 +132,8 @@ const PurchaseBlock: FC = () => {
 
   const paginatedItems = candyMachine
     ? candyMachine.items
-        .slice(0, env.REACT_APP_MAX_NFT_AVAILABLE)
-        .slice(0, currentPage * ITEMS_PER_PAGE)
+      .slice(0, env.REACT_APP_MAX_NFT_AVAILABLE)
+      .slice(0, currentPage * ITEMS_PER_PAGE)
     : [];
 
   return candyMachine ? (
@@ -194,22 +207,22 @@ const PurchaseBlock: FC = () => {
       </div>
       {paginatedItems.length <
         candyMachine.items.slice(0, env.REACT_APP_MAX_NFT_AVAILABLE).length && (
-        <div className="flex justify-center">
-          <Button
-            onClick={handleViewMore}
-            variant="solid"
-            colorScheme="green"
-            background={"#25AC88"}
-            textColor={"#000000"}
-            borderRadius={"26px"}
-            _hover={{ background: "#ffffff", color: "#25AC88" }}
-            _active={{ background: "#ffffff", color: "#25AC88" }}
-            className="inset-y-0 mt-8 w-full max-w-40 flex-grow !text-wrap rounded-[26px] px-6 py-2.5 text-[14px] font-semibold"
-          >
-            View More
-          </Button>
-        </div>
-      )}
+          <div className="flex justify-center">
+            <Button
+              onClick={handleViewMore}
+              variant="solid"
+              colorScheme="green"
+              background={"#25AC88"}
+              textColor={"#000000"}
+              borderRadius={"26px"}
+              _hover={{ background: "#ffffff", color: "#25AC88" }}
+              _active={{ background: "#ffffff", color: "#25AC88" }}
+              className="inset-y-0 mt-8 w-full max-w-40 flex-grow !text-wrap rounded-[26px] px-6 py-2.5 text-[14px] font-semibold"
+            >
+              View More
+            </Button>
+          </div>
+        )}
       <RevealNFTModal
         isOpen={isRevealModalOpen}
         onClose={closeRevealModal}
