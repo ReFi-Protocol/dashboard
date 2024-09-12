@@ -128,5 +128,5 @@ export function calculatePercentage(part: number, whole: number): number {
     return 0; // Avoid division by zero
   }
   const percentage = (part / whole) * 100;
-  return Number(percentage.toFixed(1));
+  return Number(percentage.toFixed(2));
 }

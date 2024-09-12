@@ -20,7 +20,7 @@ const StakeNowModal: FC<StakeNowModalProps> = ({ isOpen, onClose }) => {
 
   const handleStakeNow = () => {
     navigate("/staking");
-    onClose();
+    onClose(); 
   };
 
   return (

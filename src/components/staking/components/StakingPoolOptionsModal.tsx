@@ -86,8 +86,14 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
           description: `You have successfully staked ${humanAmount} $REFI`,
           status: "success",
         });
+
         
         onClose();
+        
+        window.scrollTo({
+          top: document.documentElement.scrollHeight, // Scroll to the bottom
+          behavior: 'smooth', // Smooth scrolling
+        });
       } catch (e: any) {
         showToast({
           title: "Error",

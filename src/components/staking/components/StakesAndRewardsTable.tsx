@@ -44,7 +44,7 @@ const tableHeaders = [
   "Amount",
   "USD Value",
   "Start Date",
-  "Locked End Date",
+  "LOCK END DATE",
   "APY",
   "Staking Status",
   "Rewards",
@@ -127,10 +127,10 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
     const dApy = stake.baseApy + (stake.nftApy || 0);
     const apy = dApy / 10 ** APY_DECIMALS;
     const status = stake.restakeTime
-      ? "Restaked"
+      ? "Confirmed Restake"
       : stake.destakeTime
         ? "Destaked"
-        : "Confirmed";
+        : "Confirmed Stake";
     const canDestake = compareDesc(lockEndDate, new Date()) > 0;
     const canRestake = !stake.parentStakeIndex && stake.nft;
 
