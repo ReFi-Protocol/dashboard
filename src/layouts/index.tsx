@@ -1,15 +1,18 @@
+import { InfoOutlineIcon } from "@chakra-ui/icons";
+import { IconButton } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import Sidebar from "../components/sidebar";
-import routes from "../routes";
-import PageTitle from "../components/page-contents/PageTitle";
-import { AppRoute } from "../types";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import NotFound from "../components/not-found";
-import Bridging from "../components/bridging";
+import PageTitle from "../components/page-contents/PageTitle";
+import Sidebar from "../components/sidebar";
+import TutorialModal from "../components/tutorial-modal";
+import routes from "../routes";
+import { AppRoute } from "../types";
 
 const Layout: FC = () => {
   const [currentRoute, setCurrentRoute] = useState("Dashboard");
   const [open, setOpen] = useState(true);
+  const [openTutorial, setOpenTutorial] = useState<boolean>(false);
 
   const location = useLocation();
 
@@ -46,7 +49,16 @@ const Layout: FC = () => {
       <Sidebar open={open} onClose={() => setOpen(false)} />
       <div className="h-full w-full bg-[#000000] ">
         <main className="mx-[12px] h-full flex-none transition-all md:pr-2 xl:ml-[250px] ">
-          <PageTitle title={currentRoute} onOpenSidenav={() => setOpen(true)} />
+          <div className="flex w-full items-center">
+            <PageTitle title={currentRoute} onOpenSidenav={() => setOpen(true)} />
+            <IconButton
+              aria-label="Info"
+              variant="blackAlpha"
+              borderRadius="10px"
+              onClick={() => setOpenTutorial(true)}
+              icon={<InfoOutlineIcon color='white' />}
+            />
+          </div>
           <div className="mx-auto mb-auto h-full min-h-[84vh] p-2 pt-5">
             <Routes>
               {getRoutes(routes)}
@@ -55,6 +67,10 @@ const Layout: FC = () => {
             </Routes>
           </div>
         </main>
+        <TutorialModal
+          isOpen={openTutorial}
+          onClose={() => setOpenTutorial(false)}
+        />
       </div>
     </div>
   );

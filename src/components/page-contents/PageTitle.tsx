@@ -1,5 +1,6 @@
+import { IconButton } from "@chakra-ui/react";
 import { FC } from "react";
-import { FiAlignJustify } from "react-icons/fi";
+import { HamburgerIcon } from '@chakra-ui/icons';
 
 interface PageTitleProps {
   title: string;
@@ -9,13 +10,16 @@ interface PageTitleProps {
 const PageTitle: FC<PageTitleProps> = ({ title, onOpenSidenav }) => {
   return (
     <div className="top-4 flex flex-row flex-wrap items-center justify-between rounded-xl bg-none p-2 backdrop-blur-xl">
+      <div className="xl:hidden">
+        <IconButton
+          aria-label="Menu"
+          variant="blackAlpha"
+          borderRadius="10px"
+          onClick={onOpenSidenav}
+          icon={<HamburgerIcon color='white' />}
+        />
+      </div>
       <h2 className="font-sans text-3xl font-medium text-white">{title}</h2>
-      <span
-        className="flex cursor-pointer text-xl text-white xl:hidden"
-        onClick={onOpenSidenav}
-      >
-        <FiAlignJustify className="h-5 w-5" />
-      </span>
     </div>
   );
 };
