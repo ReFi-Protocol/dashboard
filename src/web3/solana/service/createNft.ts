@@ -23,7 +23,6 @@ export async function mintNftFromCandyMachine(
   umi: Umi,
   nftMint = generateSigner(umi),
 ) {
-  // const nftMint = generateSigner(umi);
   const candyMachineAddress = publicKey(CANDY_MACHINE_ADDRESS);
   const candyMachine = await fetchCandyMachine(umi, candyMachineAddress);
   const candyGuard = await fetchCandyGuard(umi, candyMachine.mintAuthority);
@@ -82,6 +81,5 @@ export async function mintNftFromCandyMachine(
       }
     }
   }
-console.log(nftMint.publicKey)
   return nftMint.publicKey;
 }
