@@ -18,12 +18,6 @@ import { D, d } from "../../web3/util/d";
 import { formatReFi } from "../../web3/solana/staking/util";
 import ZeroReFiTokensPopupModal from "./components/ZeroReFiTokensPopUpModal";
 
-
-const sessionManager = {
-  get: (key: string) => sessionStorage.getItem(key),
-  set: (key: string, value: string) => sessionStorage.setItem(key, value)
-};
-
 const DashboardContent: FC = () => {
   const { historicalPrices, currentPrice } = useAppSelector(
     (state) => state.price,
@@ -67,27 +61,19 @@ const DashboardContent: FC = () => {
     }
   }, [anchorWallet]);
 
+  useEffect(() => {
+    if (!sessionStorage.getItem("popUpModalShown")) {
+      setPopupModalOpen(true);
+      sessionStorage.setItem("popUpModalShown", "true");
+    } 
+  }, []);
   
   useEffect(() => {
     console.log("your current refi balance is: " + totalHumanReFi)
   }, [totalHumanReFi]);
 
-  useEffect(() => {  
-    const hasPopUpModalBeenShown = sessionManager.get("hasPopUpModalBeenShown");
-
-    if (!hasPopUpModalBeenShown) {      
-      setPopupModalOpen(true);
-    }
-      
-    
-    console.log("upon page load, hasModalBeenShown: " + sessionManager.get("hasPopUpModalBeenShown"));
-
-  }, []);
-
   const handleCloseModal = () => {
     setPopupModalOpen(false);
-
-    sessionManager.set("hasPopUpModalBeenShown", "true");
   };
 
   if (!wallet.publicKey) {
