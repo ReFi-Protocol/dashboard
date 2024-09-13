@@ -59,4 +59,4 @@ const RevealNFTModal: FC<RevealNFTModalProps> = ({
   </Modal>
 );
 
-export default RevealNFTModal;
+export default RevealNFTModal; 
