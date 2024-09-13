@@ -13,6 +13,16 @@ import ConnectWalletModal from "../connect-wallet-modal";
 import MyNFTsGallery from "../marketplace/components/MyNFTsGallery";
 import ExchangeRateChart from "./components/ExchangeRateChart";
 import GrowthChart from "./components/GrowthChart";
+import { getTotalReFi } from "../../web3/solana/staking/service/getTotalReFi";
+import { D, d } from "../../web3/util/d";
+import { formatReFi } from "../../web3/solana/staking/util";
+import ZeroReFiTokensPopupModal from "./components/ZeroReFiTokensPopUpModal";
+
+
+const sessionManager = {
+  get: (key: string) => sessionStorage.getItem(key),
+  set: (key: string, value: string) => sessionStorage.setItem(key, value)
+};
 
 const DashboardContent: FC = () => {
   const { historicalPrices, currentPrice } = useAppSelector(
@@ -20,11 +30,17 @@ const DashboardContent: FC = () => {
   );
   const anchorWallet = useAnchorWallet();
   const [isModalOpen, setModalOpen] = useState(true);
+
+  const [isPopupModalOpen, setPopupModalOpen] = useState(false);
+
   const wallet = useWallet();
   const umi = useUmi(wallet);
   const [stakes, setStakes] = useState<Stake[]>([]);
   const [myNfts, setMyNfts] = useState<DigitalAsset[]>([]);
   const [allStakesAccs, setAllStakesAccs] = useState<StakeInfoAccount[]>([]);
+
+  const [totalHumanReFi, setTotalHumanReFi] = useState<number | null>(null);
+  
 
   useEffect(() => {
     getAllStakes().then(setAllStakesAccs);
@@ -42,6 +58,38 @@ const DashboardContent: FC = () => {
     }
   }, [anchorWallet, umi]);
 
+
+  useEffect(() => {
+    if (anchorWallet) {
+      getTotalReFi(anchorWallet.publicKey).then((value) => {
+        setTotalHumanReFi(Math.trunc(d(value)));
+      });
+    }
+  }, [anchorWallet]);
+
+  
+  useEffect(() => {
+    console.log("your current refi balance is: " + totalHumanReFi)
+  }, [totalHumanReFi]);
+
+  useEffect(() => {  
+    const hasPopUpModalBeenShown = sessionManager.get("hasPopUpModalBeenShown");
+
+    if (!hasPopUpModalBeenShown) {      
+      setPopupModalOpen(true);
+    }
+      
+    
+    console.log("upon page load, hasModalBeenShown: " + sessionManager.get("hasPopUpModalBeenShown"));
+
+  }, []);
+
+  const handleCloseModal = () => {
+    setPopupModalOpen(false);
+
+    sessionManager.set("hasPopUpModalBeenShown", "true");
+  };
+
   if (!wallet.publicKey) {
     return (
       <ConnectWalletModal
@@ -49,7 +97,7 @@ const DashboardContent: FC = () => {
         onClose={() => setModalOpen(false)}
       />
     );
-  }
+  }  
 
   return (
     <div>
@@ -68,6 +116,14 @@ const DashboardContent: FC = () => {
         </h3>
         <MyNFTsGallery />
       </div>
+
+      {isPopupModalOpen && totalHumanReFi != null && (
+        <ZeroReFiTokensPopupModal 
+          isOpen={isModalOpen} 
+          onClose={handleCloseModal}
+          zeroRefiTokens={totalHumanReFi === 0}
+        />
+      )}
     </div>
   );
 };
