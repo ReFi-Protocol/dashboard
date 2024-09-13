@@ -10,7 +10,8 @@ import { env } from "../../env";
 import { getTotalReFi } from "../../web3/solana/staking/service/getTotalReFi";
 import { D, d } from "../../web3/util/d";
 import { formatReFi } from "../../web3/solana/staking/util";
-import { ZeroReFiTokensPopupModal } from "./components/RevealNFTModal";
+// import { ZeroReFiTokensPopupModal } from "./components/RevealNFTModal";
+import ZeroRefiTokensPopUpModal from "./components/ZeroReFiTokensPopUpModal"
 
 const tabOptions = [
   "NFT Collection",
@@ -107,7 +108,7 @@ const MarketplaceContent: FC = () => {
       </div>
       
       {isModalOpen &&  totalHumanReFi != null && (
-        <ZeroReFiTokensPopupModal 
+        <ZeroRefiTokensPopUpModal 
           isOpen={isModalOpen} 
           onClose={handleCloseModal}
           zeroRefiTokens={totalHumanReFi === 0}

@@ -24,7 +24,7 @@ import { getTotalReFi } from "../../../web3/solana/staking/service/getTotalReFi"
 import { formatReFi } from "../../../web3/solana/staking/util";
 import { GaEvent, registerEvent } from "../../../events";
 import { D, d } from "../../../web3/util/d";
-import { RestakePopupModal } from "../../marketplace/components/RevealNFTModal";
+import RestakePopupModal from "../../marketplace/components/RestakePopupModal";
 
 interface StakingPoolOptionsModalProps {
   isOpen: boolean;
@@ -95,7 +95,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
         // however this implementation should:
           // cause the page to be scrolled down to my stakes & rewards
           // a popup then appears suggesting that the user should restake for higher rewards
-        if (lockPeriod != 0) {
+        if (lockPeriod === 0) {
           try {
             setRestakeModalOpen(true);
             onClose();
@@ -105,10 +105,10 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
         }
 
         
-        window.scrollTo({
-          top: document.documentElement.scrollHeight, // Scroll to the bottom
-          behavior: 'smooth', // Smooth scrolling
-        });
+        // window.scrollTo({
+        //   top: document.documentElement.scrollHeight, // Scroll to the bottom
+        //   behavior: 'smooth', // Smooth scrolling
+        // });
 
 
       } catch (e: any) {
@@ -117,7 +117,6 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
           description: e.message,
           status: "error",
         });
-
         console.error(e);
       }
     }
