@@ -95,7 +95,7 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
         // however this implementation should:
           // cause the page to be scrolled down to my stakes & rewards
           // a popup then appears suggesting that the user should restake for higher rewards
-        if (lockPeriod === 0) {
+        if (lockPeriod != 0) {
           try {
             setRestakeModalOpen(true);
             onClose();
