@@ -1,28 +1,28 @@
-import { FC, useState, useEffect, useMemo } from "react";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalHeader,
-  NumberInput,
-  NumberInputStepper,
-  NumberInputField,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  Button,
+    Button,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay,
+    NumberDecrementStepper,
+    NumberIncrementStepper,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
 } from "@chakra-ui/react";
-import { StakingPoolData } from "../../../types";
-import { IoClose } from "react-icons/io5";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
-import { useCustomToast } from "../../../utils";
-import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
-import { stake } from "../../../web3/solana/staking/service/stake";
-import { useUmi } from "../../../web3/solana/hook";
-import { getTotalReFi } from "../../../web3/solana/staking/service/getTotalReFi";
-import { formatReFi } from "../../../web3/solana/staking/util";
+import { FC, useEffect, useState } from "react";
+import { IoClose } from "react-icons/io5";
 import { GaEvent, registerEvent } from "../../../events";
+import { StakingPoolData } from "../../../types";
+import { useCustomToast } from "../../../utils";
+import { useUmi } from "../../../web3/solana/hook";
+import { getReFiNfts } from "../../../web3/solana/service/getReFiNfts";
+import { getTotalReFi } from "../../../web3/solana/staking/service/getTotalReFi";
+import { stake } from "../../../web3/solana/staking/service/stake";
+import { formatReFi } from "../../../web3/solana/staking/util";
 import { D, d } from "../../../web3/util/d";
 import RestakePopupModal from "../../marketplace/components/RestakePopupModal";
 

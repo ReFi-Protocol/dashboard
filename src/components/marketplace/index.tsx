@@ -1,17 +1,12 @@
-import { useState, FC, useEffect } from "react";
-import TabContent from "./components/TabContent";
+import { Button } from "@chakra-ui/react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { FC, useState } from "react";
+import { env } from "../../env";
+import { useCandyMachine } from "../../web3/solana/hook";
+import ConnectWalletModal from "../connect-wallet-modal";
 import MarketplaceBanner from "./components/MarketplaceBanner";
 import ProjectStats from "./components/ProjectStats";
-import { useCandyMachine } from "../../web3/solana/hook";
-import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
-import ConnectWalletModal from "../connect-wallet-modal";
-import { Button } from "@chakra-ui/react";
-import { env } from "../../env";
-import { getTotalReFi } from "../../web3/solana/staking/service/getTotalReFi";
-import { D, d } from "../../web3/util/d";
-import { formatReFi } from "../../web3/solana/staking/util";
-// import { ZeroReFiTokensPopupModal } from "./components/RevealNFTModal";
-import ZeroRefiTokensPopUpModal from "./components/ZeroReFiTokensPopUpModal"
+import TabContent from "./components/TabContent";
 
 const tabOptions = [
   "NFT Collection",
@@ -26,11 +21,6 @@ const MarketplaceContent: FC = () => {
   const wallet = useWallet();
   const candyMachine = useCandyMachine();
   
-  const [totalHumanReFi, setTotalHumanReFi] = useState<number | null>(null);
-  const anchorWallet = useAnchorWallet();
-  // const [showZeroReFiTokensModal, setShowZeroReFiTokensModal] = useState(false);
-
-
   const STARTING_FROM_PRICE = 125_000;
   const hiddenNftCount = (candyMachine?.items?.length || 250) - env.REACT_APP_MAX_NFT_AVAILABLE
 
@@ -50,20 +40,6 @@ const MarketplaceContent: FC = () => {
     { value: `${volumeTraded.toLocaleString()} $REFI`, name: "Volume traded" },
     { value: "90 days", name: "Ownership Duration" },
   ];
-
-  useEffect(() => {
-    if (anchorWallet) {
-      getTotalReFi(anchorWallet.publicKey).then((value) => {
-        setTotalHumanReFi(Math.trunc(d(value)));
-      });
-    }
-  }, [anchorWallet, wallet.publicKey]);
-
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-  
 
   if (!wallet.publicKey) {
     return (
@@ -106,14 +82,6 @@ const MarketplaceContent: FC = () => {
           <TabContent activeTab={activeTab} />
         </div>
       </div>
-      
-      {isModalOpen &&  totalHumanReFi != null && (
-        <ZeroRefiTokensPopUpModal 
-          isOpen={isModalOpen} 
-          onClose={handleCloseModal}
-          zeroRefiTokens={totalHumanReFi === 0}
-        />
-      )}
     </div>
   );
 };

@@ -1,16 +1,43 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { HiX } from "react-icons/hi";
-import Links from "./Links";
 import routes from "../../routes";
+import Links from "./Links";
 // import { ConnectKitButton } from "connectkit";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
-
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import { getTotalReFi } from "../../web3/solana/staking/service/getTotalReFi";
+import { d } from "../../web3/util/d";
+import ZeroRefiTokensPopUpModal from "../marketplace/components/ZeroReFiTokensPopUpModal";
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
 }
 
 const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
+  const anchorWallet = useAnchorWallet();
+  const { connected } = useWallet();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [hasWalletConnected, setHasWalletConnected] = useState(false);
+  const [totalHumanReFi, setTotalHumanReFi] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (anchorWallet) {
+      getTotalReFi(anchorWallet.publicKey).then((value) => {
+        setTotalHumanReFi(Math.trunc(d(value)));
+      });
+    }
+  }, [anchorWallet]);
+
+  useEffect(() => {
+    if (connected && !hasWalletConnected) {
+      setHasWalletConnected(true);
+      setIsModalVisible(true);
+    }
+  }, [connected, hasWalletConnected]);
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
   return (
     <div
       className={`sm:none duration-175 linear fixed !z-50 flex min-h-full w-[225px] flex-col rounded-[20px]  bg-[#061A11] pb-10 shadow-2xl shadow-white/5 transition-all  md:!z-50 lg:!z-50 xl:!z-0 ${
@@ -66,6 +93,13 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
           />
         </div>
       </div>
+      {isModalVisible &&  totalHumanReFi != null && (
+        <ZeroRefiTokensPopUpModal 
+          isOpen={isModalVisible} 
+          onClose={handleModalClose}
+          zeroRefiTokens={totalHumanReFi === 0}
+        />
+      )}
     </div>
   );
 };
