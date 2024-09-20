@@ -89,12 +89,6 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
           status: "success",
         });
         
-        // successfully tested that the modal appears correctly 
-        // however have not tested whether it appears in the case that a lock period stake is executed 
-        // This is due to the fact that I am unable to buy an NFT while testing / on devnet 
-        // however this implementation should:
-          // cause the page to be scrolled down to my stakes & rewards
-          // a popup then appears suggesting that the user should restake for higher rewards
         if (lockPeriod != 0) {
           try {
             setRestakeModalOpen(true);
@@ -103,12 +97,6 @@ const StakingPoolOptionsModal: FC<StakingPoolOptionsModalProps> = ({
             console.error(e);
           }
         }
-
-        
-        // window.scrollTo({
-        //   top: document.documentElement.scrollHeight, // Scroll to the bottom
-        //   behavior: 'smooth', // Smooth scrolling
-        // });
 
 
       } catch (e: any) {

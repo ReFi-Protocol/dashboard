@@ -7,7 +7,7 @@ import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { getTotalReFi } from "../../web3/solana/staking/service/getTotalReFi";
 import { d } from "../../web3/util/d";
-import ZeroRefiTokensPopUpModal from "../marketplace/components/ZeroReFiTokensPopUpModal";
+import ZeroRefiTokensPopUpModal from "../dashboard/components/ZeroReFiTokensPopUpModal";
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
