@@ -1,12 +1,12 @@
-import { useState, FC, useEffect } from "react";
-import TabContent from "./components/TabContent";
+import { Button } from "@chakra-ui/react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { FC, useState } from "react";
+import { env } from "../../env";
+import { useCandyMachine } from "../../web3/solana/hook";
+import ConnectWalletModal from "../connect-wallet-modal";
 import MarketplaceBanner from "./components/MarketplaceBanner";
 import ProjectStats from "./components/ProjectStats";
-import { useCandyMachine } from "../../web3/solana/hook";
-import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
-import ConnectWalletModal from "../connect-wallet-modal";
-import { Button } from "@chakra-ui/react";
-import { env } from "../../env";
+import TabContent from "./components/TabContent";
 
 const tabOptions = [
   "NFT Collection",
@@ -20,7 +20,7 @@ const MarketplaceContent: FC = () => {
   const [isModalOpen, setModalOpen] = useState(true);
   const wallet = useWallet();
   const candyMachine = useCandyMachine();
-
+  
   const STARTING_FROM_PRICE = 125_000;
   const hiddenNftCount = (candyMachine?.items?.length || 250) - env.REACT_APP_MAX_NFT_AVAILABLE
 
