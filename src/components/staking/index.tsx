@@ -57,7 +57,7 @@ const StakingContent: FC = () => {
   const umi = useUmi(walletContext);
   const [allStakesAccs, setAllStakesAccs] = useState<StakeInfoAccount[]>([]);
   const { stakes } = useStakes(anchorWallet);
-console.log("stakes", stakes)
+  
   useEffect(() => {
     getAllStakes().then(setAllStakesAccs);
   }, []);

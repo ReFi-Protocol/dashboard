@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
 
 import {
   Modal,
@@ -10,6 +9,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 
+import { useNavigate } from "react-router-dom";
+
 interface ZeroReFiTokensPopupModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -17,12 +18,15 @@ interface ZeroReFiTokensPopupModalProps {
 }
 
 const ZeroReFiTokensPopupModal: FC<ZeroReFiTokensPopupModalProps> = ({ isOpen, onClose, zeroRefiTokens, }) => {
-  
+  const navigate = useNavigate();
 
   const handleClick = () => {
+
+    navigate("/marketplace")
+
     window.scrollTo({
-        top: 1250, // Replace 500 with the desired Y-coordinate
-        behavior: 'smooth' // Optional: enables smooth scrolling
+        top: 2000, 
+        behavior: 'smooth' 
     });
     onClose(); 
   };
