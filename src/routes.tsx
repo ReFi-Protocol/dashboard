@@ -63,21 +63,21 @@ const devRoutes: AppRoute[] = [
 ];
 
 const prodRoutes: AppRoute[] = [
-  // {
-  //   name: "Dashboard",
-  //   layout: "/",
-  //   path: "dashboard",
-  //   icon: <MdHome className="h-6 w-6" />,
-  //   component: <Dashboard />,
-  // },
   {
-    name: "Marketplace",
+    name: "Dashboard",
     layout: "/",
-    path: "marketplace",
-    icon: <MdOutlineShoppingCart className="h-6 w-6" />,
-    component: <Marketplace />,
-    secondary: true,
+    path: "dashboard",
+    icon: <MdHome className="h-6 w-6" />,
+    component: <Dashboard />,
   },
+  // {
+  //   name: "Marketplace",
+  //   layout: "/",
+  //   path: "marketplace",
+  //   icon: <MdOutlineShoppingCart className="h-6 w-6" />,
+  //   component: <Marketplace />,
+  //   secondary: true,
+  // },
   // {
   //   name: "Staking",
   //   layout: "/",
@@ -92,13 +92,13 @@ const prodRoutes: AppRoute[] = [
     icon: <MdSwapHoriz className="h-6 w-6" />,
     component: <Bridging />,
   },
-  // {
-  //   name: "Leaderboard",
-  //   layout: "/",
-  //   path: "leaderboard",
-  //   icon: <MdBarChart className="h-6 w-6" />,
-  //   component: <Leaderboard />,
-  // },
+  {
+    name: "Leaderboard",
+    layout: "/",
+    path: "leaderboard",
+    icon: <MdBarChart className="h-6 w-6" />,
+    component: <Leaderboard />,
+  },
   {
     name: "Contact us",
     layout: "",
