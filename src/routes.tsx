@@ -78,13 +78,13 @@ const prodRoutes: AppRoute[] = [
   //   component: <Marketplace />,
   //   secondary: true,
   // },
-  // {
-  //   name: "Staking",
-  //   layout: "/",
-  //   path: "staking",
-  //   icon: <MdTrendingUp className="h-6 w-6" />,
-  //   component: <Staking />,
-  // },
+  {
+    name: "Staking",
+    layout: "/",
+    path: "staking",
+    icon: <MdTrendingUp className="h-6 w-6" />,
+    component: <Staking />,
+  },
   {
     name: "Bridging",
     layout: "/",
