@@ -65,7 +65,7 @@ const MyMetrics: FC = () => {
     {
       icon: <LockIcon width={28} height={28} fill="white" />,
       title: "Owned/Locked pCRBN",
-      subtitle: `${myNfts.length + lockedNftCount} pCRBN`,
+      subtitle: `${myNfts.length } pCRBN`,
     },
   ];
 

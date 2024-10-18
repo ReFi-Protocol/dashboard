@@ -10,10 +10,13 @@ import {
   Box,
   VStack,
 } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
+import { InfoOutlineIcon } from "@chakra-ui/icons";
 
 interface NFTModalProps {
   isOpen: boolean;
   onClose: () => void;
+  uri: string;
   nftInfo: {
     name: string;
     description: string;
@@ -22,7 +25,7 @@ interface NFTModalProps {
   };
 }
 
-const NFTModal: FC<NFTModalProps> = ({ isOpen, onClose, nftInfo }) => {
+const NFTModal: FC<NFTModalProps> = ({ isOpen, onClose, nftInfo , uri }) => {
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay bg="rgba(0, 0, 0, 0.7)" backdropFilter="blur(10x)" />
@@ -37,7 +40,11 @@ const NFTModal: FC<NFTModalProps> = ({ isOpen, onClose, nftInfo }) => {
                   alt="NFT image"
                 />
                 <div className="flex flex-col justify-between">
+                  <div className="flex w-full items-center">
+                  <a href = {uri}>
                   <p className="text-[18px] font-semibold">{nftInfo?.name}</p>
+                  </a>
+                  </div>
                   <VStack align="start" spacing={2} className="mt-4 text-base">
                     {nftInfo?.attributes?.map((attribute) => (
                       <Box
