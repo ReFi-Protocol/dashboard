@@ -4,6 +4,7 @@ import DashboardContent from "../dashboard";
 import StakingContent from "../staking";
 import BridgingContent from "../bridging";
 import LeaderboardContent from "../leaderboard";
+import AdminContent from "../admin";
 
 interface PageContentProps {
   activeTab: string;
@@ -16,6 +17,7 @@ const PageContent: FC<PageContentProps> = ({ activeTab }) => {
     staking: <StakingContent />,
     bridging: <BridgingContent />,
     leaderboard: <LeaderboardContent />,
+    admin: <AdminContent />,
   };
 
   return (

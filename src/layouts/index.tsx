@@ -8,11 +8,16 @@ import Sidebar from "../components/sidebar";
 import TutorialModal from "../components/tutorial-modal";
 import routes from "../routes";
 import { AppRoute } from "../types";
+import { getConfig } from "../web3/solana/staking/service/getConfig";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import { ProgramConfig } from "../web3/solana/staking/types";
 
 const Layout: FC = () => {
   const [currentRoute, setCurrentRoute] = useState("Dashboard");
   const [open, setOpen] = useState(true);
   const [openTutorial, setOpenTutorial] = useState<boolean>(false);
+  const anchorWallet = useAnchorWallet();
+  const [config, setConfig] = useState<ProgramConfig | null>(null);
 
   const location = useLocation();
 
@@ -21,6 +26,14 @@ const Layout: FC = () => {
       window.innerWidth < 1200 ? setOpen(false) : setOpen(true),
     );
   }, []);
+  useEffect(() => {
+
+    if (anchorWallet) {
+        getConfig(anchorWallet).then((config) =>{
+          setConfig(config)
+      })
+    }
+  }, [anchorWallet?.publicKey]);
 
   useEffect(() => {
     getActiveRoute(routes);
@@ -39,7 +52,9 @@ const Layout: FC = () => {
   };
 
   const getRoutes = (routes: AppRoute[]) => {
-    return routes.map((prop, key) => {
+    return routes.filter((route) =>{
+      return !route.isAdmin || config && anchorWallet && config.admin.equals(anchorWallet?.publicKey)
+    }).map((prop, key) => {
       return <Route path={prop.path} element={prop.component} key={key} />;
     });
   };

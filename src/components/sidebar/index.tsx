@@ -8,6 +8,8 @@ import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { getTotalReFi } from "../../web3/solana/staking/service/getTotalReFi";
 import { d } from "../../web3/util/d";
 import ZeroRefiTokensPopUpModal from "../dashboard/components/ZeroReFiTokensPopUpModal";
+import { ProgramConfig } from "../../web3/solana/staking/types";
+import { getConfig } from "../../web3/solana/staking/service/getConfig";
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
@@ -19,12 +21,15 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [hasWalletConnected, setHasWalletConnected] = useState(false);
   const [totalHumanReFi, setTotalHumanReFi] = useState<number | null>(null);
+  const [config, setConfig] = useState<ProgramConfig | null>(null);
 
   useEffect(() => {
     if (anchorWallet) {
       getTotalReFi(anchorWallet.publicKey).then((value) => {
         setTotalHumanReFi(Math.trunc(d(value)));
       });
+
+      getConfig(anchorWallet).then(setConfig)
     }
   }, [anchorWallet]);
 
@@ -63,7 +68,9 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
         </div>
         <div>
           <ul className="mb-auto pt-1">
-            <Links routes={routes} />
+            <Links routes={routes.filter((route) =>{
+      return !route.isAdmin || config && anchorWallet && config.admin.equals(anchorWallet?.publicKey)
+    })} />
           </ul>
           {/* <ConnectKitButton.Custom>
             {({

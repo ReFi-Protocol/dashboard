@@ -12,6 +12,7 @@ export interface AppRoute {
   layout: string;
   path: string;
   icon: React.ReactNode;
+  isAdmin?: boolean;
   component: React.ReactNode;
   secondary?: boolean;
 }
@@ -41,7 +42,7 @@ export interface NFTInfo {
 }
 
 export interface WidgetData {
-  icon: ReactNode;
+  icon?: ReactNode;
   title: string;
   subtitle: string;
 }

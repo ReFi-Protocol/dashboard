@@ -1,4 +1,5 @@
 import Marketplace from "./views/marketplace";
+import Admin from "./views/admin";
 import Dashboard from "./views/dashboard";
 import Staking from "./views/staking";
 import Bridging from "./views/bridging";
@@ -13,6 +14,7 @@ import {
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { AppRoute } from "./types";
 import { env } from "./env";
+import { RiAdminFill } from "react-icons/ri";
 
 const devRoutes: AppRoute[] = [
   {
@@ -103,6 +105,14 @@ const prodRoutes: AppRoute[] = [
     path: "https://refiprotocol.io/contact",
     icon: <FaExternalLinkAlt />,
     component: "",
+  },
+  {
+    name: "Admin",
+    layout: "/",
+    path: "admin",
+    isAdmin: true,
+    icon: <RiAdminFill className="h-6 w-6" />,
+    component: <Admin />,
   },
 ];
 

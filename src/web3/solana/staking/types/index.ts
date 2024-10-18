@@ -1,6 +1,7 @@
 import { PublicKey, Transaction, VersionedTransaction } from "@solana/web3.js";
 import { getMyStakes } from "../service/getMyStakes";
 import { getAllStakes } from "../service/getAllStakes";
+import { getConfig } from "../util";
 
 export interface Wallet {
   signTransaction<T extends Transaction | VersionedTransaction>(
@@ -14,3 +15,4 @@ export interface Wallet {
 
 export type Stake = Awaited<ReturnType<typeof getMyStakes>>[number];
 export type StakeInfoAccount = Awaited<ReturnType<typeof getAllStakes>>[number];
+export type ProgramConfig = Awaited<ReturnType<typeof getConfig>>;
