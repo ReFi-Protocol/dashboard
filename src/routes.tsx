@@ -63,13 +63,13 @@ const devRoutes: AppRoute[] = [
 ];
 
 const prodRoutes: AppRoute[] = [
-  // {
-  //   name: "Dashboard",
-  //   layout: "/",
-  //   path: "dashboard",
-  //   icon: <MdHome className="h-6 w-6" />,
-  //   component: <Dashboard />,
-  // },
+  {
+    name: "Dashboard",
+    layout: "/",
+    path: "dashboard",
+    icon: <MdHome className="h-6 w-6" />,
+    component: <Dashboard />,
+  },
   // {
   //   name: "Marketplace",
   //   layout: "/",
