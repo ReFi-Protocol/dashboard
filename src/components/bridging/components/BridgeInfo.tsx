@@ -97,8 +97,8 @@ const BridgeInfo: FC<BridgeInfoProps> = ({
         <div className="mb-8 flex flex-col gap-2.5">
           <h3 className="font-sans text-3xl font-medium text-white">Bridge</h3>
           <p className="font-sans text-sm font-medium text-white">
-            ReFi Protocol offers a secured & unlimited transfer across chains
-            for tokens
+            ReFi Protocol offers a secured & unlimited transfers across chains
+            for tokens for free! Please refresh page after swapping to update the table below!
           </p>
         </div>
         <div className="mb-8 flex flex-col items-center justify-between gap-5 sm:flex-row">

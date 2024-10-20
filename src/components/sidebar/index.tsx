@@ -100,13 +100,13 @@ const Sidebar: FC<SidebarProps> = ({ open, onClose }) => {
           />
         </div>
       </div>
-      {isModalVisible &&  totalHumanReFi != null && (
-        <ZeroRefiTokensPopUpModal 
-          isOpen={isModalVisible} 
+      {/* {isModalVisible &&  totalHumanReFi != null && (
+        <ZeroRefiTokensPopUpModal
+          isOpen={isModalVisible}
           onClose={handleModalClose}
           zeroRefiTokens={totalHumanReFi === 0}
         />
-      )}
+      )} */}
     </div>
   );
 };

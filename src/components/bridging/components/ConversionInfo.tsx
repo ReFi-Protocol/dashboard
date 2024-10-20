@@ -20,7 +20,7 @@ const ConversionInfo: FC<ConversionInfoProps> = ({ value }) => (
             <span>{value}</span>
           </div>
           <div className="flex justify-between">
-            <span>Difference</span>
+            <span>Fee</span>
             <span>0</span>
           </div>
         </div>

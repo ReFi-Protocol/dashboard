@@ -92,13 +92,13 @@ const prodRoutes: AppRoute[] = [
     icon: <MdSwapHoriz className="h-6 w-6" />,
     component: <Bridging />,
   },
-  {
-    name: "Leaderboard",
-    layout: "/",
-    path: "leaderboard",
-    icon: <MdBarChart className="h-6 w-6" />,
-    component: <Leaderboard />,
-  },
+  // {
+  //   name: "Leaderboard",
+  //   layout: "/",
+  //   path: "leaderboard",
+  //   icon: <MdBarChart className="h-6 w-6" />,
+  //   component: <Leaderboard />,
+  // },
   {
     name: "Contact us",
     layout: "",
