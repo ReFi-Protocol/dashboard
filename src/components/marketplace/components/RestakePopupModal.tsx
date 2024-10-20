@@ -65,7 +65,7 @@ const RestakePopupModal: FC<RestakePopupModalProps> = ({ isOpen, onClose }) => {
               borderRadius={"8px"}
               onClick={handleRestake}
             >
-              Explore now
+              Restake now
             </Button>
           </div>
         </ModalFooter>

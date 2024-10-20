@@ -28,6 +28,7 @@ const MyNFTsGallery: FC = () => {
   const [collectibleNfts, setCollectibleNfts] = useState<DigitalAsset[]>([]);
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+  const [selectedUri, setSelectedUri] = useState<string>("");
 
   useEffect(() => {
     const loadStakesAndNFTs = async () => {
@@ -79,6 +80,7 @@ const MyNFTsGallery: FC = () => {
   const closeModal = () => setModalOpen(false);
 
   const handleLearnMore = async (uri: string) => {
+    setSelectedUri(uri);
     try {
       const metadata = await fetchMetadata(uri);
       setNftInfo(metadata);
@@ -151,7 +153,7 @@ const MyNFTsGallery: FC = () => {
         </div>
       )}
       {nftInfo && (
-        <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} />
+        <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} uri={selectedUri}/>
       )}
     </div>
   );

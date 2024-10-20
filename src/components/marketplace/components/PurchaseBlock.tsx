@@ -32,6 +32,7 @@ const PurchaseBlock: FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isBoughtNft, setIsBoughtNft] = useState(false);
   const anchorWallet = useAnchorWallet();
+  const [selectedUri, setSelectedUri] = useState<string>("");
 
   const availableNFTs = candyMachine?.items?.length
     ? candyMachine?.items?.length - Number(candyMachine?.itemsRedeemed)
@@ -117,6 +118,7 @@ const PurchaseBlock: FC = () => {
   };
 
   const handleLearnMore = async (uri: string) => {
+    setSelectedUri(uri);
     try {
       const metadata = await fetchMetadata(uri);
       setNftInfo(metadata);
@@ -233,7 +235,7 @@ const PurchaseBlock: FC = () => {
         onClose={() => setStakeModalOpen(false)}
       />
       {nftInfo && (
-        <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} />
+        <NFTModal isOpen={isModalOpen} onClose={closeModal} nftInfo={nftInfo} uri={selectedUri} />
       )}
     </div>
   ) : (
