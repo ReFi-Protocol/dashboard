@@ -39,7 +39,7 @@ const stakingPoolData: StakingPoolData[] = [
     duration: null,
     maxStake:
       "Stake or de-stake anytime. There is no limit to the $REFI staked.",
-    apy: "3.5%",
+    apy: "6%",
   },
 ];
 
@@ -57,7 +57,7 @@ const StakingContent: FC = () => {
   const umi = useUmi(walletContext);
   const [allStakesAccs, setAllStakesAccs] = useState<StakeInfoAccount[]>([]);
   const { stakes } = useStakes(anchorWallet);
-  
+
   useEffect(() => {
     getAllStakes().then(setAllStakesAccs);
   }, []);
