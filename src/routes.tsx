@@ -70,14 +70,14 @@ const prodRoutes: AppRoute[] = [
     icon: <MdHome className="h-6 w-6" />,
     component: <Dashboard />,
   },
-  {
-    name: "Marketplace",
-    layout: "/",
-    path: "marketplace",
-    icon: <MdOutlineShoppingCart className="h-6 w-6" />,
-    component: <Marketplace />,
-    secondary: true,
-  },
+  // {
+  //   name: "Marketplace",
+  //   layout: "/",
+  //   path: "marketplace",
+  //   icon: <MdOutlineShoppingCart className="h-6 w-6" />,
+  //   component: <Marketplace />,
+  //   secondary: true,
+  // },
   {
     name: "Staking",
     layout: "/",
