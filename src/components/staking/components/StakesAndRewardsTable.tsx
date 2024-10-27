@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC , useState} from "react";
 import {
   Table,
   TableContainer,
@@ -37,6 +37,7 @@ interface StakesAndRewardsTableProps {
   stakes: Stake[];
   currentPrice: number;
   onStakeNow: () => void;
+  setClaimedRewards: (reward: number) => void;
 }
 
 const tableHeaders = [
@@ -55,27 +56,18 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
   stakes,
   onStakeNow,
   currentPrice,
+  setClaimedRewards
 }) => {
   const anchorWallet = useAnchorWallet();
   const walletContext = useWallet();
   const showToast = useCustomToast();
 
-  const handleClaimClick = async (stakeIndex: number) => {
-    registerEvent({ event: GaEvent.CLAIM });
-    if (anchorWallet) {
-      try {
-        await claim(walletContext, anchorWallet, stakeIndex);
-      } catch (e: any) {
-        showToast({
-          title: "Error",
-          description: e.message,
-          status: "error",
-        });
-
-        console.error(e);
-      }
-    }
-  };
+  const [rewards, setRewards] = useState(
+    stakes.map((stake) => {
+      const claimableReward = calculateClaimableReward(stake);
+      return Math.max(claimableReward - stake.paidAmount.toNumber(), 0);
+    })
+  );
 
   const handleRestakeClick = async (stakeIndex: number) => {
     registerEvent({ event: GaEvent.RESTAKE });
@@ -111,6 +103,33 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
     }
   };
 
+  const handleClaimClick = async (stakeIndex: number) => {
+    registerEvent({ event: GaEvent.CLAIM });
+    if (anchorWallet) {
+      try {
+         await claim(walletContext, anchorWallet, stakeIndex);
+
+        const claimedReward = rewards[stakeIndex];
+        setClaimedRewards(claimedReward);
+
+        setRewards((prevRewards) =>
+          prevRewards.map((reward, index) =>
+            index === stakeIndex ? 0 : reward
+          )
+        );
+      } catch (e: any) {
+        showToast({
+          title: "Error",
+          description: e.message,
+          status: "error",
+        });
+
+        console.error(e);
+      }
+    }
+    window.location.reload();
+  };
+
   const renderHeader = () => (
     <Thead>
       <Tr className="py-6">
@@ -134,12 +153,6 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
     const canDestake = compareDesc(lockEndDate, new Date()) > 0;
     const canRestake = !stake.parentStakeIndex && stake.nft;
 
-    const claimableReward = calculateClaimableReward(stake);
-    const actualReward = Math.max(
-      claimableReward - stake.paidAmount.toNumber(),
-      0,
-    );
-
     return (
       <Tr key={index}>
         <Td>{index}</Td>
@@ -157,7 +170,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
             {status}
           </Badge>
         </Td>
-        <Td>{formatReFi(actualReward)}</Td>
+        <Td>{formatReFi(rewards[index])}</Td>
         <Td>
           <div className="flex min-h-[112px] flex-col justify-center gap-2">
             {!stake.destakeTime && (
@@ -177,7 +190,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
                     Restake
                   </Button>
                 )}
-                {actualReward > 0 && (
+                {rewards[index] > 0 && (
                   <Button
                     variant="outline"
                     size="sm"

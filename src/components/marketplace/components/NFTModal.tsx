@@ -41,9 +41,7 @@ const NFTModal: FC<NFTModalProps> = ({ isOpen, onClose, nftInfo , uri }) => {
                 />
                 <div className="flex flex-col justify-between">
                   <div className="flex w-full items-center">
-                  <a href = {uri}>
                   <p className="text-[18px] font-semibold">{nftInfo?.name}</p>
-                  </a>
                   </div>
                   <VStack align="start" spacing={2} className="mt-4 text-base">
                     {nftInfo?.attributes?.map((attribute) => (
