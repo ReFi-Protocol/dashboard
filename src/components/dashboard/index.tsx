@@ -34,6 +34,7 @@ const DashboardContent: FC = () => {
   const [allStakesAccs, setAllStakesAccs] = useState<StakeInfoAccount[]>([]);
 
   const [totalHumanReFi, setTotalHumanReFi] = useState<number | null>(null);
+  const [claimedRewards, setClaimedRewards] = useState(0);
   
 
   useEffect(() => {
@@ -88,7 +89,7 @@ const DashboardContent: FC = () => {
   return (
     <div>
       <GlobalMetrics stakeAccounts={allStakesAccs} />
-      <MyMetrics />
+      <MyMetrics claimedRewards={claimedRewards}/>
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2">
         <ExchangeRateChart
           prices={historicalPrices}

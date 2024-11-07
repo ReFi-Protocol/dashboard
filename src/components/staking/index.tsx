@@ -57,7 +57,8 @@ const StakingContent: FC = () => {
   const umi = useUmi(walletContext);
   const [allStakesAccs, setAllStakesAccs] = useState<StakeInfoAccount[]>([]);
   const { stakes } = useStakes(anchorWallet);
-
+  const [claimedRewards, setClaimedRewards] = useState(0);
+  
   useEffect(() => {
     getAllStakes().then(setAllStakesAccs);
   }, []);
@@ -90,7 +91,8 @@ const StakingContent: FC = () => {
     <div className="flex flex-col gap-12 text-white">
       <StakingPromoBanner />
       <GlobalMetrics stakeAccounts={allStakesAccs} />
-      <MyMetrics />
+      <MyMetrics 
+      claimedRewards={claimedRewards} />
       <StakingPools
         stakingPoolData={stakingPoolData}
         selectedPoolIndex={selectedPoolIndex}
@@ -102,6 +104,7 @@ const StakingContent: FC = () => {
         currentPrice={currentPrice}
         stakes={stakes}
         onStakeNow={openModal}
+        setClaimedRewards={setClaimedRewards}
       />
       <StakingPoolOptionsModal
         isOpen={isModalOpen}

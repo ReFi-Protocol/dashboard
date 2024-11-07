@@ -76,7 +76,6 @@ const PurchaseBlock: FC = () => {
     try {
       const mint = await mintNftFromCandyMachine(umi);
 
-      openRevealModal();
 
       if (!mint) {
         throw new Error("Error purchasing NFT: Mint address not generated");
@@ -89,6 +88,7 @@ const PurchaseBlock: FC = () => {
       setNftInfo(metadata);
       setIsRevealed(true);
       setIsBoughtNft(true);
+      openRevealModal();
     } catch (error: any) {
       console.error("Error purchasing NFT:", error);
       closeRevealModal();

@@ -14,7 +14,11 @@ import { formatReFi } from "../web3/solana/staking/util";
 import MetricsSection from "./MetricSection";
 import { ConfettiIcon, LockIcon, SumIcon } from "./icons";
 
-const MyMetrics: FC = () => {
+interface MyMetricsProps {
+  claimedRewards: number;
+}
+
+const MyMetrics: FC<MyMetricsProps> = ({ claimedRewards }) => {
   const anchorWallet = useAnchorWallet();
   const wallet = useWallet();
   const umi = useUmi(wallet);
@@ -60,7 +64,7 @@ const MyMetrics: FC = () => {
     {
       icon: <ConfettiIcon width={28} height={28} fill="white" />,
       title: "Expected Rewards",
-      subtitle: `${formatReFi(expectedReward)} $REFI`,
+      subtitle: `${formatReFi(expectedReward - claimedRewards)} $REFI`,
     },
     {
       icon: <LockIcon width={28} height={28} fill="white" />,
