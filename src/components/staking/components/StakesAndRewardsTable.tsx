@@ -153,6 +153,12 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
     const canDestake = compareDesc(lockEndDate, new Date()) > 0;
     const canRestake = !stake.parentStakeIndex && stake.nft;
 
+    const claimableReward = calculateClaimableReward(stake);
+
+   const potentialUnclaimedReward = claimableReward - stake.paidAmount.toNumber()
+   const unclaimedReward = stake.destakeTime ? 0 : potentialUnclaimedReward
+
+
     return (
       <Tr key={index}>
         <Td>{index}</Td>
@@ -170,7 +176,7 @@ const StakesAndRewardsTable: FC<StakesAndRewardsTableProps> = ({
             {status}
           </Badge>
         </Td>
-        <Td>{formatReFi(rewards[index])}</Td>
+        <Td>{unclaimedReward}</Td>
         <Td>
           <div className="flex min-h-[112px] flex-col justify-center gap-2">
             {!stake.destakeTime && (
